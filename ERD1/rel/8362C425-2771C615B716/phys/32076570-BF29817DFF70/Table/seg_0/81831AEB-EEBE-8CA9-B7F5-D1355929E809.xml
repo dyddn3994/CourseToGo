@@ -1,0 +1,49 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev11g class="oracle.dbtools.crest.model.design.storage.oracle.v11g.TableProxyOraclev11g" name="EXPECTEDPLAYINGS" directorySegmentName="seg_0" id="81831AEB-EEBE-8CA9-B7F5-D1355929E809">
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:40:19 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<schemaObject>BECB8B68-95C5-E19B-A89E-67684BB1083D</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>4E398A7E-0D49-16BE-CB02-DE4AD4E61061</segment>
+<tableSpace>E8196AF7-AC54-26C2-EF46-1FBC0B187263</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="RELEASE_DATE" id="C4BF259D-41CD-9F6E-48ED-CD8571F1ADEB">
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:40:19 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="EXPECTEDPLAYINGS_ID" id="E9CAD588-8EA1-814E-3ADE-97F64B597096">
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:40:19 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="EXPECTEDPLAYINGS_PK1" id="EC9C32F6-9544-49F3-C317-EEF30C59E76E">
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:40:19 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<schemaObject>BECB8B68-95C5-E19B-A89E-67684BB1083D</schemaObject>
+<segment>583AB6F0-28CD-4967-74F2-7FD90EE87A27</segment>
+<tableSpace>E8196AF7-AC54-26C2-EF46-1FBC0B187263</tableSpace>
+</IndexProxy>
+</indexProxies>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="EXPECTEDPLAYINGS_PK1" id="940F93CF-CCED-ED20-1E87-DA9B435B0275">
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:40:19 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<segment>583AB6F0-28CD-4967-74F2-7FD90EE87A27</segment>
+<tableSpace>E8196AF7-AC54-26C2-EF46-1FBC0B187263</tableSpace>
+<existingIndex>EC9C32F6-9544-49F3-C317-EEF30C59E76E</existingIndex>
+<indexSegment>583AB6F0-28CD-4967-74F2-7FD90EE87A27</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev11g>

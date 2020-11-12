@@ -1,0 +1,84 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="0372B3B9-1225-1C93-1D49-CB7DF947292E" schemaObject="BECB8B68-95C5-E19B-A89E-67684BB1083D" name="MOVIE_MANAGES">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>CINEMA</sourceObjSchema>
+<sourceObjName>MOVIE_MANAGES</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:32:14 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="MOVIE_ID" id="123130B5-A08D-851C-7121-BBB6C63D1D8F">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>MOVIE_MANAGES</sourceObjSchema>
+<sourceObjName>MOVIE_ID</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:32:14 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10 BYTE</dataTypeSize>
+<ownDataTypeParameters>10 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="C3C6E0D9-186C-6BFC-6EB3-FDEE93B54234" referredColumn="EB938FB7-6E2C-3518-675B-F617F1A92085"/>
+</associations>
+</Column>
+<Column name="MANAGER_ID" id="299EB4A1-53AC-7141-B1F7-51C1B6A0585F">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>MOVIE_MANAGES</sourceObjSchema>
+<sourceObjName>MANAGER_ID</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:32:14 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10 BYTE</dataTypeSize>
+<ownDataTypeParameters>10 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="1E6A2809-81BF-DA9E-DC2C-8F4A09CF7301" name="MOVIE_MANAGES_PK1">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>CINEMA</sourceObjSchema>
+<sourceObjName>MOVIE_MANAGES_PK1</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:32:14 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="123130B5-A08D-851C-7121-BBB6C63D1D8F"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="AA157A9B-5D4A-6CC9-0645-B2E293CF92A6" schemaObject="BECB8B68-95C5-E19B-A89E-67684BB1083D" name="MOVIE_MANAGES_PK1">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>CINEMA</sourceObjSchema>
+<sourceObjName>MOVIE_MANAGES_PK1</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:32:14 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="123130B5-A08D-851C-7121-BBB6C63D1D8F"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="709827E9-3CED-B9BD-9B91-2AFDF9579E55" name="MOVIE_MANAGES_FK1">
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:32:14 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="123130B5-A08D-851C-7121-BBB6C63D1D8F"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

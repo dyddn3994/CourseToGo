@@ -1,0 +1,84 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev11g class="oracle.dbtools.crest.model.design.storage.oracle.v11g.TableProxyOraclev11g" name="MOVIES" directorySegmentName="seg_0" id="0648D182-5193-7A4D-00F9-0FC8F2C69CD6">
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:23:39 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<schemaObject>BECB8B68-95C5-E19B-A89E-67684BB1083D</schemaObject>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>4E398A7E-0D49-16BE-CB02-DE4AD4E61061</segment>
+<tableSpace>E8196AF7-AC54-26C2-EF46-1FBC0B187263</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="MOVIE_NAME" id="08EE2E4A-DCC7-81EF-86C2-8B4F7CCB1D50">
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:23:39 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="TRAILER" id="49E3FBE4-B093-88BA-A41B-230531C023B8">
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:23:39 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="STILL_CUT" id="5BC6618E-D517-077D-B095-3A17C1DEFE55">
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:23:39 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="RUNNING_TIME" id="92A7C212-188F-942A-45D7-3D72E593BBC8">
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:23:39 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="ACTOR" id="A62C00E2-C130-D672-F661-740324AE01E3">
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:23:39 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="SUMMARY" id="B7A9AEBC-9859-4A81-A697-C89B6A90A9F4">
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:23:39 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="GENRE" id="D3836763-B765-803C-E943-3C4D948CF7E1">
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:23:39 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="MOVIE_ID" id="EB938FB7-6E2C-3518-675B-F617F1A92085">
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:23:39 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="GRADE" id="FF709BF9-109E-2161-862E-D905F1B2559C">
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:23:39 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="MOVIES_PK" id="61005B96-55A7-4F31-5625-074998D21D75">
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:23:39 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<schemaObject>BECB8B68-95C5-E19B-A89E-67684BB1083D</schemaObject>
+<segment>583AB6F0-28CD-4967-74F2-7FD90EE87A27</segment>
+<tableSpace>E8196AF7-AC54-26C2-EF46-1FBC0B187263</tableSpace>
+</IndexProxy>
+</indexProxies>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="MOVIES_PK" id="F27E4835-2CAC-E0A1-704E-9A4387690241">
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:23:39 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<segment>583AB6F0-28CD-4967-74F2-7FD90EE87A27</segment>
+<tableSpace>E8196AF7-AC54-26C2-EF46-1FBC0B187263</tableSpace>
+<existingIndex>61005B96-55A7-4F31-5625-074998D21D75</existingIndex>
+<indexSegment>583AB6F0-28CD-4967-74F2-7FD90EE87A27</indexSegment>
+<indexSort>SORTED</indexSort>
+<usingIndex>BY INDEX NAME</usingIndex>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev11g>

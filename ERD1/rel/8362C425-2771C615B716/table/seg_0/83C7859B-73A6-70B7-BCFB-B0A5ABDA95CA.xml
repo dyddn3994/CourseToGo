@@ -1,0 +1,125 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="83C7859B-73A6-70B7-BCFB-B0A5ABDA95CA" schemaObject="BECB8B68-95C5-E19B-A89E-67684BB1083D" name="HALLS">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>CINEMA</sourceObjSchema>
+<sourceObjName>HALLS</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:40:25 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="HALL_ID" id="B1DDD39E-7096-0835-8D51-24D9D60AC022">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>HALLS</sourceObjSchema>
+<sourceObjName>HALL_ID</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:40:25 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>20 BYTE</dataTypeSize>
+<ownDataTypeParameters>20 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="CINEMA_ID" id="333A54E4-A37D-A540-2793-6D71D07001BD">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>HALLS</sourceObjSchema>
+<sourceObjName>CINEMA_ID</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:40:25 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>20 BYTE</dataTypeSize>
+<ownDataTypeParameters>20 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="HALL_NAME" id="38C676AD-5CD2-6F3A-5F2D-F70FACD13489">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>HALLS</sourceObjSchema>
+<sourceObjName>HALL_NAME</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:40:25 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>20 BYTE</dataTypeSize>
+<ownDataTypeParameters>20 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="SEAT_COUNT" id="6157DB9D-6CD4-3631-17E3-AE447F5FD381">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>HALLS</sourceObjSchema>
+<sourceObjName>SEAT_COUNT</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:40:25 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="HALL_SEATNO" id="FB139918-AA2B-E058-F492-A36FA6A2F648">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>HALLS</sourceObjSchema>
+<sourceObjName>HALL_SEATNO</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:40:25 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>4 BYTE</dataTypeSize>
+<ownDataTypeParameters>4 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="PRICE" id="36FFAFBB-5683-F087-6943-11EA692B41F3">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>HALLS</sourceObjSchema>
+<sourceObjName>PRICE</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:40:25 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="36D597DD-EDF8-036A-BC38-A84364216F42" name="HALLS_PK1">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>CINEMA</sourceObjSchema>
+<sourceObjName>HALLS_PK1</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:40:25 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="B1DDD39E-7096-0835-8D51-24D9D60AC022"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="02CB8FF8-D000-2826-8136-7DA4BF92F973" schemaObject="BECB8B68-95C5-E19B-A89E-67684BB1083D" name="HALLS_PK1">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>CINEMA</sourceObjSchema>
+<sourceObjName>HALLS_PK1</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:40:25 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="B1DDD39E-7096-0835-8D51-24D9D60AC022"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

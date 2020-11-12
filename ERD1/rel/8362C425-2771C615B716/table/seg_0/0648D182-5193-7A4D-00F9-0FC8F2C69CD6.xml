@@ -1,0 +1,170 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="0648D182-5193-7A4D-00F9-0FC8F2C69CD6" schemaObject="BECB8B68-95C5-E19B-A89E-67684BB1083D" name="MOVIES">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>CINEMA</sourceObjSchema>
+<sourceObjName>MOVIES</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:23:39 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="MOVIE_ID" id="EB938FB7-6E2C-3518-675B-F617F1A92085">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>MOVIES</sourceObjSchema>
+<sourceObjName>MOVIE_ID</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:23:39 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>30 BYTE</dataTypeSize>
+<ownDataTypeParameters>30 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="MOVIE_NAME" id="08EE2E4A-DCC7-81EF-86C2-8B4F7CCB1D50">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>MOVIES</sourceObjSchema>
+<sourceObjName>MOVIE_NAME</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:23:39 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>30 BYTE</dataTypeSize>
+<ownDataTypeParameters>30 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="RUNNING_TIME" id="92A7C212-188F-942A-45D7-3D72E593BBC8">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>MOVIES</sourceObjSchema>
+<sourceObjName>RUNNING_TIME</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:23:39 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>3 BYTE</dataTypeSize>
+<ownDataTypeParameters>3 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="GRADE" id="FF709BF9-109E-2161-862E-D905F1B2559C">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>MOVIES</sourceObjSchema>
+<sourceObjName>GRADE</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:23:39 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>20 BYTE</dataTypeSize>
+<ownDataTypeParameters>20 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="ACTOR" id="A62C00E2-C130-D672-F661-740324AE01E3">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>MOVIES</sourceObjSchema>
+<sourceObjName>ACTOR</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:23:39 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>400 BYTE</dataTypeSize>
+<ownDataTypeParameters>400 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="GENRE" id="D3836763-B765-803C-E943-3C4D948CF7E1">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>MOVIES</sourceObjSchema>
+<sourceObjName>GENRE</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:23:39 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>20 BYTE</dataTypeSize>
+<ownDataTypeParameters>20 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="TRAILER" id="49E3FBE4-B093-88BA-A41B-230531C023B8">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>MOVIES</sourceObjSchema>
+<sourceObjName>TRAILER</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:23:39 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>200 BYTE</dataTypeSize>
+<ownDataTypeParameters>200 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="STILL_CUT" id="5BC6618E-D517-077D-B095-3A17C1DEFE55">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>MOVIES</sourceObjSchema>
+<sourceObjName>STILL_CUT</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:23:39 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>200 BYTE</dataTypeSize>
+<ownDataTypeParameters>200 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="SUMMARY" id="B7A9AEBC-9859-4A81-A697-C89B6A90A9F4">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>MOVIES</sourceObjSchema>
+<sourceObjName>SUMMARY</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:23:39 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>3000 BYTE</dataTypeSize>
+<ownDataTypeParameters>3000 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="F27E4835-2CAC-E0A1-704E-9A4387690241" name="MOVIES_PK">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>CINEMA</sourceObjSchema>
+<sourceObjName>MOVIES_PK</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:23:39 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="EB938FB7-6E2C-3518-675B-F617F1A92085"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="61005B96-55A7-4F31-5625-074998D21D75" schemaObject="BECB8B68-95C5-E19B-A89E-67684BB1083D" name="MOVIES_PK">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>CINEMA</sourceObjSchema>
+<sourceObjName>MOVIES_PK</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:23:39 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="EB938FB7-6E2C-3518-675B-F617F1A92085"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

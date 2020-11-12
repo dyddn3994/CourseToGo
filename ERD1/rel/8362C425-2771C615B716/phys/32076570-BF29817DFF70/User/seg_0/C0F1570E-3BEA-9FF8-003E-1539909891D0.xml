@@ -1,0 +1,11 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<UserOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UserOraclev10g" name="CINEMA" directorySegmentName="seg_0" id="C0F1570E-3BEA-9FF8-003E-1539909891D0">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjName>CINEMA</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:23:19 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<schemaObject>BECB8B68-95C5-E19B-A89E-67684BB1083D</schemaObject>
+<defTableSpace>E8196AF7-AC54-26C2-EF46-1FBC0B187263</defTableSpace>
+<privileges>UNLIMITED TABLESPACE</privileges>
+</UserOraclev10g>

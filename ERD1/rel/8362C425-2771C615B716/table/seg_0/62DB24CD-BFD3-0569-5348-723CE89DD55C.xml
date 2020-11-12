@@ -1,0 +1,140 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="62DB24CD-BFD3-0569-5348-723CE89DD55C" schemaObject="BECB8B68-95C5-E19B-A89E-67684BB1083D" name="SCREENING_SCHEDULES">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>CINEMA</sourceObjSchema>
+<sourceObjName>SCREENING_SCHEDULES</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:40:37 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="SCREENING_ID" id="3F251684-0104-40B0-0AF2-2B7BE2A9F29C">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>SCREENING_SCHEDULES</sourceObjSchema>
+<sourceObjName>SCREENING_ID</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:40:37 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10 BYTE</dataTypeSize>
+<ownDataTypeParameters>10 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="MOVIE_ID" id="17D7D7BE-A5A5-0E42-80C4-F0060A3677BE">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>SCREENING_SCHEDULES</sourceObjSchema>
+<sourceObjName>MOVIE_ID</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:40:37 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>20 BYTE</dataTypeSize>
+<ownDataTypeParameters>20 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="5391B855-5C78-7CA1-DACB-502F7C08D26E" referredColumn="EB938FB7-6E2C-3518-675B-F617F1A92085"/>
+</associations>
+</Column>
+<Column name="CINEMA_ID" id="4996F427-D101-0C08-1202-08636BD7445B">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>SCREENING_SCHEDULES</sourceObjSchema>
+<sourceObjName>CINEMA_ID</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:40:37 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10 BYTE</dataTypeSize>
+<ownDataTypeParameters>10 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="HALL_ID" id="64171BBB-5C01-7D05-3F57-AAFBB5F13932">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>SCREENING_SCHEDULES</sourceObjSchema>
+<sourceObjName>HALL_ID</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:40:37 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10 BYTE</dataTypeSize>
+<ownDataTypeParameters>10 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="SCRENNING_TIME" id="BB901796-726E-02DB-D68B-FDFA0EF66806">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>SCREENING_SCHEDULES</sourceObjSchema>
+<sourceObjName>SCRENNING_TIME</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:40:37 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10 BYTE</dataTypeSize>
+<ownDataTypeParameters>10 BYTE,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="SCRENNING_DATE" id="B1F0E2D2-1423-B69F-8397-E23636438CC3">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>SCREENING_SCHEDULES</sourceObjSchema>
+<sourceObjName>SCRENNING_DATE</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:40:37 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT007</logicalDatatype>
+<dataTypeSize>7</dataTypeSize>
+<ownDataTypeParameters>7,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="79E135BD-316C-DF4A-8546-93B1A1A7B0F7" name="SCREENING_SCHEDULES_PK1">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>CINEMA</sourceObjSchema>
+<sourceObjName>SCREENING_SCHEDULES_PK1</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:40:37 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="3F251684-0104-40B0-0AF2-2B7BE2A9F29C"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="80246244-1969-0427-D72B-72E32D705597" schemaObject="BECB8B68-95C5-E19B-A89E-67684BB1083D" name="SCREENING_SCHEDULES_PK1">
+<sourceConnName>cinema</sourceConnName>
+<sourceObjSchema>CINEMA</sourceObjSchema>
+<sourceObjName>SCREENING_SCHEDULES_PK1</sourceObjName>
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:40:37 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<indexState>Unique Plain Index</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="3F251684-0104-40B0-0AF2-2B7BE2A9F29C"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="FE1477D5-48DE-4D82-CD3E-F89A572067B7" name="SCREENING_SCHEDULES_FK1">
+<createdBy>82103</createdBy>
+<createdTime>2020-11-12 06:40:37 UTC</createdTime>
+<ownerDesignName>ERD1</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="17D7D7BE-A5A5-0E42-80C4-F0060A3677BE"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>
