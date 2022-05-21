@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import Modal from 'react-modal';
@@ -8,26 +8,42 @@ import GroupListDiv from "./GroupListDiv.js";
 
 const MainPage = () => {
   // useState
-  const [groupAddModalIsOpen, setGroupAddModalIsOpen] = useState(false);
-  const [groupJoinModalIsOpen, setGroupJoinModalIsOpen] = useState(false);
+  const [isGroupAddModalOpen, setIsGroupAddModalOpen] = useState(false);
+  const [isGroupJoinModalOpen, setIsGroupJoinModalOpen] = useState(false);
   const [inputGroupName, setInputGroupName] = useState('');
   const [inputGroupKey, setInputGroupKey] = useState('');
+  const [addGroupState, setAddGroupState] = useState('');
+
+  // useRef
+  const groupListDivRef = useRef();
 
   // onClick
-  const onClickGroupAddModal = () => {
-    setGroupAddModalIsOpen(true);
-  };
-  const onClickGroupJoinModal = () => {
-    setGroupJoinModalIsOpen(true);
-  };
+  const onClickGroupAddModal = () => setIsGroupAddModalOpen(true);
+  const onClickGroupJoinModal = () => setIsGroupJoinModalOpen(true);
   const onClickLogout = () => {
     alert('logout');
   };
   const onClickGroupAdd = () => {
     if (inputGroupName) {
-      alert('created group name : ' + inputGroupName);
-      setGroupAddModalIsOpen(false);
-      setInputGroupName('');
+      fetch("/group", {
+        method: 'post',
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body : JSON.stringify({groupName: inputGroupName})
+      })
+      .then((res)=>{
+        return res.json();
+      })
+      .then((addedGroupId)=>{
+        // 추가된 그룹 id
+        alert(addedGroupId);
+        
+        setIsGroupAddModalOpen(false);
+        setInputGroupName('');
+
+        groupListDivRef.current.commuteGetGroupInfo();
+      });
     }
     else {
       alert('그룹 명이 입력되지 않았습니다.');
@@ -35,9 +51,32 @@ const MainPage = () => {
   };
   const onClickGroupJoin = () => {
     if (inputGroupKey) {
-      alert('input group key : ' + inputGroupKey);
-      setGroupJoinModalIsOpen(false);
-      setInputGroupKey('');
+      fetch("/group/participate?code="+inputGroupKey, {
+        method: 'post',
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body : JSON.stringify(inputGroupKey)
+      })
+      .then((res)=>{
+        return res.json();
+      })
+      .then((ack)=>{
+        // 1:성공 / 2:이미 참가중인 그룹 / 3:찾는 그룹 없음
+        if (ack === 1) {
+          alert('그룹 참가에 성공하였습니다.');
+          setIsGroupJoinModalOpen(false);
+          setInputGroupKey('');
+
+          groupListDivRef.current.commuteGetGroupInfo();
+        }
+        else if (ack === 2) {
+          alert('이미 참가중인 그룹입니다.');
+        }
+        else if (ack === 3) {
+          alert('그룹 키를 다시 확인하세요.');
+        }
+      });
     }
     else {
       alert('그룹 초대 코드가 입력되지 않았습니다.');
@@ -45,19 +84,15 @@ const MainPage = () => {
   };
 
   // onChange
-  const onChangeInputGroupName = e => {
-    setInputGroupName(e.target.value);
-  }
-  const onChangeInputGroupKey = e => {
-    setInputGroupKey(e.target.value);
-  }
+  const onChangeInputGroupName = e => setInputGroupName(e.target.value);
+  const onChangeInputGroupKey = e => setInputGroupKey(e.target.value);
 
   // Modal
   const groupAddModal = (
     // 그룹 추가 모달
     <Modal 
-      isOpen={groupAddModalIsOpen} 
-      onRequestClose={() => setGroupAddModalIsOpen(false)}
+      isOpen={isGroupAddModalOpen} 
+      onRequestClose={() => setIsGroupAddModalOpen(false)}
       style={{
         overlay: {
           position: 'fixed',
@@ -78,14 +113,14 @@ const MainPage = () => {
         <input name="inputGroupName" value={inputGroupName} onChange={onChangeInputGroupName} />
       </div>
       <button onClick={onClickGroupAdd}>그룹 생성</button>
-      <button onClick={() => setGroupAddModalIsOpen(false)}>취소</button>
+      <button onClick={() => setIsGroupAddModalOpen(false)}>취소</button>
     </Modal>
   );
   const groupJoinModal = (
     // 그룹 참가 모달
     <Modal 
-      isOpen={groupJoinModalIsOpen} 
-      onRequestClose={() => setGroupJoinModalIsOpen(false)}
+      isOpen={isGroupJoinModalOpen} 
+      onRequestClose={() => setIsGroupJoinModalOpen(false)}
       style={{
         overlay: {
           position: 'fixed'
@@ -106,7 +141,7 @@ const MainPage = () => {
         <input name="inputGroupKey" value={inputGroupKey} onChange={onChangeInputGroupKey} />
       </div>
       <button onClick={onClickGroupJoin}>그룹 참가</button>
-      <button onClick={() => setGroupJoinModalIsOpen(false)}>취소</button>
+      <button onClick={() => setIsGroupJoinModalOpen(false)}>취소</button>
     </Modal>
   );
 
@@ -118,11 +153,11 @@ const MainPage = () => {
           <GroupTitleDiv>
             <h1>그룹</h1>
             <GroupButtonDiv>
-              <GroupButton onClick={onClickGroupAddModal}>그룹 추가</GroupButton>
+              <GroupButton onClick={onClickGroupAddModal}>그룹 생성</GroupButton>
               <GroupButton onClick={onClickGroupJoinModal}>그룹 참가</GroupButton>
             </GroupButtonDiv>
           </GroupTitleDiv>
-          <GroupListDiv />
+          <GroupListDiv ref={groupListDivRef} />
         </GroupDiv>
       </LeftScreenDiv>
 
@@ -151,7 +186,6 @@ const MainScreenDiv = styled.div`
   height: 100vh;
 `;
 const LeftScreenDiv = styled.div`
-  /* background-color: #ffffd0; */
   flex-basis: 40%;
   float: left;
 `;
@@ -166,13 +200,11 @@ const GroupDiv = styled.div`
   margin-top: 5%;
 
   width: 85%;
-  /* background-color: #d0ffff; */
 `;
 const GroupTitleDiv = styled.div`
   display: flex;
   justify-content: space-between;
   padding-left: 5%;
-  /* background-color: #ffd0ff; */
 `;
 const GroupButtonDiv = styled.div`
   display: flex;
@@ -189,24 +221,24 @@ const GroupButton = styled.button`
   align-self: center;
   float: right;
 
+  border-width: 1px;
+  padding: 3px 5px;
+
+  font-size: 13px;
   border-style: solid;
   border-radius: 10%;
   border-color: white;
-  border-width: 1px;
-  font-size: 13px;
-  padding: 3px 5px;
-
   background-color: #3498DB;
   color: white;
 `;
 const MyPageButton = styled.button`
+  padding: 3px 5px;
+  border-width: 1px;
+  
   border-style: solid;
   border-radius: 10%;
   border-color: #3498DB;
-  border-width: 1px;
   font-size: 13px;
-  padding: 3px 5px;
-
   background-color: gray;
   color: white;
 `;
