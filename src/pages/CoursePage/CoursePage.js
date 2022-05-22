@@ -22,8 +22,8 @@ const CoursePage = () => {
   const [searchPlace, setSearchPlace] = useState(''); // 장소 검색어
   const [itineraryArray, setItineraryArray] = useState([
     // 등록된 일정 리스트
-    {itineraryId: 1, itineraryName: '이호태우해수욕장', itineraryStartTime: '2022-05-01t16:00', itineraryEndTime: '2022-05-01t17:30', itineraryColor: '#FCCCD4'},
-    {itineraryId: 2, itineraryName: '애월카페', itineraryStartTime: '2022-05-01t09:30', itineraryEndTime: '2022-05-01t10:50', itineraryColor: '#aadc8e'},
+    {itineraryId: 1, itineraryName: '이호태우해수욕장', itineraryStartTime: '2022-05-01t16:00', itineraryEndTime: '2022-05-01t17:30', itineraryColor: '#FCCCD4', itineraryHidden: false},
+    {itineraryId: 2, itineraryName: '애월카페', itineraryStartTime: '2022-05-01t09:30', itineraryEndTime: '2022-05-01t10:50', itineraryColor: '#aadc8e', itineraryHidden: false},
   ]); 
   const [isMemoOpen, setIsMemoOpen] = useState(false); // 메모 열기 임시 state
 
@@ -388,7 +388,7 @@ const CoursePage = () => {
     let itineraryTitle = null;
 
     for (let minute = 0; minute < MINUTES; minute+=10) {
-      let renderColor = "#FFFFFF";
+      let renderColor = '#FFFFFF';
       let isTitlePosition = false;
 
       let hourToStr = hour.toString();
@@ -444,9 +444,17 @@ const CoursePage = () => {
         }
       });
 
+      // 일정이 있는 상황인지 확인
+      let isRenderColor = false;
+      if (renderColor !== '#FFFFFF' && '#ffffff' && 'white'){
+        if (!thisItinerary.itineraryHidden) {
+          isRenderColor = true;
+        }
+      }
+
       renderResult.push(
         <ItineraryMinuteDiv 
-          style={{backgroundColor: renderColor}} 
+          style={{backgroundColor: (isRenderColor && renderColor)}} 
           onClick={() => onClickItinerary(
                     (renderColor==="#FFFFFF"), 
                     "2022-05-01t"+thisTimeFormat, 

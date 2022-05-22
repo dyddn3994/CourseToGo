@@ -18,7 +18,6 @@ const App = () => {
   return (
     <Routes>
       <Route path="/" element={<LoginPage />} exact={true} />
-      <Route path="/test" element={<ItineraryTest />} />
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/course" element={<CoursePage />} />
 
