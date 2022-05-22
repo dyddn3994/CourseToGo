@@ -1,15 +1,15 @@
-import React from 'react';
-import styled, { css } from 'styled-components';
+// import React from 'react';
+// import styled, { css } from 'styled-components';
 
-// components
-import MapContainer from '../../components/MapContainer';
+// // components
+// import MapContainer from '../../components/MapContainer';
 
-const CoursePage = () => {
-  return (
-    <>
-      <MapContainer></MapContainer>
-    </>
-  )
-};
+// const CoursePage = () => {
+//   return (
+//     <>
+//       <MapContainer></MapContainer>
+//     </>
+//   )
+// };
 
-export default CoursePage;
+// export default CoursePage;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React , {useState}from 'react';
 import { Routes, Route } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 
@@ -6,15 +6,28 @@ import styled, { css } from 'styled-components';
 import ItineraryTest from './pages/ItineraryTest.js';
 import MainPage from './pages/MainPage/MainPage.js';
 import MyPage from './pages/MyPage.js';
-import CoursePage from './pages/CoursePage/CoursePage.js';
+
+import LoginPage from './pages/LoginPage/LoginPage.js';
+import SearchIdPage from './pages/LoginPage/SearchIdPage.js';
+import SearchPwPage from './pages/LoginPage/SearchPwPage.js';
+import SignUpPage from './pages/LoginPage/SignUpPage.js';
+import PhotoPage from './pages/PhotoPage/PhotoPage.js';
+
 
 const App = () => {
   return (
+
     <Routes>
-      <Route path="/" element={<MainPage />} exact={true} />
-      <Route path="/test" element={<ItineraryTest />} />
+      <Route path="/" element={<LoginPage />} exact={true} />
+    
+      <Route path="/main" element={<MainPage />} />
+
       <Route path="/mypage" element={<MyPage />} />
-      <Route path="/course" element={<CoursePage />} />
+
+      <Route path="/searchId" element={<SearchIdPage />} />
+      <Route path="/searchPw" element={<SearchPwPage />} />
+      <Route path="/signUp" element={<SignUpPage />} />
+      <Route path="/photoAlbum" element={<PhotoPage />} />
     </Routes>
   );
 };
