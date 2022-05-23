@@ -1,163 +1,50 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 
-import LogoImg from '../../assets/logo.png';
+import React from "react";
+import styled, { css } from 'styled-components';
 
-const textMap = {
-    login:'로그인',
-    searchId: '아이디찾기',
-    searchPw: '비밀번호찾기'
-}
 
-const Form = ({type,inputs,  onChange, clickedHandler}) => {    
-    const text = textMap[type];
+// 로그인페이지에 있는 로그인, 아이디찾기, 비번찾기, 회원가입 인풋폼
+const InputForm = ({label, name, type, onChange, value}) => {
 
     return (
-        <ClassDiv>
-         {/* 로고 */}
-            <LogoImgDiv> 
-                <LogoImage src= {LogoImg} alt='LogoImg' />
-            </LogoImgDiv> 
-            <LoginDiv>
-            <div>
-                <InputDiv>
-                    {type === 'login' ? (
-                    <div>
-                        <InputForm placeholder="아이디를 입력하세요"
-                            type='text'
-                            id='inputId'  
-                            name='inputId'    
-                            onChange={onChange}
-                            value = {inputs.inputId}
-                        />
-                        <InputForm placeholder="비밀번호를 입력하세요"
-                            type='password' 
-                            id='inputPw' 
-                            name='inputPw'
-                            onChange={onChange} 
-                            value = {inputs.inputPw}
-                        />
-                    </div>
-                    ):(
-            
-           <div>
-                <InputForm placeholder="이름을 입력하세요"
-                    type='text'
-                    id='inputName'  
-                    name='inputName'    
-                    onChange={onChange}
-                     value = {inputs.inputName}
-                />
-                <InputForm placeholder="이메일을 입력하세요"
-                    type='text' 
-                    id='inputEmail' 
-                    name='inputEmail'
-                    onChange={onChange} 
-                    value ={inputs.inputEmail} 
-                />
-               </div>
-         
-          )}  
-           </InputDiv>
-            <LoginButton onClick={e=>clickedHandler(e)}>{text}</LoginButton>
+        <InputFormDiv>
+            <InputLabel>
+                <label>{label}</label>
+            </InputLabel>
+            <FormDiv>
+                  <Form name={name} type={type} onChange={onChange} value={value}  accept={type==='file'?"image/*":''}/>
+            </FormDiv>    
+        </InputFormDiv> 
+    );
+ };
+    
 
-         </div>    
-            <ButtonDiv>
-                {type === 'login' ? (
-                   <SearchDiv>
-                     <div>
-                        <Link to="/searchId">아이디찾기</Link>
-                     </div>
-                     <div>
-                      <Link to="/searchPw">비밀번호찾기</Link>
-                     </div>   
-                    </SearchDiv>  
-
-                ):(
-                    <Link to="/"  >로그인</Link>
-                )
-                }
-                
-                <div>
-                    <Link to ="/signUp" >회원가입</Link>
-                </div>
-               
-            </ButtonDiv>
-
-        </LoginDiv>
-        </ClassDiv>
-  );
-};
-
-const ClassDiv = styled.div`
-    margin-top:10%;
-`;
-const LogoImgDiv = styled.div`
-text-align: center;
-height: 20%;
-`;
-const LogoImage = styled.img`
-width: 80%;
-display: inline-block;
+  const InputFormDiv =  styled.div`
+  width:70%;
+  height:100%;
+  display : flex; 
+  justify-content: space-around;
+  margin-left:10%;
 `;
 
-const SearchDiv =  styled.div`
-display : flex; 
-justify-content: space-around;
-width:70%;
 
-`;
-const LoginDiv =  styled.div`
-text-align: center;
-
-`;
-const InputDiv =  styled.div`
-
-
-
-`;
-const InputForm = styled.input`
-   background-color:#4D9FE3;
+const Form = styled.input`
    border-radius: 0.30rem;
-   font-size: 1rem;
   line-height: 2;
   border: 1px solid lightgray;
-  width:55%;
+  width:100%;
 
-  color:#FFFFFF;
-  margin:0 0 10px;
-
-
+  
 `;
 
-const LoginButton = styled.button`
-    margin-top:4%;
-     background-color:#FFCC29;
-   // background-color:#FF7F50;
-    border-radius: 0.30rem;
-    font-size: 1.2rem;
-   line-height: 1.6;
-   border: 1px solid lightgray;
-   width:30%;
-   color:#FFFFFF;
-   display: inline-block;
-   font-weight:bold;
+const FormDiv=  styled.div`
+width:80%; 
+margin-bottom:3%;
+  margin-left:10%;
+`;
+const InputLabel =  styled.div`
+width:40%;
+font-size:0.9rem;
 `;
 
-const ButtonDiv = styled.div`
-font-size: 0.8rem;
-margin-top:3rem;
-display : flex; 
-justify-content: space-around;
-width:60%;
-margin-left:17%;
-a {
-    color :#000000 ;
-    text-decoration:none;
-}
-`;
-
-
-export default Form;
+export default InputForm;

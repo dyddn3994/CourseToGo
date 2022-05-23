@@ -10,7 +10,7 @@ import MyPage from './pages/MyPage.js';
 import LoginPage from './pages/LoginPage/LoginPage.js';
 import SearchIdPage from './pages/LoginPage/SearchIdPage.js';
 import SearchPwPage from './pages/LoginPage/SearchPwPage.js';
-import SignUpPage from './pages/LoginPage/SignUpPage.js';
+import JoinPage from './pages/LoginPage/JoinPage.js';
 import PhotoPage from './pages/PhotoPage/PhotoPage.js';
 
 
@@ -26,7 +26,7 @@ const App = () => {
 
       <Route path="/searchId" element={<SearchIdPage />} />
       <Route path="/searchPw" element={<SearchPwPage />} />
-      <Route path="/signUp" element={<SignUpPage />} />
+      <Route path="/join" element={<JoinPage />} />
       <Route path="/photoAlbum" element={<PhotoPage />} />
     </Routes>
   );
