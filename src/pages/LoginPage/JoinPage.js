@@ -38,48 +38,41 @@ const Join = () => {
 
   const sinUpClickHandler = () => {
     console.log('list', inputs);
-
-    // 프로필 사진과 얼굴 사진 전송하기 포함해야함
-    // const formData = new FormData();
-    // formData.append('memeberProfile', inputs.memberProfile);
-    // const config = {
-    //   headers: {
-    //     "content-type": "multipart/form-data"
-    //   }
-    // };
-    // axios.post(`uploadAPI`, formData, config);
-
     alert("회원가입되었습니다");
-    navigate('../');  //로그인 페이지로
+    navigate('/');  //로그인 페이지로
   }; 
+
+  const loginClickHandler = () => {
+    navigate('/');
+  };
 
   const duplicateClickedHandler = () =>{
     alert(inputs.userId);
     // alert("사용 가능한 아이디입니다");
     // alert("이미 사용중인 아이디입니다");
   }
+
   const faceProfileCheckedFandeler = () => {
-   
     if(checkedFaceProfile){
       setInputs({
         ...inputs,
         memberFace: ''
       });
     }
-    else{
-      setInputs({
+    else{ // 프로필 사진을 얼굴 사진으로 등록하기 O
+      setInputs({ 
         ...inputs,
         memberFace: inputs.memberProfile
       });
     }
     setCheckedFaceProfile(!checkedFaceProfile);
-
-    console.log('list',inputs);
+    return inputs;
   }
 
     return (
       <MainLayout>  
-       <div>
+       <JoinDiv>
+         <div>
         <LogoHeader /> 
         <InputForm label={"이름"} name={"memberName"} type={"text"} onChange={onChange} value={memberName} />
         <IdCheckDiv>
@@ -115,18 +108,21 @@ const Join = () => {
             <div>
               {!checkedFaceProfile ?  <InputForm accept="image/*" label={"얼굴 등록"} name={"memberFace"} type={"file"} onChange={onChange} value={memberFace} /> 
               :null}
-              <GenderDiv>
+              <ProfileCheckBoxDiv>
                   <input  onClick={faceProfileCheckedFandeler} type="checkbox" />
                   <label> 프로필 사진으로 얼굴 등록하기</label>
-              </GenderDiv>
+              </ProfileCheckBoxDiv>
             </div>
           :null}
      
                  
          <SubmitButtonDiv>
-            <SubmitButton  type="submit"onClick={sinUpClickHandler} >회원가입</SubmitButton>
+            <SubmitButton  buttonType={'login'} onClick={loginClickHandler} >로그인</SubmitButton>
+        
+            <SubmitButton   buttonType={'join'} type="submit" onClick={sinUpClickHandler} >회원가입</SubmitButton>
          </SubmitButtonDiv>
          </div>
+         </JoinDiv>
       </MainLayout>
     );
   };
@@ -145,7 +141,29 @@ const DuplicateButton =styled.button`
     border-radius: 0.30rem;
    line-height: 1.6;
    border: 1px solid lightgray;
-   
+   box-shadow: 0px 0px 2px lightgray;
+   &:hover{  
+    border: 1px solid  lightgray;
+    box-shadow: 0px 0px 3px gray;
+  }
+`;
+
+const JoinDiv =  styled.div`
+width:100%;
+height:100%;
+overflow: scroll;
+&::-webkit-scrollbar {
+  display:none;
+}
+// &::-webkit-scrollbar-thumb {
+//   background-color: #cccccc ;
+//   border-radius:6px;
+//   background-clip: padding-box;
+//   border: 2px solid transparent;
+// }
+// &::-webkit-scrollbar-corner{
+//   background-color:#F5F5F5 ;
+// }
 `;
 
 const RadioDiv =  styled.div`
@@ -164,7 +182,16 @@ const GenderDiv =  styled.div`
   margin-top:1%;
   margin-bottom:3%;
 `;
-
+const ProfileCheckBoxDiv =  styled.div`
+width:80%;
+height:100%;
+display : flex; 
+margin-left:10%;
+font-size:0.9rem;
+margin-top:1%;
+margin-bottom:3%;
+margin-left:25%;
+`;
 const IdCheckDiv=  styled.div`
   display : flex; 
   
@@ -172,20 +199,27 @@ const IdCheckDiv=  styled.div`
 const SubmitButtonDiv =  styled.div`
     text-align: center;
     margin:8%;
-
+    width:80%;
+    height:10%;
+    justify-content: space-around;
 `;
 
 const SubmitButton = styled.button`
-    margin-top:4%;
-     background-color:#FFCC29;
+  margin:5%;
+    background-color: ${(props)=>props.buttonType==='join' ? '#4D9FE3' :'#ffffff' };
     border-radius: 0.30rem;
-    font-size: 1.1rem;
-   line-height: 1.6;
+    font-size: 0.9rem;
+    line-height: 1.6;
    border: 1px solid lightgray;
-   width:40%;
-   color:#FFFFFF;
+   width:30%;
+   color: ${(props)=>props.buttonType==='join' ? '#ffffff' :'#4D9FE3' };
    display: inline-block;
    font-weight:bold;
-   margin-bottom:20%;
+   border: 1.3px solid  #4D9FE3;
+   box-shadow: 0px 0px 2px gray;
+   &:hover{  
+    border: 1px solid  lightgray;
+    box-shadow: 0px 0px 4px gray;
+  }
 `;
 export default Join;

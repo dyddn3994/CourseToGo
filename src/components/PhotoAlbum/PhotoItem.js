@@ -1,50 +1,36 @@
 import React, { useState } from "react";
 import styled, { css } from 'styled-components';
 
-const PhotoItem = ({item, onView}) => {
+const PhotoItem = ({item,checkedPhotos, addElementPhotos}) => {
 
-    const {image, itineray, id} = item;
-
-    const [isCheckedPhoto, setIsCheckedPhoto] = useState(false); //사진 선택여부
-
-    
-    const onChange= () =>{
-        // 사진 선택 해제 시 테두리 색 변경하는거 하다가 말았음
-        // setIsCheckedPhoto(!isCheckedPhoto);
-        // console.log('boolean',isCheckedAllPhoto );
-        // if(isCheckedAllPhoto){
-        //     setIsCheckedPhoto(true);
-        //     console.log('boolean',isCheckedPhoto );
-        // }
-        // else{
-        //     setIsCheckedPhoto(false);
-        // }
-        setIsCheckedPhoto(!isCheckedPhoto);
-    };
-
+    const {image, id} = item;
 
     return (
-        < Photoli border = {isCheckedPhoto ? true : false}>
-            <PhotoInput type='image' key={id} value={image} src={image} onClick={()=>{onView(id); onChange()}} />
+        < Photoli clicked = {checkedPhotos.includes(item) ? true : false}>
+            <PhotoInput type='image' key={id} value={image} src={image}  onClick={()=>addElementPhotos(item)}/>
         </ Photoli>
-    )
-}
-const PhotoInput = styled.input`
-    width: 120px;
-    height: 120px;
-    object-fit: cover;    
-`;
+    );
+};
 
+const PhotoInput = styled.input`
+    width: 90px;
+    height: 90px;
+    object-fit: cover;  
+    margin:2%;  
+`;
 
 const Photoli = styled.li`
-    width: 120px;
-    height: 120px;
-    border: ${(props)=>props.border? '3px #cccccc solid' :'3px #ffffff solid' };
+    width: 95px;
+    height: 95px;
+    background-color: ${(props)=>props.clicked? 'gray' :'#ffffff ' };
     float: left;
- 
     appearance: none;
-    // border: 1.5px solid gainsboro;
-    // border-radius: 0.35rem;
-  
+    
+    box-shadow: 0 0  3px lightgray;
+    &:hover{  
+        background-color : gray;
+      
+    }
 `;
+
 export default PhotoItem;

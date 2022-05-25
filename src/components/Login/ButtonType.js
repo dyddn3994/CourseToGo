@@ -45,16 +45,14 @@ const ButtonType = ({type, clickedHandler}) => {
 
 
 const SearchDiv =  styled.div`
-display : flex; 
-justify-content: space-around;
-width:70%;
-
+    display : flex; 
+    justify-content: space-around;
+    width:70%;
 `;
 
 const ButtonTypeDiv =  styled.div`
-width:100%;
-text-align: center;
-margin-top:10%;
+    width:100%;
+    text-align: center;
 `;
 
 const SubmitButtonDiv =  styled.div`
@@ -62,21 +60,22 @@ const SubmitButtonDiv =  styled.div`
     margin:8%;
 
 `;
-
 const SubmitButton = styled.button`
-    margin-top:4%;
-     background-color:#FFCC29;
-   // background-color:#FF7F50;
+    background-color:  #ffffff;
     border-radius: 0.30rem;
     font-size: 1.1rem;
-   line-height: 1.6;
-   border: 1px solid lightgray;
-   width:40%;
-   color:#FFFFFF;
-   display: inline-block;
-   font-weight:bold;
+    line-height: 1.6;
+    width:40%;
+    color:#4D9FE3;
+    font-weight:bold;
+    border: 1.3px solid  #4D9FE3;
+    box-shadow: 0px 0px 2px gray;
+    &:hover{  
+        background-color: #4D9FE3;
+        color:#ffffff;
+        box-shadow: 0px 0px 4px gray;
+    }
 `;
-
 const ButtonDiv = styled.div`
 font-size: 0.8rem;
 margin-top:3rem;
