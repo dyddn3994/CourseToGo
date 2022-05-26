@@ -3,9 +3,14 @@ import styled, { css } from 'styled-components';
 import { BiCopy } from 'react-icons/bi';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Link } from 'react-router-dom';
+import Modal from 'react-modal';
 
 const GroupListDiv = forwardRef((props, ref) => {
 
+  useEffect(()=>{
+    commuteGetGroupInfo();
+  },[]);
+  
   // useState
   const [groups, setGroups] = useState([
     { groupId: 1, groupName: 'A그룹', groupMemberCount: 4, groupKey: 972184357, groupClicked: false, courses: [
@@ -15,13 +20,16 @@ const GroupListDiv = forwardRef((props, ref) => {
     },
     { groupId: 2, groupName: 'B그룹', groupMemberCount: 3, groupKey: 157195250, groupClicked: false, courses: [
         { courseId: 1, courseName: '1코스', courseStartDate: 20210914, courseEndDate: 20210916, city: '제주' },
-      ] 
+      ]
     }
   ]);
   const [inputCourseName, setInputCourseName] = useState('');
   const [inputCourseStartDate, setInputCourseStartDate] = useState('');
   const [inputCourseEndDate, setInputCourseEndDate] = useState('');
   const [inputCity, setInputCity] = useState('');
+  const [createCourseGroupId, setCreateCourseGroupId] = useState(0); // 코스 추가할때 Modal에서 처리해서 어떤 그룹에서 코스를 추가하는지에 대한 데이터를 저장할 곳이 없음. 해당 값에 id 저장. 더 좋은 방법 있으면 수정
+
+  const [isCourseCreateModalOpen, setIsCourseCreateModalOpen] = useState(false); // 코스 추가 Modal
   
   
   // 부모 컴포넌트에서 자식 함수 실행할 수 있도록 설정
@@ -100,33 +108,46 @@ const GroupListDiv = forwardRef((props, ref) => {
       else {
         alert('test : ' + courseId);
         alert("코스 등록이 완료되었습니다");
-        // 모달 종료, input값 리셋
+        setIsCourseCreateModalOpen(false);
+        resetInputs();
         commuteGetGroupInfo();
       }
     });
   }
 
-  // useEffect
-  useEffect(()=>{
-    commuteGetGroupInfo();
-  },[]);
 
   // onClick
   // 그룹이 클릭되면 코스 리스트 출력하기 위한 함수
-  const onClickGroupLi = groupKey => {
+  const onClickGroupLi = groupId => {
     setGroups(
-      groups.map((group) => group.groupKey === groupKey ? { ...group, groupClicked: !group.groupClicked } : { ...group, groupClicked: false })
+      groups.map((group) => group.groupId === groupId ? { ...group, groupClicked: !group.groupClicked } : { ...group, groupClicked: false })
     );
-    console.log(groups);
   };
+  // 초대 코드 복사 아이콘
   const onClickCopy = (e, groupName) => {
     e.stopPropagation();  // 부모 요소 클릭 방지
     alert(groupName + '의 초대 코드가 복사되었습니다.');
   };
+  // ???
   const onClickCourseLi = (e) => {
     e.stopPropagation();  // 부모 요소 클릭 방지
-    
   };
+  // 코스 추가 버튼 클릭 (Modal 열기)
+  const onClickCreateCourse = (e, groupId) => {
+    e.stopPropagation(); // 부모 요소 클릭 방지
+    setCreateCourseGroupId(groupId);
+    setIsCourseCreateModalOpen(true);
+  }
+  // 모달 내 코스 추가 버튼 클릭
+  const onClickCreateCourseModal = () => {
+    commutePostCreateCourse(createCourseGroupId);
+  }
+
+  // onChange
+  const onChangeInputCourseName = e => setInputCourseName(e.target.value);
+  const onChangeInputCourseStartDate = e => setInputCourseStartDate(e.target.value);
+  const onChangeInputCourseEndDate = e => setInputCourseEndDate(e.target.value);
+  const onChangeInputCity = e => setInputCity(e.target.value);
 
   // groupKey를 화면 렌더링용으로 공백 추가하여 반환
   const groupKeySpacing = groupKey => {
@@ -140,6 +161,15 @@ const GroupListDiv = forwardRef((props, ref) => {
 
     return spacedGroupKey;
   };
+
+  // 등록이나 수정 등이 끝나면 state의 input값 비우기
+  const resetInputs = () => {
+    setInputCourseName('');
+    setInputCourseStartDate('');
+    setInputCourseEndDate('');
+    setInputCity('');
+    setCreateCourseGroupId(0);
+  }
 
   // 코스 출발 날짜와 도착 날짜를 화면 렌더링용으로 반환
   const courseDateRender = (courseStartDate, courseEndDate) => {
@@ -170,7 +200,7 @@ const GroupListDiv = forwardRef((props, ref) => {
   const coursesList = group => (
     group.courses.map((course, courseListIndex) => (
       <CourseUl>
-        <Link to='/course'>
+        <Link to={'/course/'+String(course.courseId)+'/'+String(1)}>
           <CourseLi key={courseListIndex} onClick={(e) => onClickCourseLi(e)}>
             {course.courseName} {courseDateRender(course.courseStartDate, course.courseEndDate)} {course.city}
           </CourseLi>
@@ -179,32 +209,94 @@ const GroupListDiv = forwardRef((props, ref) => {
     ))
   );
 
-  // 그룹 리스트 
-  const renderGroupsList = groups.map((group, groupListIndex) => (
-    <GroupLi key={groupListIndex} onClick={() => onClickGroupLi(group.groupKey)}>
-      <div>
-        <b style={{paddingRight: '30px'}}>{group.groupName}</b>
-        <span>인원 {group.groupMemberCount}명</span>
-        <button style={{float: 'right'}}>코스 추가</button>
-        <button style={{float: 'right'}}>코스 조회</button>
-      </div>
-      <div>
-        <span>초대 코드 : {groupKeySpacing(group.groupKey)} </span>
-        {/* 클립보드 복사 */}
-        <CopyToClipboard text={group.groupKey} >    
-          {/* 복사 아이콘 */}
-          <BiCopy onClick={(e) => onClickCopy(e, group.groupName)} /> 
-        </CopyToClipboard>
-      </div>
-      {/* 그룹이 클릭되어 있으면 코스 리스트 출력 */}
-      {group.groupClicked && coursesList(group)}
-    </GroupLi>
-  ));
+  // // 그룹 리스트 
+  // const renderGroupsList = groups.map((group, groupListIndex) => (
+  //   <GroupLi key={groupListIndex} onClick={() => onClickGroupLi(group.groupId)}>
+  //     <div>
+  //       <b style={{paddingRight: '30px'}}>{group.groupName}</b>
+  //       <span>인원 {group.groupMemberCount}명</span>
+  //       <button style={{float: 'right', margin: '3px'}} onClick={(e) => onClickCreateCourse(e, group.groupId)}>코스 추가</button>
+  //       <button style={{float: 'right', margin: '3px'}}>코스 조회</button>
+  //     </div>
+  //     <div>
+  //       <span>초대 코드 : {groupKeySpacing(group.groupKey)} </span>
+  //       {/* 클립보드 복사 */}
+  //       <CopyToClipboard text={group.groupKey} >    
+  //         {/* 복사 아이콘 */}
+  //         <BiCopy onClick={(e) => onClickCopy(e, group.groupName)} /> 
+  //       </CopyToClipboard>
+  //     </div>
+  //     {/* 그룹이 클릭되어 있으면 코스 리스트 출력 */}
+  //     {group.groupClicked && coursesList(group)}
+  //   </GroupLi>
+  // ));
 
+  // Modal
+  const courseCreateModal = (
+    // 코스 추가 모달
+    <Modal 
+      ariaHideApp={false} // allElement 경고창 제거
+      isOpen={isCourseCreateModalOpen} 
+      onRequestClose={() => setIsCourseCreateModalOpen(false)}
+      style={{
+        overlay: {
+          position: 'fixed'
+        },
+        content: {
+          top: '200px',
+          left: '200px',
+          right: '200px',
+          bottom: '200px',
+
+          border: '1px solid'
+        }
+      }}
+    >
+      <div>추가할 코스의 정보를 입력하세요.</div>
+      <div>
+        <span>코스 명 : </span>
+        <input name="inputCourseName" value={inputCourseName} onChange={onChangeInputCourseName} />
+      </div>
+      <div>
+        <span>코스 시작 날짜 : </span>
+        <input name="inputCourseStartDate" value={inputCourseStartDate} onChange={onChangeInputCourseStartDate} />
+      </div>
+      <div>
+        <span>코스 종료 날짜 : </span>
+        <input name="inputCourseEndDate" value={inputCourseEndDate} onChange={onChangeInputCourseEndDate} />
+      </div>
+      <div>
+        <span>도시 : </span>
+        <input name="inputCity" value={inputCity} onChange={onChangeInputCity} />
+      </div>
+      <button onClick={onClickCreateCourseModal}>그룹 참가</button>
+      <button onClick={() => setIsCourseCreateModalOpen(false)}>취소</button>
+    </Modal>
+  );
 
   return (
     <GroupUl>
-      {renderGroupsList}
+      {groups.map((group, groupListIndex) => (
+        <GroupLi key={groupListIndex} onClick={() => onClickGroupLi(group.groupId)}>
+          <div>
+            <b style={{paddingRight: '30px'}}>{group.groupName}</b>
+            <span>인원 {group.groupMemberCount}명</span>
+            <button style={{float: 'right', margin: '3px'}} onClick={(e) => onClickCreateCourse(e, group.groupId)}>코스 추가</button>
+            <button style={{float: 'right', margin: '3px'}}>코스 조회</button>
+          </div>
+          <div>
+            <span>초대 코드 : {groupKeySpacing(group.groupKey)} </span>
+            {/* 클립보드 복사 */}
+            <CopyToClipboard text={group.groupKey} >    
+              {/* 복사 아이콘 */}
+              <BiCopy onClick={(e) => onClickCopy(e, group.groupName)} /> 
+            </CopyToClipboard>
+          </div>
+          {/* 그룹이 클릭되어 있으면 코스 리스트 출력 */}
+          {group.groupClicked && coursesList(group)}
+        </GroupLi>
+      ))}
+      {courseCreateModal}
     </GroupUl>
   );
 });

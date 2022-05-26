@@ -17,6 +17,7 @@
     "react-modal": "^3.14.4",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.0",
+    "react-tooltip": "^4.2.21",
     "styled-components": "^5.3.5",
     "web-vitals": "^2.1.0"
   },
@@ -45,4 +46,4 @@
     ]
   },
   "proxy": "http://122.199.121.202:9092"
-}
+} 

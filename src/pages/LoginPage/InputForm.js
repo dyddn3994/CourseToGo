@@ -18,31 +18,45 @@ const Form = ({type}) => {
   // onChange
   const onChangeInputId = e => setInputId(e.target.value);
   const onChangeInputPwd = e => setInputPwd(e.target.value);
+  
+  // onKeyPress
+  const onKeyPressLogin = e => {
+    if (e.key === 'Enter') {
+      buttonClickHandler();
+    }
+  }
 
   const navigate = useNavigate();
   const text = textMap[type];
   
   const buttonClickHandler = () => {
-    fetch("/login?userId="+inputId+"&pwd="+inputPwd)
-        .then((res)=>{
-          return res.json();
-        })
-        .then((data)=>{
-          if (data === 1) {
-            alert('로그인 성공!');
-            navigate('/main');
-          }
-          else if (data === 2) {
-            alert('탈퇴한 회원입니다. 다시 가입해주세요.');
-          }
-          else if (data === 3) {
-            alert('로그인에 실패하였습니다. 아이디와 비밀번호를 다시 확인하세요.');
-          }
-        });
+    if (inputId === '') {
+      alert('아이디를 입력하세요.');
+    }
+    else if (inputPwd === '') {
+      alert('비밀번호를 입력하세요.');
+    }
+    else {
+      fetch("/login?userId="+inputId+"&pwd="+inputPwd)
+      .then((res)=>{
+        return res.json();
+      })
+      .then((data)=>{
+        if (data === 1) {
+          alert('로그인 성공!');
+          navigate('/main');
+        }
+        else if (data === 2) {
+          alert('탈퇴한 회원입니다. 다시 가입해주세요.');
+        }
+        else if (data === 3) {
+          alert('로그인에 실패하였습니다. 아이디와 비밀번호를 다시 확인하세요.');
+        }
+      });
+    }
   };
 
   return (
-  
     <LoginDiv>
       <div>
         <InputDiv>
@@ -53,6 +67,7 @@ const Form = ({type}) => {
                 id='inputId'  
                 name='inputId'    
                 onChange={onChangeInputId}
+                onKeyPress={onKeyPressLogin}
                 // value = {form.username}
             />
             <InputForm placeholder="비밀번호를 입력하세요"
@@ -60,6 +75,7 @@ const Form = ({type}) => {
                 id='inputPwd' 
                 name='inputPwd'
                 onChange={onChangeInputPwd} 
+                onKeyPress={onKeyPressLogin}
                 // value ={form.password} 
             />
             </div>
