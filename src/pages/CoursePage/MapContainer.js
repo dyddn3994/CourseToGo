@@ -1,14 +1,26 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react'
 
 const { kakao } = window
 
-const MapContainer = ({ searchPlace, setIsMarkerClicked, setMarkerInfo }) => {
+const MapContainer = forwardRef((props, ref) => {
+
+  const { searchPlace, setIsMarkerClicked, setMarkerInfo } = props;
+  
+  // 부모 컴포넌트에서 자식 함수 실행할 수 있도록 설정
+  useImperativeHandle(ref, () => ({
+    // 그룹 정보 조회
+    setMarkerClose() {
+      infowindow.close();
+    }
+  }));
 
   // 검색결과 배열에 담아줌
   const [places, setPlaces] = useState([])
+  const [infowindow, setInfowindow] = useState();
   
   useEffect(() => {
-    var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 })
+    setInfowindow(new kakao.maps.InfoWindow({ zIndex: 1 }))
+    // var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 })
     var markers = []
     const container = document.getElementById('myMap')
     const options = {
@@ -131,6 +143,6 @@ const MapContainer = ({ searchPlace, setIsMarkerClicked, setMarkerInfo }) => {
       </div>
     </div>
   )
-}
+});
 
 export default MapContainer

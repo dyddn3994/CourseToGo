@@ -17,4 +17,8 @@ const LoginPage = () => {
 // styled components
 // div
 
+const LoginDiv =  styled.div`
+  text-align: center;
+  margin-top:5%;
+`;
 export default LoginPage;

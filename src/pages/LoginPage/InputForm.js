@@ -120,7 +120,7 @@ const Form = ({type}) => {
             }
             
             <div>
-                <Link to ="/signUp" >회원가입</Link>
+                <Link to ="/join" >회원가입</Link>
             </div>
             
         </ButtonDiv>

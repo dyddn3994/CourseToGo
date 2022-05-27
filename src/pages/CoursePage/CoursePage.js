@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router';
 import Modal from 'react-modal';
 import ReactTooltip from 'react-tooltip';
+import SockJS from 'sockjs-client';
+import StompJs from 'stompjs';
 
 // icons
 import { IoMdSettings } from 'react-icons/io';
@@ -14,6 +16,8 @@ import { CgChevronLeftR, CgChevronRightR } from 'react-icons/cg';
 import MapContainer from './MapContainer';
 import Memo from './Memo.js'
 import OverlapItineraryModal from './OverlapItineraryModal';
+import OverlapItineraryTooltip from './OverlapItineraryTooltip';
+import ItineraryTimeTooltip from './ItineraryTimeTooltip';
 
 // 사용자별 색 인덱스에 따라 색 지정
 const colorList = [
@@ -29,12 +33,22 @@ const CoursePage = () => {
 
   // useEffect
   useEffect(() => {
+    // commuteStomp();
+    return () => {
+      // disconnectStomp();
+    }
+  }, []);
+  useEffect(() => {
     commuteGetItineraryDate(params.courseId, params.day);
     commuteGetItineraryInfo(params.day);
   }, [params]);
 
+  // useRef
+  const mapContainerRef = useRef();
+
   // useState
   const [thisPageDate, setThisPageDate] = useState(''); // 현재 일정 날짜
+  const [endPageDate, setEndPageDate] = useState(''); // 마지막 일정 날짜
   const [searchPlace, setSearchPlace] = useState(''); // 장소 검색어
   const [itineraryArray, setItineraryArray] = useState([
     // 등록된 일정 리스트
@@ -54,6 +68,9 @@ const CoursePage = () => {
       touristSpotName: "중복2", touristSpotAddress: "거제시 여러분", touristSpotAvgCost: 0, touristSpotAvgTime: 0
     }},
   ]); 
+  const [overlapItineraryArrayState, setOverlapItineraryArrayState] = useState([]);
+  const [representativeItineraryState, setRepresentativeItineraryState] = useState({});
+  const [thisItineraryTime, setThisItineraryTime] = useState(''); // 마커 클릭 후 일정에 mouseover시 표현할 툴팁 내 시간
   const [isMemoOpen, setIsMemoOpen] = useState(false); // 메모 열기 임시 state
 
   const [isAddItineraryModal, setIsAddItineraryModal] = useState(false); // 일정 추가 모달
@@ -72,13 +89,13 @@ const CoursePage = () => {
   const [isMarkerClicked, setIsMarkerClicked] = useState(false); // 지도의 마커가 클릭되었을 때 true
   const [markerInfo, setMarkerInfo] = useState({}); // 클릭된 마커 정보
 
-  const [isOverlapMouseOver, setIsOverlapMouseOver] = useState(false);
+  // const [isOverlapMouseOver, setIsOverlapMouseOver] = useState(false);
 
   // onChange
   let searchInputTemp = ''; // 검색 input값 임시 저장
   const onChangeSearch = e => searchInputTemp = e.target.value;
   const onChangeInputItineraryName = e => setInputItineraryName(e.target.value);
-  const onChangeInputItineraryAddress = e => {setInputItineraryAddress(e.target.value); console.log(e.target.value)}
+  const onChangeInputItineraryAddress = e => setInputItineraryAddress(e.target.value);
   const onChangeInputItineraryStartTime = e => setInputItineraryStartTime(e.target.value);
   const onChangeInputItineraryEndTime = e => setInputItineraryEndTime(e.target.value);
   const onChangeInputItineraryHidden = e => setInputItineraryHidden(e.target.value);
@@ -141,15 +158,17 @@ const CoursePage = () => {
     e.stopPropagation();  // 부모 요소 클릭 방지
     // e.preventDefault();  // 부모 요소 클릭 방지
     setIsOverlapItineraryModal(true);
-
   }
   const onClickSetRepresentative = (representativeItineraryId, overlapItineraryId) => {
     // 중복 일정에서 대표 일정 설정
     // representativeItineraryId: 현재 설정되어 있는 대표 일정 id
     // overlapItineraryId: 대표 일정으로 바꿀 일정 id
-    const newItineraryArray1 = itineraryArray.map(itinerary => (itinerary.itineraryId === representativeItineraryId ? { ...itinerary, itineraryHidden: true } : itinerary)); // 기존 대표 일정 숨김
-    const newItineraryArray2 = newItineraryArray1.map(itinerary => (itinerary.itineraryId === overlapItineraryId ? { ...itinerary, itineraryHidden: false } : itinerary)); // 새로운 대표 일정 설정
-    setItineraryArray(newItineraryArray2);
+
+    // const newItineraryArray1 = itineraryArray.map(itinerary => (itinerary.itineraryId === representativeItineraryId ? { ...itinerary, itineraryHidden: true } : itinerary)); // 기존 대표 일정 숨김
+    // const newItineraryArray2 = newItineraryArray1.map(itinerary => (itinerary.itineraryId === overlapItineraryId ? { ...itinerary, itineraryHidden: false } : itinerary)); // 새로운 대표 일정 설정
+    // setItineraryArray(newItineraryArray2);
+
+    commutePutSelectOverlapItinerary(representativeItineraryId, overlapItineraryId);
   }
 
   const addItineraryByMarker = (startTime, endTime, isHidden) => {
@@ -159,6 +178,7 @@ const CoursePage = () => {
       const markerPlaceAddress = markerInfo.address_name;
 
       setIsMarkerClicked(false);
+      mapContainerRef.current.setMarkerClose();
       alert(markerPlaceName + '일정이 ' + startTime + '부터 ' + endTime + '까지로 등록되었습니다.');
 
       commutePostCreateItinerary(markerPlaceName, markerPlaceAddress, startTime, endTime, isHidden);
@@ -166,7 +186,7 @@ const CoursePage = () => {
     }
   }
   const updateItinerary = (itinerary) => {
-    // 일정 수정
+    // 일정 수정 Modal을 위한 세팅
     setInputItineraryId(itinerary.itineraryId);
     setInputItineraryName(itinerary.touristSpot.touristSpotName);
     setInputItineraryAddress(itinerary.touristSpot.touristSpotAddress);
@@ -180,11 +200,18 @@ const CoursePage = () => {
   }
 
   // onMouseOver
-  const onMouseOverItinerary = (e, isHidden) => {
+  const onMouseOverItinerary = (e, thisTimeFormat) => {
     // 마커 클릭 후 일정표에서 마우스가 올라가 있을 경우 색상 변경
     if (isMarkerClicked) {
-      e.currentTarget.style.background = '#de3252';
+      e.currentTarget.style.background = '#7fd1f7';
+      setThisItineraryTime(thisTimeFormat);
     }
+  }
+  const onMouseOverOverlapItinerary = (representativeItinerary, overlapItineraryStartTime) => {
+    // 중복 일정 숫자에 마우스 올리면 
+    const overlapItineraryArray = itineraryArray.filter(itinerary => (((itinerary.itineraryStartTime === overlapItineraryStartTime) && (itinerary.itineraryHidden)) && itinerary))
+    setOverlapItineraryArrayState(overlapItineraryArray);
+    setRepresentativeItineraryState(representativeItinerary);
   }
 
   // onMouseOut
@@ -199,33 +226,43 @@ const CoursePage = () => {
   const onKeyPressSearch = e => {
     if (e.key === 'Enter') {
       onClickSearch();
+      sendStomp();
     }
   }
 
-  // 일정 날짜 설정 -> 일정 받아오는 부분 만들어서 필요없을듯
-  // const thisItineraryDate = (itinerayData) => {
-  //   const dayToNumber = Number(params.day);
-
-  //   const course = itinerayData[0].course; // 날짜 지정을 위한 코스 
-  //   const courseStartYear = Number(course.courseStartDate.substring(0, 4));
-  //   const courseStartMonth = Number(course.courseStartDate.substring(5, 7));
-  //   const courseStartDay = Number(course.courseStartDate.substring(8, 10));
-
-  //   let thisDate = new Date(courseStartYear, courseStartMonth-1, courseStartDay);
-  //   thisDate.setDate(thisDate.getDate() + dayToNumber);
-  //   setThisPageDate(thisDate.toISOString().substring(0, 10));
-  // }
-
 
   // 통신
+  // stomp
+  let socketJs = new SockJS("/socket");
+  let stompcli = StompJs.over(socketJs);
+  // let stompcli = null;
+  const commuteStomp = () => {
+    // let socketJs = new SockJS("/socket");
+    // stompcli = StompJs.over(socketJs);
+    stompcli.connect({},() => {
+      stompcli.subscribe('/topic/'+String(params.courseId), (data) => {// -> 받을때
+        alert('data: ' + data);
+      });
+    });
+  };
+  const sendStomp = () => {
+    stompcli.send('/app/message', {}, params.courseId);
+  }
+  const disconnectStomp = () => {
+    // 연결 해제
+    if (stompcli !== null) {
+      stompcli.disconnect();
+    }
+  }
   // 일정 날짜 조회
   const commuteGetItineraryDate = (courseId, day) => {
     fetch("/course/date?courseId="+courseId+"&day="+day)
     .then(res => {
-      return res.text();
+      return res.json();
     })
-    .then((itineraryDate) => {
-      setThisPageDate(itineraryDate);
+    .then((itineraryDateInfo) => {
+      setThisPageDate(itineraryDateInfo.selectDate);
+      setEndPageDate(itineraryDateInfo.endDate);
     })
   }
   // 일정 정보 조회
@@ -332,7 +369,7 @@ const CoursePage = () => {
   // 일정 삭제
   const commuteDeleteItinerary = (inputItineraryId) => {
     // RequestParam 수정
-    fetch("/course/itinerary/delete?itineraryId="+inputItineraryId, {
+    fetch("/course/itinerary/delete?itineraryId="+inputItineraryId+'&courseId='+params.courseId, {
       method: 'delete',
       headers: {
         "Content-Type": "application/json",
@@ -362,10 +399,42 @@ const CoursePage = () => {
       }
     });
   }
+  // 중복일정 선택
+  const commutePutSelectOverlapItinerary = (preId, selectedId) => {
+    fetch("/course/itinerary/duplicate", {
+      method: 'put',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body : JSON.stringify({
+        // 입력값 설정할것
+        preId: preId,
+        selectedId: selectedId
+      })
+    })
+    .then((res)=>{
+      return res.json();
+    })
+    .then((ack)=>{
+      // 중복일정 선택 성공 시  true
+      if (ack) {
+        alert('대표일정이 변경되었습니다.');
+        commuteGetItineraryInfo(params.day);
+      }
+      else {
+        alert('대표일정 변경에 실패하였습니다.');
+      }
+    });
+  }
 
   const linkDate = (date) => {
     // 날짜 이동. 오른쪽 화살표는 date:1, 왼쪽 화살표는 date:-1
-    return '/course/'+params.courseId+'/'+(Number(params.day)+date)
+    // if () {
+    //   // 날짜 이동이 코스 일차 바깥으로 넘어가지 못하도록 제어
+    // }
+    // else {
+      return '/course/'+params.courseId+'/'+(Number(params.day)+date)
+    // }
   }
 
   const formatTime = (hour, minute) => {
@@ -384,22 +453,28 @@ const CoursePage = () => {
     return formatTime;
   }
 
-  const renderOverlapTooltip = (overlapItineraryArray) => {
-    return (
-      <ReactTooltip
-      id='tooltip'
-      place='right'
-      effect='solid'
-      type='dark'
-      // getContent={dataTip => 'sss' + dataTip}
-    >
-      <div>동일 시간대 중복 일정</div>
-      {overlapItineraryArray.map((overlapItinerary, overlapItineraryIndex) => (
-        <div>{overlapItineraryIndex+1}. {overlapItinerary.touristSpot.touristSpotName}</div>
-      ))}
-    </ReactTooltip>
-    )
-  }
+  // const overlapItinerarySetting = (overlapItineraryArray) => {
+  //   // 중복 일정 state에 설정
+  //   const newOverlapItineraryArray = overlapItineraryArrayState.concat(overlapItineraryArray);
+  //   setOverlapItineraryArrayState(newOverlapItineraryArray);
+  // }
+
+  // const renderOverlapTooltip = (overlapItineraryArray) => {
+  //   return (
+  //     <ReactTooltip
+  //     id='tooltip'
+  //     place='right'
+  //     effect='solid'
+  //     type='dark'
+  //     // getContent={dataTip => 'sss' + dataTip}
+  //   >
+  //     <div>동일 시간대 중복 일정</div>
+  //     {overlapItineraryArray.map((overlapItinerary, overlapItineraryIndex) => (
+  //       <div>{overlapItineraryIndex+1}. {overlapItinerary.touristSpot.touristSpotName}</div>
+  //     ))}
+  //   </ReactTooltip>
+  //   )
+  // }
 
   // 일정 시간표
   const renderItineraryList = () => {
@@ -480,24 +555,26 @@ const CoursePage = () => {
             overlapCnt++;
             const newOverlapItineraryArray = overlapItineraryArray.concat(itinerary);
             overlapItineraryArray = newOverlapItineraryArray;
-            // console.log(overlapItineraryArray);
           }
           else {
             renderColor = colorList[itinerary.itineraryColor];
             thisItinerary = itinerary;
             representativeStartTimeFormat = formatTime(thisItinerary.itineraryStartTime.substring(11, 13), thisItinerary.itineraryStartTime.substring(14, 16));
             representativeEndTimeFormat = formatTime(thisItinerary.itineraryEndTime.substring(11, 13), thisItinerary.itineraryEndTime.substring(14, 16));
-            // console.log(thisItinerary)
-            // console.log('thisItinerary')
           }
         }
         // 일정 시간의 가장 상단일 경우 일정명 출력
         if (thisTime === startTime && thisItinerary !== null) {
           isTitlePosition = true;
-          // itineraryTitle = itinerary.itineraryName;
           itineraryTitle = thisItinerary.touristSpot.touristSpotName; 
+
+          // 중복 일정 등록 끝나고 나면 state에 값 설정
+          if (overlapItineraryArray !== []) {
+            // overlapItinerarySetting(overlapItineraryArray);
+          }
         }
       });
+      
 
       // 일정이 있는 상황인지 확인
       let isRenderColor = false;
@@ -515,14 +592,15 @@ const CoursePage = () => {
           onClick={(e) => onClickItinerary(
                     e,
                     (renderColor === "#FFFFFF" && '#ffffff' && 'white'), 
-                    "2022-05-01t"+thisTimeFormat, 
-                    "2022-05-01t"+thisTimeAnHourFormat,
-                    "2022-05-01t"+representativeStartTimeFormat,
-                    "2022-05-01t"+representativeEndTimeFormat,
+                    thisPageDate+"T"+thisTimeFormat, 
+                    thisPageDate+"T"+thisTimeAnHourFormat,
+                    thisPageDate+"T"+representativeStartTimeFormat,
+                    thisPageDate+"T"+representativeEndTimeFormat,
                     thisItinerary
                   )} 
-          onMouseOver={(e) => onMouseOverItinerary(e, isHidden)}
+          onMouseOver={(e) => onMouseOverItinerary(e, thisTimeFormat)}
           onMouseOut={(e) => onMouseOutItinerary(e, renderColor)}
+          data-tip data-for='itineraryTimeTooltip'
         >
           {isTitlePosition && itineraryTitle}
           {(isHidden && isTitlePosition) && 
@@ -534,75 +612,13 @@ const CoursePage = () => {
                 color:'#FF0000'
               }}
               onClick={(e) => onClickOverlap(e)} 
-              onMouseOver={() => setIsOverlapMouseOver(true)}
-              onMouseOut={() => setIsOverlapMouseOver(false)}
+              onMouseOver={() => onMouseOverOverlapItinerary(thisItinerary, thisPageDate+'T'+thisTimeFormat+':00')}
+              // onMouseOver={() => setIsOverlapMouseOver(true)}
+              // onMouseOut={() => setIsOverlapMouseOver(false)}
               data-tip data-for='tooltip'
             >
               {overlapCnt}
             </span>
-
-            {/* 중복 일정 툴팁 */}
-            {/* <ReactTooltip
-              id='tooltip'
-              place='right'
-              effect='solid'
-              type='dark'
-              // getContent={dataTip => 'sss' + dataTip}
-            >
-              <div>동일 시간대 중복 일정</div>
-              {overlapItineraryArray.map((overlapItinerary, overlapItineraryIndex) => (
-                <div>{overlapItineraryIndex+1}. {overlapItinerary.touristSpot.touristSpotName}</div>
-              ))}
-            </ReactTooltip> */}
-            {(isOverlapMouseOver && renderOverlapTooltip(overlapItineraryArray))}
-
-            {/* 중복 일정 모달 */}
-            {/* <Modal 
-              isOpen={isOverlapItineraryModal} 
-              onRequestClose={() => setIsOverlapItineraryModal(false)}
-              style={{
-                overlay: {
-                  position: 'fixed',
-                  zIndex: '2'
-                },
-                content: {
-                  top: '200px',
-                  left: '200px',
-                  right: '200px',
-                  bottom: '200px',
-                  
-                  border: '1px solid',
-                }
-              }}
-            >
-              <>
-                <div>중복 일정 리스트</div>
-                <div style={{display: 'flex'}}>
-                  <span style={{border: '1px solid black', borderRadius:'5px', margin: '10px', padding: '5px'}}>
-                    <div>&lt;대표 일정&gt;</div>
-                    <div style={{textAlign: 'center', margin: '10px'}}>{thisItinerary.touristSpot.touristSpotName}</div>
-                  </span>
-                  <span style={{border: '1px solid black', margin: '10px', borderRadius:'5px', padding: '5px'}}>
-                    <div style={{textAlign: 'center'}}>&lt;중복 일정&gt;</div>
-                    <div style={{display: 'flex'}}>
-                      {overlapItineraryArray.map((overlapItinerary, overlapItineraryIndex) => (
-                        <span style={{margin: '10px'}}>
-                          <div style={{textAlign: 'center'}}>{overlapItinerary.touristSpot.touristSpotName}</div>
-                          <button onClick={() => onClickSetRepresentative(thisItinerary.itineraryId, overlapItinerary.itineraryId)}>대표 일정으로 설정</button>
-                        </span>
-                      ))}
-                    </div>
-                  </span>
-                </div>
-              </>
-            </Modal> */}
-            <OverlapItineraryModal 
-              isOverlapItineraryModal={isOverlapItineraryModal} 
-              setIsOverlapItineraryModal={setIsOverlapItineraryModal}
-              thisItinerary={thisItinerary}
-              overlapItineraryArray={overlapItineraryArray}
-              onClickSetRepresentative={onClickSetRepresentative}
-            />
           </>
           }
         </div>
@@ -736,15 +752,25 @@ const CoursePage = () => {
             <span style={{float: 'right', paddingRight: '10px', fontSize: '25px'}}> <BsFillPlusSquareFill onClick={() => onClickItineraryAddIcon()} /> </span>
           </SearchDiv>
           <MapDiv>
-            <MapContainer searchPlace={searchPlace} setIsMarkerClicked={setIsMarkerClicked} setMarkerInfo={setMarkerInfo}></MapContainer>
+            <MapContainer searchPlace={searchPlace} setIsMarkerClicked={setIsMarkerClicked} setMarkerInfo={setMarkerInfo} ref={mapContainerRef} ></MapContainer>
           </MapDiv>
         </LeftScreenDiv>
 
         <div>
           <div style={{display: "flex", justifyContent: "space-evenly"}}>
-            <span> <Link to={linkDate(-1)}> <CgChevronLeftR /> </Link> </span>
+            <span> 
+              {
+                // 1일차일 경우 일차 감소 클릭 방지
+                (params.day !== '1' ? (<Link to={linkDate(-1)}> <CgChevronLeftR /> </Link>) : (<CgChevronLeftR />))
+              }
+            </span>
             <span>{thisPageDate} ({params.day}일차)</span>
-            <span> <Link to={linkDate(1)}> <CgChevronRightR /> </Link> </span>
+            <span> 
+              {
+                // 가장 마지막 일차일 경우 일차 증가 클릭 방지
+                (thisPageDate !== endPageDate ? (<Link to={linkDate(1)}> <CgChevronRightR /> </Link>) : <CgChevronRightR />)
+              }
+            </span>
           </div>
           <ItineraryScreenDiv style={isMarkerClicked ? {opacity: '0.5'} : {opacity: '1'}}>
             {renderItineraryList()}
@@ -760,7 +786,7 @@ const CoursePage = () => {
           <div>
             {/* <RightScreenButton>히스토리</RightScreenButton>  */}
             <RightScreenButton onClick={() => setIsMemoOpen(!isMemoOpen)}>메모</RightScreenButton>
-            <Link to='/coursePhoto'>
+            <Link to={'/photoAlbum/'+String(params.courseId)+'/'+String(params.day)}>
               <RightScreenButton>사진</RightScreenButton> 
             </Link>
           </div>
@@ -777,6 +803,35 @@ const CoursePage = () => {
 
       {/* 일정 수정 Modal */}
       {updateItineraryModal}
+
+      {/* 중복 일정 툴팁, 마커 클릭 된 상태에서 띄우지 않음*/}
+      {
+        (!isMarkerClicked && 
+          <OverlapItineraryTooltip
+            overlapItineraryArray={overlapItineraryArrayState}
+          />
+        )
+      }
+
+      {/* 중복 일정 Modal */}
+      <OverlapItineraryModal 
+        isOverlapItineraryModal={isOverlapItineraryModal} 
+        setIsOverlapItineraryModal={setIsOverlapItineraryModal}
+        thisItinerary={representativeItineraryState}
+        overlapItineraryArray={overlapItineraryArrayState}
+        onClickSetRepresentative={onClickSetRepresentative}
+      />
+
+      {/* 마커 클릭 후 일정 mouseover 툴팁 */}
+      {
+        (isMarkerClicked &&
+          <ItineraryTimeTooltip
+            thisItineraryTime={thisItineraryTime}
+          />
+        )
+      }
+      
+
     </MainScreenDiv>
   )
 };

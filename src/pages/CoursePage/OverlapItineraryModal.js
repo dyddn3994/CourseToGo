@@ -37,7 +37,7 @@ const OverlapItineraryModal = props => {
         <div style={{display: 'flex'}}>
           <span style={{border: '1px solid black', borderRadius:'5px', margin: '10px', padding: '5px'}}>
             <div>&lt;대표 일정&gt;</div>
-            <div style={{textAlign: 'center', margin: '10px'}}>{thisItinerary.touristSpot.touristSpotName}</div>
+            <div style={{textAlign: 'center', margin: '10px'}}>{(Object.keys(thisItinerary).length !== 0 && thisItinerary.touristSpot.touristSpotName)}</div>
           </span>
           <span style={{border: '1px solid black', margin: '10px', borderRadius:'5px', padding: '5px'}}>
             <div style={{textAlign: 'center'}}>&lt;중복 일정&gt;</div>

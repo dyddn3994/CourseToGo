@@ -7,7 +7,7 @@ import Modal from 'react-modal';
 
 const GroupListDiv = forwardRef((props, ref) => {
 
-  useEffect(()=>{
+  useEffect(() => {
     commuteGetGroupInfo();
   },[]);
   
