@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 
 // components
 import MainPage from './pages/MainPage/MainPage.js';
-import MyPage from './pages/MyPage.js';
+import MyPage from './pages/MyPage/MyPage.js';
 
 import LoginPage from './pages/LoginPage/LoginPage.js';
 import SearchIdPage from './pages/LoginPage/SearchIdPage.js';

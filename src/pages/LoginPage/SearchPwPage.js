@@ -7,9 +7,7 @@ import InputForm from "../../components/Login/InputForm";
 import ButtonType from "../../components/Login/ButtonType";
 
     const SearchPwPage = () => {
-      const [icCheckedId, setIsCheckedId] = useState('false');  //아이디 확인
-      const [isCheckedPwd, setIsCheckedPwd] = useState('false');  //비밀번호 확인
-      // 입력되는 아이디와 비밀번호
+       
       const [inputs, setInputs] = useState({
         userId: '',
         email: ''
@@ -25,17 +23,45 @@ import ButtonType from "../../components/Login/ButtonType";
         });
       };
      
-      const clickedHandler =(e) =>{
-        alert("비밀번호입니다");
-      };
+
+  const onKeyPressLogin = e => {
+    if (e.key === 'Enter') {
+      buttonClickHandler();
+    }
+  }
+
+  const buttonClickHandler = () => {
+    if (inputs.userId === '') {
+      alert('아이드를 입력하세요.');
+    }
+    else if (inputs.email === '') {
+      alert('이메일를 입력하세요.');
+    }
+    else {
+      // fetch("/login?userId="+inputs.inputId+"&pwd="+inputs.inputPwd)
+      // .then((res)=>{
+      //   return res.json();
+      // })
+      // .then((data)=>{
+      //   if (data === 1) {
+      //     alert('< 비밀번호 > 입니다');
+      //     navigate('/main');
+      //   }
+      //   else if (data === 3) {
+      //      alert('등록되지 않은 회원 정보입니다');
+      //   }
+      // });
+    }
+  };
+
 
       return(
           <MainLayout>
             <LoginDiv>
               <LogoHeader />
-              <InputForm label={"아이디"} name={"userId"} type={"text"} onChange={onChange} value = {userId}/>
-              <InputForm label={"이메일"} name={"email"} type={"text"} onChange={onChange} value = {email}/>
-              <ButtonType type='searchPw' clickedHandler={clickedHandler}/>
+              <InputForm label={"아이디"} name={"userId"} type={"text"} onChange={onChange} value = {userId}  onKeyPressLogin={onKeyPressLogin}/>
+              <InputForm label={"이메일"} name={"email"} type={"text"} onChange={onChange} value = {email}  onKeyPressLogin={onKeyPressLogin}/>
+              <ButtonType type='searchPw' clickedHandler={buttonClickHandler}/>
             </LoginDiv>
         </MainLayout> 
 

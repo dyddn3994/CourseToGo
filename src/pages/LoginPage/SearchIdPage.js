@@ -8,9 +8,6 @@ import ButtonType from "../../components/Login/ButtonType";
 
 
     const SearchIdPage = () => {
-      const [icCheckedId, setIsCheckedId] = useState('false');  //아이디 확인
-      const [isCheckedPwd, setIsCheckedPwd] = useState('false');  //비밀번호 확인
-      // 입력되는 아이디와 비밀번호
       const [inputs, setInputs] = useState({
         name: '',
         email: ''
@@ -26,17 +23,47 @@ import ButtonType from "../../components/Login/ButtonType";
         });
       };
      
-      const clickedHandler =(e) =>{
-        alert("아이디입니다");
-      };
+
+  const onKeyPressLogin = e => {
+    if (e.key === 'Enter') {
+      buttonClickHandler();
+    }
+  }
+
+  const buttonClickHandler = () => {
+    if (inputs.name === '') {
+      alert('이름를 입력하세요.');
+    }
+    else if (inputs.email === '') {
+      alert('이메일를 입력하세요.');
+    }
+    else {
+      // fetch("/login?userId="+inputs.inputId+"&pwd="+inputs.inputPwd)
+      // .then((res)=>{
+      //   return res.json();
+      // })
+      // .then((data)=>{
+      //   if (data === 1) {
+      //     alert('< 아이디 > 입니다');
+      //     navigate('/main');
+      //   }
+      //   else if (data === 2) {
+      //     alert('탈퇴한 회원입니다. 다시 가입해주세요.');
+      //   }
+      //   else if (data === 3) {
+      //     alert('등록되지 않은 회원 정보입니다');
+      //   }
+      // });
+    }
+  };
 
       return(
           <MainLayout>
             <LoginDiv>
               <LogoHeader />
-              <InputForm label={"이름"} name={"name"} type={"text"} onChange={onChange} value = {name}/>
-              <InputForm label={"이메일"} name={"email"} type={"text"} onChange={onChange} value = {email}/>
-              <ButtonType type='searchId' clickedHandler={clickedHandler}/>
+              <InputForm label={"이름"} name={"name"} type={"text"} onChange={onChange} value = {name} onKeyPressLogin={onKeyPressLogin}/>
+              <InputForm label={"이메일"} name={"email"} type={"text"} onChange={onChange} value = {email} onKeyPressLogin={onKeyPressLogin}/>
+              <ButtonType type='searchId' clickedHandler={buttonClickHandler}/>
             </LoginDiv>
         </MainLayout> 
 

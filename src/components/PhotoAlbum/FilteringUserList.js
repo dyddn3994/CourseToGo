@@ -21,6 +21,18 @@ const FilteringUserList = ({users,checkedHandler}) => {
 const UserDiv =  styled.div`
   display: flex;
   overflow: scroll;
-  
+  &::-webkit-scrollbar {
+    width:0px;
+    height:8px;
+    border-radius:3%;
+   
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: #cccccc ;
+    border-radius:6px;
+    background-clip: padding-box;
+    border: 1px solid transparent;
+  }
+
 `;
 export default FilteringUserList;

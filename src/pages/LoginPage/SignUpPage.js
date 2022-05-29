@@ -1,9 +1,10 @@
-
 import React, { useState, Component } from "react";
 import styled, { css } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
-import MainLayout from "../MainLayout";
+import MainLayout from "../../components/Login/MainLayout";
+
+// import MainLayout from "../MainLayout";
 const SignUp = () => {
   const navigate = useNavigate();
   
