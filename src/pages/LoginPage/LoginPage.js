@@ -27,6 +27,7 @@ const LoginPage = () => {
 
   const onKeyPressLogin = e => {
     if (e.key === 'Enter') {
+      
       buttonClickHandler();
     }
   }
