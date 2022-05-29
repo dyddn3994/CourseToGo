@@ -42,8 +42,16 @@ const Join = () => {
       ...inputs,
       [name]: value // name 키를 가진 값을 value 로
     });
-
   };
+  // 파일 input의 경우 e.targetvalue가 아닌 e.targetfiles로 처리
+  const onChangeFile = (e) => {
+    const { files, name } = e.target;
+
+    setInputs({
+      ...inputs,
+      [name]: files
+    });
+  }
 
   const sinUpClickHandler = () => {
     if (!isCheckedIdDuplicate) {
@@ -98,68 +106,91 @@ const Join = () => {
     console.log('list',inputs);
   }
 
-  // 텍스트 정보 회원가입
+  // // 텍스트 정보 회원가입
+  // const commutePostJoin = () => {
+  //   fetch("/join/info", {
+  //     method: 'post',
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body : JSON.stringify({
+  //       userId: inputs.userId,
+  //       pwd: inputs.pwd,
+  //       phoneNumber: inputs.phoneNumber,
+  //       email: inputs.email,
+  //       age: inputs.age,
+  //       memberName: inputs.name,
+  //       gender: inputs.gender,
+  //       profileImage: inputs.memberProfile,
+  //       faceImage: inputs.memberFace
+  //     })
+  //   })
+  //   .then((res)=>{
+  //     return res.json();
+  //   })
+  //   .then((memberId)=>{
+  //     // 회원가입 성공 시 멤버 id값 반환, 실패시 -1
+  //     if (memberId === -1) {
+  //       alert('회원가입에 실패하였습니다');
+  //     }
+  //     else {
+  //       commutePostJoinImage();
+  //     }
+  //   });
+  // }
+  // // 사진 이미지 정보 회원가입
+  // const commutePostJoinImage = () => {
+  //   const profileImage = new FormData();
+  //   profileImage.append('profileImage', file1[0]);
+  //   profileImage.append('profileImage', file2[0]);
+  //   const config = {
+  //     headers: {
+  //       "content-type": "multipart/form-data"
+  //     }
+  //   };
+  //   axios.post(`join/image`, profileImage, config)
+  //   .then(res => console.log(res.data));
+    
+  //   alert('회원가입에 성공하였습니다.');
+  //   // navigate('../');  //로그인 페이지로
+  // }
+  // 회원가입 
   const commutePostJoin = () => {
-    fetch("/join/info", {
-      method: 'post',
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body : JSON.stringify({
-        userId: inputs.userId,
-        pwd: inputs.pwd,
-        phoneNumber: inputs.phoneNumber,
-        email: inputs.email,
-        age: inputs.age,
-        memberName: inputs.name,
-        gender: inputs.gender,
-        profileImage: inputs.memberProfile,
-        faceImage: inputs.memberFace
-      })
-    })
-    .then((res)=>{
-      return res.json();
-    })
-    .then((memberId)=>{
-      // 회원가입 성공 시 멤버 id값 반환, 실패시 -1
-      if (memberId === -1) {
-        alert('회원가입에 실패하였습니다');
-      }
-      else {
-        commutePostJoinImage();
-      }
-    });
-  }
-  // 사진 이미지 정보 회원가입
-  const commutePostJoinImage = () => {
     const profileImage = new FormData();
-    profileImage.append('profileImage', file1[0]);
-    profileImage.append('profileImage', file2[0]);
+    profileImage.append('profileImage', memberProfile[0]);
+    profileImage.append('profileImage', memberFace[0]);
+    profileImage.append('userId', new Blob([JSON.stringify(inputs.userId)], { type: 'application/json'}));
+    profileImage.append('pwd', new Blob([JSON.stringify(inputs.pwd)], { type: 'application/json'}));
+    profileImage.append('phoneNumber', new Blob([JSON.stringify(inputs.phoneNumber)], { type: 'application/json'}));
+    profileImage.append('email', new Blob([JSON.stringify(inputs.email)], { type: 'application/json'}));
+    profileImage.append('age', new Blob([JSON.stringify(inputs.age)], { type: 'application/json'}));
+    profileImage.append('memberName', new Blob([JSON.stringify(inputs.name)], { type: 'application/json'}));
+    profileImage.append('gender', new Blob([JSON.stringify(inputs.gender)], { type: 'application/json'}));
     const config = {
       headers: {
         "content-type": "multipart/form-data"
       }
     };
-    axios.post(`join/image`, profileImage, config)
+    axios.post(`join`, profileImage, config)
     .then(res => console.log(res.data));
     
     alert('회원가입에 성공하였습니다.');
     // navigate('../');  //로그인 페이지로
   }
 
-  const [file1, setFile1] = useState('');
-  const [file2, setFile2] = useState('');
+  // const [file1, setFile1] = useState('');
+  // const [file2, setFile2] = useState('');
 
-  const onLoadFile1 = e => {
-    const file = e.target.files;
-    console.log(file);
-    setFile1(file);
-  }
-  const onLoadFile2 = e => {
-    const file = e.target.files;
-    console.log(file);
-    setFile2(file);
-  }
+  // const onLoadFile1 = e => {
+  //   const file = e.target.files;
+  //   console.log(file);
+  //   setFile1(file);
+  // }
+  // const onLoadFile2 = e => {
+  //   const file = e.target.files;
+  //   console.log(file);
+  //   setFile2(file);
+  // }
 
     return (
       <MainLayout>  
@@ -194,18 +225,18 @@ const Join = () => {
   
           {/* 프로필 사진 업로드 및 선택 부분 */}
     
-          {/* <InputForm  label={"프로필 사진"} name={"memberProfile"} type={"file"} onChange={onChange} value={memberProfile} />
+          <InputForm accept="image/*" label={"프로필 사진"} name={"memberProfile"} type={"file"} onChange={onChangeFile} value={memberProfile} />
           {!(memberProfile==='') ?
             <div>
-              {!checkedFaceProfile ?  <InputForm accept="image/*" label={"얼굴 등록"} name={"memberFace"} type={"file"} onChange={onChange} value={memberFace} /> 
+              {!checkedFaceProfile ?  <InputForm accept="image/*" label={"얼굴 등록"} name={"memberFace"} type={"file"} onChange={onChangeFile} value={memberFace} /> 
               :null}
               <GenderDiv>
                   <input  onClick={faceProfileCheckedFandeler} type="checkbox" />
                   <label> 프로필 사진으로 얼굴 등록하기</label>
               </GenderDiv>
             </div>
-          :null} */}
-          <form>
+          :null}
+          {/* <form>
           <input type='file' id='image1' accept='img/*' onChange={onLoadFile1} />
           <label htmlFor='image1'>파일 선택하기</label>
           </form>
@@ -214,7 +245,7 @@ const Join = () => {
 
           <input type='file' id='image2' accept='img/*' onChange={onLoadFile2} />
           <label htmlFor='image2'>파일 선택하기</label>
-          </form>
+          </form> */}
                  
          <SubmitButtonDiv>
             <SubmitButton  type="submit"onClick={sinUpClickHandler} >회원가입</SubmitButton>
