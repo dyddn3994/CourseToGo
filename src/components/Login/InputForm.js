@@ -33,7 +33,7 @@ const Form = styled.input`
   line-height: 2;
   border: 1px solid lightgray;
   width:100%;
-
+  box-shadow: 0px 0px 2px lightgray;
   
 `;
 

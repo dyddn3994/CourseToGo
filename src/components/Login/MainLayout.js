@@ -50,6 +50,7 @@ const RightScreenDiv = styled.div`
   object-fit: cover; 
   width:60%; 
   margin-left:40%;
+  box-shadow: 0px 0px 12px lightgray;
 `;
 
 export default MainLayout;
