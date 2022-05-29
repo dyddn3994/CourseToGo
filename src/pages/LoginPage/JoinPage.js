@@ -155,15 +155,6 @@ overflow: scroll;
 &::-webkit-scrollbar {
   display:none;
 }
-// &::-webkit-scrollbar-thumb {
-//   background-color: #cccccc ;
-//   border-radius:6px;
-//   background-clip: padding-box;
-//   border: 2px solid transparent;
-// }
-// &::-webkit-scrollbar-corner{
-//   background-color:#F5F5F5 ;
-// }
 `;
 
 const RadioDiv =  styled.div`
