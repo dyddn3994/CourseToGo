@@ -12,7 +12,7 @@ const InputForm = ({label, name, type, onChange, value}) => {
                 <label>{label}</label>
             </InputLabel>
             <FormDiv>
-                  <Form name={name} type={type} onChange={onChange} value={value}  accept={type==='file'?"image/*":''}/>
+                  <Form name={name} type={type} onChange={onChange} value={value} onKeyPress={onKeyPressLogin} accept={type==='file'?"image/*":''}/>
             </FormDiv>    
         </InputFormDiv> 
     );
