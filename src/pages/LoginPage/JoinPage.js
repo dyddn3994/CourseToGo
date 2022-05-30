@@ -234,6 +234,7 @@ const Join = () => {
                  
          <SubmitButtonDiv>
             <SubmitButton  type="submit" onClick={sinUpClickHandler} >회원가입</SubmitButton>
+            <SubmitButton onClick={() => navigate('../')} >로그인 화면</SubmitButton>
          </SubmitButtonDiv>
          </div>
       </MainLayout>
@@ -296,5 +297,6 @@ const SubmitButton = styled.button`
    display: inline-block;
    font-weight:bold;
    margin-bottom:20%;
+   margin-right: 3%;
 `;
 export default Join;

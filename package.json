@@ -10,11 +10,9 @@
     "@types/stompjs": "^2.3.5",
     "@uiball/loaders": "^1.2.6",
     "axios": "^0.27.2",
-
     "net": "^1.0.2",
     "ngrok": "^4.3.1",
     "react": "^18.1.0",
-
     "react-awesome-modal": "^2.0.5",
     "react-copy-to-clipboard": "^5.1.0",
     "react-dnd": "^16.0.1",
@@ -27,8 +25,8 @@
     "react-scripts": "5.0.0",
     "react-stomp": "^5.1.0",
     "react-tooltip": "^4.2.21",
+    "serve": "^13.0.2",
     "sockjs-client": "^1.6.0",
-
     "styled-components": "^5.3.5",
     "web-vitals": "^2.1.0"
   },
@@ -56,5 +54,6 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://192.168.235.226:9092"
+  "proxy": "http://192.168.235.226:9092",
+  "homepage": "./"
 }
