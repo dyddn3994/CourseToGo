@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 
 import MainLayout from "../../components/Login/MainLayout";
 import LogoHeader from "../../components/Login/LogoHeader";
-import InputForm from "../../components/Login/InputForm";
+import InputForm from "../../components/InputForm";
 import ButtonType from "../../components/Login/ButtonType";
 
 

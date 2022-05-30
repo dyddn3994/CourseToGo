@@ -6,7 +6,7 @@ import data from '../../assets/Photo/Photo';
 import userData from '../../assets/User/User';
 
 import CourseHeader from "../../components/CourseHeader";
-import InputForm from "../../components/Login/InputForm";
+import InputForm from "../../components/InputForm";
 const CoursePhotoPage = () => {
     const navigate = useNavigate();
 

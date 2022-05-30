@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 
 
 // 로그인페이지에 있는 로그인, 아이디찾기, 비번찾기, 회원가입 인풋폼
-const InputForm = ({label, name, type, onChange, value}) => {
+const InputForm = ({label, name, type, onKeyPressLogin, onChange, value}) => {
 
     return (
         <InputFormDiv>

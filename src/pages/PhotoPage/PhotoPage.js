@@ -1,7 +1,8 @@
-import React, { useState , useEffect} from "react";
-import styled, { css } from 'styled-components';
+import React, { useState , useEffect, useRef } from "react";
+import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router';
+import { Ring } from '@uiball/loaders'
 
 import data from '../../assets/Photo/Photo';
 import userData from '../../assets/User/User';
@@ -19,7 +20,25 @@ const CoursePhotoPage = () => {
   // courseId: 코스id(1, 2, ...)
   // day: 설정 일차(1, 2, ...)
   const params = useParams();
-  
+
+  // useEffect
+  useEffect(() => {
+    // new Promise((resolve, reject) => {
+    //   commuteGetMemberInfo();
+    //   commuteGetCoursePhoto();
+    // .then(() => {
+    //   setLoading(false);
+    // })
+    // .catch(() => {
+    //   console.log('err')
+    // })
+    commuteGetMemberInfo();
+    commuteGetCoursePhoto();
+    setLoading(false);
+  }, []);
+
+  // useRef
+  const photoInputRef = useRef(); // 사진 업로드 input을 버튼에서 클릭할 수 있게 하는 ref
   // const outerDivRef = useRef();
 
   const [courseName, setCourseName] = useState("JEJU 제주");  //코스이름
@@ -34,6 +53,16 @@ const CoursePhotoPage = () => {
   const [currItem, setCurrItem] = useState(data[0]);  //선택된 사진(상세정보 보일 사진)
   const [checkedPhotos, setCheckedPhotos]  =  useState([]);   // 선택된 사진들 리스트
 
+  // 입력되는 정보
+  const [inputs, setInputs] = useState({
+    uploadPhotos: ''
+  });
+  const { uploadPhotos } = inputs;
+
+  const [loading, setLoading] = useState(true); // 화면이 로딩중이라면 true
+  
+  // const [isCheckedAllPhoto, setIsCheckedAllPhoto] = useState(false); //사진 선택여부
+  // const [isCheckedPhoto, setIsCheckedPhoto] = useState(false); //사진 선택여부
   // 사진 편집 클릭 유무
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); 
 
@@ -65,7 +94,7 @@ const CoursePhotoPage = () => {
    //다운로드 클릭 시
    const downloadCheckedHandler = (e) => {
     checkedPhotos.forEach((value) => {    //선택된 사진들 다 다운로드 하기
-      const url =  value.image;
+      const url =  value.photoImage;
       const a = document.createElement("a")
       a.href = url
       a.download = `${value.itinerary}_${value.uploader}` //다운로드될 파일 이름
@@ -103,13 +132,28 @@ const CoursePhotoPage = () => {
     }
     return checkedUsers;
   };
+
+  // 사진 업로드 클릭 시
+  const photoUploadHandler = () => {
+    photoInputRef.current.click();
+  }
+
+  // 파일 input의 경우 e.targetvalue가 아닌 e.targetfiles로 처리
+  const onChangeFile = (e) => {
+    const { files, name } = e.target;
+
+    setInputs({
+      ...inputs,
+      [name]: files
+    });
+  }
     
   // 사진 리스트에서 하나 클릭해서 디테일 뷰 보여주기
   const onView = () => {
     console.log(checkedPhotos);
     if(checkedPhotos.length >0){
       const lastValue = checkedPhotos[checkedPhotos.length - 1];
-      setCurrItem(datas.find(element => element.id === lastValue.id));
+      setCurrItem(datas.find(element => element.photoId === lastValue.photoId));
       return currItem;
     }
   };
@@ -122,7 +166,7 @@ const CoursePhotoPage = () => {
   const addElementPhotos = (item) => {
   
     if(checkedPhotos.includes(item)) { // 이미 선택된 사진한 번 더 클릭 시
-      setCheckedPhotos(checkedPhotos.filter(element => element.id !== item.id));  // 리스트에서 삭제
+      setCheckedPhotos(checkedPhotos.filter(element => element.photoId !== item.photoId));  // 리스트에서 삭제
     }
     else{ // 선택된 사진 리스트에 없다면
       setCheckedPhotos(checkedPhotos.concat(item)); //리스트에 추가    
@@ -130,6 +174,52 @@ const CoursePhotoPage = () => {
      return checkedPhotos; 
   };
   
+  
+  // 통신
+  // 코스 멤버 정보 조회
+  const commuteGetMemberInfo = () => {
+    fetch("/course/member?courseId="+params.courseId)
+    .then((res)=>{
+      return res.json();
+    })
+    .then((memberData)=>{
+      setUser(memberData);
+    });
+  }
+  // 코스 사진 가져오기
+  const commuteGetCoursePhoto = () => {
+    fetch("/course/photo?courseId="+params.courseId)
+    .then((res)=>{
+      return res.json();
+    })
+    .then((photoData)=>{
+      setData(photoData);
+    });
+  }
+  // 사진 등록
+  const commutePostCoursePhoto = () => {
+    fetch("/course/photo", {
+      method: 'post',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body : JSON.stringify({
+        courseId: params.courseId,
+        images: uploadPhotos
+      })
+    })
+    .then((res)=>{
+      return res.json();
+    })
+    .then((ack)=>{
+      if (ack) {
+        alert('사진 등록에 성공하였습니다.');
+      }
+      else {
+        alert('사진 등록에 실패하였습니다.');
+      }
+    });
+  }
   // 편집 클릭 시 
   const editClickedHandler = () => { 
     setIsEditModalOpen(true); //모달 오픈
@@ -140,7 +230,17 @@ const CoursePhotoPage = () => {
   // render
     return (
       <MainDiv>
-
+      {loading ? (
+        <div style={{position: 'absolute', left: '50%', top: '45%'}}>
+        <Ring 
+          size={40}
+          lineWeight={5}
+          speed={2} 
+          color="black"
+        />
+        </div>
+      ) : (
+        <>
           {/* 코스명이 들어갈 부분 */}
             <HeaderDiv>
              <span style={{marginLeft: '20px'}}>{courseName}</span>
@@ -187,7 +287,8 @@ const CoursePhotoPage = () => {
             <EditModal setIsEditModalOpen={setIsEditModalOpen} />
           )}
         </div>
-
+        </>
+      )}
       
      </MainDiv>
   );
@@ -202,6 +303,16 @@ const MainDiv = styled.div`
   background-color:	#F5F5F5;
   width:100%;
   height: 100vh;
+`;
+
+const HeaderDiv = styled.div`
+  width:100%;
+  height:40px;
+  background-color:#4D9FE3;
+  color:#FFFFFF;
+  padding-top:1%;
+  width:100%;
+  position:fixed;
 `;
 
 const   FixedButtonDiv = styled.div`

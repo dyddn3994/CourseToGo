@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components';
 
 import MainLayout from "../../components/Login/MainLayout";
 import LogoHeader from "../../components/Login/LogoHeader";
-import InputForm from "../../components/Login/InputForm";
+import InputForm from "../../components/InputForm";
 import ButtonType from "../../components/Login/ButtonType";
 
 const LoginPage = () => {
@@ -46,7 +46,7 @@ const LoginPage = () => {
       .then((data)=>{
         if (data === 1) {
           alert('로그인 성공!');
-          navigate('/main');
+          // navigate('/main');
         }
         else if (data === 2) {
           alert('탈퇴한 회원입니다. 다시 가입해주세요.');
