@@ -41,7 +41,7 @@ const LoginPage = () => {
       alert('비밀번호를 입력하세요.');
     }
     else {
-      fetch("/login?userId="+inputs.inputId+"&pwd="+inputs.inputPwd)
+      fetch("/login?userId="+userId+"&pwd="+pwd)
       .then((res)=>{
         return res.json();
       })

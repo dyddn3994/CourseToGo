@@ -2,9 +2,22 @@ import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'rea
 
 const { kakao } = window
 
+const CITYLATLNG = [
+  { city: 'seoul', lat: 37.56667, lng: 126.97806 },
+  { city: 'busan', lat: 35.17944, lng: 129.07556 },
+  { city: 'daegu', lat: 35.87222, lng: 128.60250 },
+  { city: 'incheon', lat: 37.45639, lng: 126.70528 },
+  { city: 'gwangju', lat: 35.15972, lng: 126.85306 },
+  { city: 'daejeon', lat: 36.35111, lng: 127.38500 },
+  { city: 'ulsan', lat: 35.53889, lng: 129.31667 },
+  { city: 'sejong', lat: 36.48750, lng: 127.28167 },
+  { city: 'jeju', lat: 33.375701, lng: 126.570667 }
+]
+
 const MapContainer = forwardRef((props, ref) => {
 
   const { searchPlace, setIsMarkerClicked, setMarkerInfo } = props;
+  const [thisCity, setThisCity] = useState('제주');
   
   // 부모 컴포넌트에서 자식 함수 실행할 수 있도록 설정
   useImperativeHandle(ref, () => ({
@@ -16,15 +29,17 @@ const MapContainer = forwardRef((props, ref) => {
 
   // 검색결과 배열에 담아줌
   const [places, setPlaces] = useState([])
-  const [infowindow, setInfowindow] = useState();
+  const [infowindow, setInfowindow] = useState(); // 마커에서 일정 등록 이후에 마커 클릭된 상태 닫으려고 한건데 안되네..
   
   useEffect(() => {
     setInfowindow(new kakao.maps.InfoWindow({ zIndex: 1 }))
     // var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 })
     var markers = []
     const container = document.getElementById('myMap')
+    const lat = CITYLATLNG.find(item => item.city === 'busan').lat;
+    const lng = CITYLATLNG.find(item => item.city === 'busan').lng;
     const options = {
-      center: new kakao.maps.LatLng(33.375701, 126.570667),
+      center: new kakao.maps.LatLng(lat, lng),
       level: 10,
     }
     const map = new kakao.maps.Map(container, options)

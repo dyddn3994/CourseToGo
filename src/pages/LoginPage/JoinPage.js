@@ -4,6 +4,7 @@ import styled, { css } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios'
 
+// components
 import MainLayout from "../../components/Login/MainLayout";
 import InputForm from "../../components/Login/InputForm";
 import LogoHeader from "../../components/Login/LogoHeader";
@@ -67,11 +68,11 @@ const Join = () => {
 
   // 아이디 중복 체크
   const duplicateClickedHandler = () => {
-    if (inputs.userId === '') {
+    if (userId === '') {
       alert('아이디를 입력해주세요.');
     }
     else {
-      fetch("/duplicate?userId="+String(inputs.userId))
+      fetch("/duplicate?userId="+String(userId))
       .then((res)=>{
         return res.json();
       })
@@ -106,76 +107,60 @@ const Join = () => {
     console.log('list',inputs);
   }
 
-  // // 텍스트 정보 회원가입
-  // const commutePostJoin = () => {
-  //   fetch("/join/info", {
-  //     method: 'post',
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body : JSON.stringify({
-  //       userId: inputs.userId,
-  //       pwd: inputs.pwd,
-  //       phoneNumber: inputs.phoneNumber,
-  //       email: inputs.email,
-  //       age: inputs.age,
-  //       memberName: inputs.name,
-  //       gender: inputs.gender,
-  //       profileImage: inputs.memberProfile,
-  //       faceImage: inputs.memberFace
-  //     })
-  //   })
-  //   .then((res)=>{
-  //     return res.json();
-  //   })
-  //   .then((memberId)=>{
-  //     // 회원가입 성공 시 멤버 id값 반환, 실패시 -1
-  //     if (memberId === -1) {
-  //       alert('회원가입에 실패하였습니다');
-  //     }
-  //     else {
-  //       commutePostJoinImage();
-  //     }
-  //   });
-  // }
-  // // 사진 이미지 정보 회원가입
-  // const commutePostJoinImage = () => {
-  //   const profileImage = new FormData();
-  //   profileImage.append('profileImage', file1[0]);
-  //   profileImage.append('profileImage', file2[0]);
-  //   const config = {
-  //     headers: {
-  //       "content-type": "multipart/form-data"
-  //     }
-  //   };
-  //   axios.post(`join/image`, profileImage, config)
-  //   .then(res => console.log(res.data));
-    
-  //   alert('회원가입에 성공하였습니다.');
-  //   // navigate('../');  //로그인 페이지로
-  // }
   // 회원가입 
   const commutePostJoin = () => {
-    const profileImage = new FormData();
-    profileImage.append('profileImage', memberProfile[0]);
-    profileImage.append('profileImage', memberFace[0]);
-    profileImage.append('userId', new Blob([JSON.stringify(inputs.userId)], { type: 'application/json'}));
-    profileImage.append('pwd', new Blob([JSON.stringify(inputs.pwd)], { type: 'application/json'}));
-    profileImage.append('phoneNumber', new Blob([JSON.stringify(inputs.phoneNumber)], { type: 'application/json'}));
-    profileImage.append('email', new Blob([JSON.stringify(inputs.email)], { type: 'application/json'}));
-    profileImage.append('age', new Blob([JSON.stringify(inputs.age)], { type: 'application/json'}));
-    profileImage.append('memberName', new Blob([JSON.stringify(inputs.name)], { type: 'application/json'}));
-    profileImage.append('gender', new Blob([JSON.stringify(inputs.gender)], { type: 'application/json'}));
-    const config = {
-      headers: {
-        "content-type": "multipart/form-data"
+    // input이 비어있을 경우 예외처리
+    if (pwd === '') {
+      alert('비밀번호를 입력해주세요');
+    }
+    else if (memberName === '') {
+      alert('이름을 입력해주세요');
+    }
+    else if (phoneNumber === '') {
+      alert('전화번호를 입력해주세요');
+    }
+    else if (email === '') {
+      alert('이메일을 입력해주세요');
+    }
+    else if (age === '') {
+      alert('나이를 입력해주세요');
+    }
+    else if (gender === '') {
+      alert('성별을 선택해주세요');
+    }
+    else if (memberProfile === '') {
+      alert('프로필 사진을 선택해주세요');
+    }
+    else if (!checkedFaceProfile && memberFace === '') {
+      alert('얼굴로 등록할 사진을 선택해주세요');
+    }
+    else {
+      const formData = new FormData();
+      const memberDto1 = {
+        userId: userId,
+        pwd: pwd,
+        phoneNumber: phoneNumber,
+        email: email,
+        age: age,
+        memberName: memberName,
+        gender: gender
       }
-    };
-    axios.post(`join`, profileImage, config)
-    .then(res => console.log(res.data));
-    
-    alert('회원가입에 성공하였습니다.');
-    // navigate('../');  //로그인 페이지로
+      formData.append('memberDto', new Blob([JSON.stringify(memberDto1)], { type: 'application/json'}));
+      formData.append('profileImage', memberProfile[0]);
+      formData.append('faceImage', memberFace[0]);
+      const config = {
+        headers: {
+          "content-type": "multipart/form-data"
+        }
+      };
+      axios.post(`join`, formData, config)
+      .then(res => {
+        console.log(res.data)
+        alert('회원가입에 성공하였습니다.');
+      // navigate('../');  //로그인 페이지로
+      });
+      
+    }
   }
 
   // const [file1, setFile1] = useState('');
@@ -225,13 +210,13 @@ const Join = () => {
   
           {/* 프로필 사진 업로드 및 선택 부분 */}
     
-          <InputForm accept="image/*" label={"프로필 사진"} name={"memberProfile"} type={"file"} onChange={onChangeFile} value={memberProfile} />
+          <InputForm accept="image/*" label={"프로필 사진"} name={"memberProfile"} type={"file"} onChange={onChangeFile} /> 
           {!(memberProfile==='') ?
             <div>
-              {!checkedFaceProfile ?  <InputForm accept="image/*" label={"얼굴 등록"} name={"memberFace"} type={"file"} onChange={onChangeFile} value={memberFace} /> 
+              {!checkedFaceProfile ?  <InputForm accept="image/*" label={"얼굴 등록"} name={"memberFace"} type={"file"} onChange={onChangeFile} /> 
               :null}
               <GenderDiv>
-                  <input  onClick={faceProfileCheckedFandeler} type="checkbox" />
+                  <input onClick={faceProfileCheckedFandeler} type="checkbox" />
                   <label> 프로필 사진으로 얼굴 등록하기</label>
               </GenderDiv>
             </div>
@@ -248,7 +233,7 @@ const Join = () => {
           </form> */}
                  
          <SubmitButtonDiv>
-            <SubmitButton  type="submit"onClick={sinUpClickHandler} >회원가입</SubmitButton>
+            <SubmitButton  type="submit" onClick={sinUpClickHandler} >회원가입</SubmitButton>
          </SubmitButtonDiv>
          </div>
       </MainLayout>
