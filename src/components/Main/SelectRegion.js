@@ -3,12 +3,11 @@ import styled from 'styled-components';
 
 const SelectRegion = (props) => {
 	return (
-		<SelectDiv 	defaultValue={props.defaultValue} onChange={props.selectOnChange}>
+		<SelectDiv onChange={props.selectOnChange}>
 			{props.options.map((option) => (
 				<option
 					key={option.value}
 					value={option.value}
-				
 				>
 					{option.name}
 				</option>

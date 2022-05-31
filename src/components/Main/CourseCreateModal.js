@@ -8,7 +8,7 @@ import SelectRegion from "./SelectRegion";
 const CourseCreateModal = ({isCourseCreateModalOpen, setIsCourseCreateModalOpen,  inputCreateCourse,setInputCreateCourse, onChangeInputCreatCourse ,onClickCreateCourseModal  }) => {
  
       const [openDatePicker, setOpenDatePicker] = useState(false);
-      const [startDate, setStartDate] = useState(new Date());
+      const [startDate, setStartDate] = useState('');
       const [endDate, setEndDate] = useState('');
   
       // 지역 선택을 위한 데이터
@@ -82,7 +82,7 @@ const CourseCreateModal = ({isCourseCreateModalOpen, setIsCourseCreateModalOpen,
           position: 'fixed'
         },
         content: {
-          top: '100px',
+          top: '120px',
           left: '340px',
           right: '340px',
           bottom: '170px',
@@ -99,16 +99,7 @@ const CourseCreateModal = ({isCourseCreateModalOpen, setIsCourseCreateModalOpen,
                         <Form  name="inputCourseName" value={inputCreateCourse.inputCourseName} onChange={onChangeInputCreatCourse } /> 
                   </FormDiv>    
             </InputDiv>
-            <div>
-                  {openDatePicker &&
-                        <DatePickerDiv>
-                              <DatePickerItem   
-                                    selected={startDate}
-                                    onChange={dateOnChange}
-                                    startDate={startDate}
-                                    endDate={endDate} />
-                        </DatePickerDiv> }
-            </div>
+      
             <InputDiv>
                   <InputLabel>여행 날짜</InputLabel>
                   <DateFormDiv>
@@ -119,7 +110,13 @@ const CourseCreateModal = ({isCourseCreateModalOpen, setIsCourseCreateModalOpen,
                         </DateResultView> }
                   </DateFormDiv>   
             </InputDiv>
-         
+            <DatePickerItem   
+                  openDatePicker={openDatePicker}
+                  setOpenDatePicker={setOpenDatePicker}
+                  selected={startDate}
+                  onChange={dateOnChange}
+                  startDate={startDate}
+                   endDate={endDate} />
             <InputDiv>
                   <InputLabel>지역</InputLabel>
                   <FormDiv>

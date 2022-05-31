@@ -14,12 +14,15 @@ import { BsFillPlusSquareFill } from 'react-icons/bs';
 import { CgChevronLeftR, CgChevronRightR } from 'react-icons/cg';
 
 // components
-import MapContainer from './MapContainer';
+import MapContainer from '../../components/Course/MapContainer';
 import Memo from './Memo.js'
 import OverlapItineraryModal from './OverlapItineraryModal';
-import OverlapItineraryTooltip from './OverlapItineraryTooltip';
-import ItineraryTimeTooltip from './ItineraryTimeTooltip';
-
+import OverlapItineraryTooltip from '../../components/Course/OverlapItineraryTooltip';
+import ItineraryTimeTooltip from '../../components/Course/ItineraryTimeTooltip';
+import AddItineraryModal from './AddItineraryModal';
+import UpdateItineraryModal from './UpdateItineraryModal';
+import CourseHeader from '../../components/CourseHeader';
+import RenderItineraryList from '../../components/Course/RenderItineraryList';
 // 사용자별 색 인덱스에 따라 색 지정
 const colorList = [
   '#aadc8e',
@@ -34,7 +37,6 @@ const CoursePage = () => {
   // day: 설정 일차(1, 2, ...)
   const params = useParams();
 
-  // useEffect
   useEffect(() => {
     // commuteStomp();
     return () => {
@@ -75,6 +77,7 @@ const CoursePage = () => {
       touristSpotName: "애월중복2", touristSpotAddress: "거제시 여러분", touristSpotAvgCost: 0, touristSpotAvgTime: 0
     }},
   ]); 
+  
   const [overlapItineraryArrayState, setOverlapItineraryArrayState] = useState([]);
   const [representativeItineraryState, setRepresentativeItineraryState] = useState({});
   const [thisItineraryTime, setThisItineraryTime] = useState(''); // 마커 클릭 후 일정에 mouseover시 표현할 툴팁 내 시간
@@ -84,18 +87,23 @@ const CoursePage = () => {
   const [isUpdateItineraryModal, setIsUpdateItineraryModal] = useState(false); // 일정 수정 모달
   const [isOverlapItineraryModal, setIsOverlapItineraryModal] = useState(false); // 중복일정 모달
 
-  const [inputItineraryId, setInputItineraryId] = useState(0); // 일정 수정용 일정 id. Modal에 파라미터로 넘겨주는 방법을 몰라서 이렇게 처리. 알게되면 수정
-  const [inputItineraryName, setInputItineraryName] = useState(''); // 일정 추가 일정명 input
-  const [inputItineraryAddress, setInputItineraryAddress] = useState(''); // 일정 추가 주소 input
-  const [inputItineraryStartTime, setInputItineraryStartTime] = useState(''); // 일정 추가 시작시간 input
-  const [inputItineraryEndTime, setInputItineraryEndTime] = useState(''); // 일정 추가 종료시간 input
-  const [inputItineraryStartTimeHour, setInputItineraryStartTimeHour] = useState(0); // 일정 시작 시간 input
-  const [inputItineraryStartTimeMinute, setInputItineraryStartTimeMinute] = useState(0); // 일정 시작 분 input
-  const [inputItineraryEndTimeHour, setInputItineraryEndTimeHour] = useState(0); // 일정 종료 시간 input
-  const [inputItineraryEndTimeMinute, setInputItineraryEndTimeMinute] = useState(0); // 일정 종료 분 input
-  const [inputItineraryHidden, setInputItineraryHidden] = useState(false); // 일정 추가 중복 일정 숨김 input
-  const [inputItineraryDetail, setInputItineraryDetail] = useState(''); // 일정 추가 일정 상세 input
-  const [inputItineraryCost, setInputItineraryCost] = useState(0); // 일정 추가 일정 비용 input
+  const [inputItinerary, setInputItinerary] = useState ({
+    inputItineraryId: 0,// 일정 수정용 일정 id. Modal에 파라미터로 넘겨주는 방법을 몰라서 이렇게 처리. 알게되면 수정
+    inputItineraryName:'',// 일정 추가 일정명 input
+    inputItineraryAddress:'', // 일정 추가 주소 input
+    inputItineraryStartTime: '',  // 일정 추가 시작시간 input
+    inputItineraryEndTime: '',// 일정 추가 종료시간 input
+    inputItineraryStartTimeHour:0, // 일정 시작 시간 input
+    inputItineraryStartTimeMinute:0, // 일정 시작 분 input
+    inputItineraryEndTimeHour:0, // 일정 종료 시간 input
+    inputItineraryEndTimeMinute:0,// 일정 종료 분 input
+    inputItineraryHidden: false,// 일정 추가 중복 일정 숨김 input
+    inputItineraryDetail:'',// 일정 추가 일정 상세 input
+    inputItineraryCost:0 // 일정 추가 일정 비용 input
+    }  );
+    const { inputItineraryId,inputItineraryName, inputItineraryAddress, inputItineraryStartTime,  inputItineraryEndTime,
+      inputItineraryStartTimeHour, inputItineraryStartTimeMinute,  inputItineraryEndTimeHour,inputItineraryEndTimeMinute,inputItineraryHidden, inputItineraryDetail, inputItineraryCost }= inputItinerary;
+ 
 
   const [isMarkerClicked, setIsMarkerClicked] = useState(false); // 지도의 마커가 클릭되었을 때 true
   const [markerInfo, setMarkerInfo] = useState({}); // 클릭된 마커 정보
@@ -107,45 +115,28 @@ const CoursePage = () => {
   // onChange
   let searchInputTemp = ''; // 검색 input값 임시 저장
   const onChangeSearch = e => searchInputTemp = e.target.value;
-  const onChangeInputItineraryName = e => setInputItineraryName(e.target.value);
-  const onChangeInputItineraryAddress = e => setInputItineraryAddress(e.target.value);
-  const onChangeInputItineraryStartTime = e => setInputItineraryStartTime(e.target.value);
-  const onChangeInputItineraryEndTime = e => setInputItineraryEndTime(e.target.value);
-  const onChangeInputItineraryStartTimeHour = e => setInputItineraryStartTimeHour(e.target.value);
-  const onChangeInputItineraryStartTimeMinute = e => setInputItineraryStartTimeMinute(e.target.value);
-  const onChangeInputItineraryEndTimeHour = e => setInputItineraryEndTimeHour(e.target.value);
-  const onChangeInputItineraryEndTimeMinute = e => setInputItineraryEndTimeMinute(e.target.value);
-  // const onChangeInputItineraryStartTimeHour = e => {
-  //   const startTime = thisPageDate + 'T' + e.target.value + ':' + inputItineraryStartTimeMinute + ':00';
-  //   setInputItineraryStartTime(startTime);
-  //   setInputItineraryStartTimeHour(e.target.value);
-  // };
-  // const onChangeInputItineraryStartTimeMinute = e => {
-  //   setInputItineraryStartTimeMinute(e.target.value)
-  // };
-  // const onChangeInputItineraryEndTimeHour = e => {
-  //   const endTime = thisPageDate + 'T' + inputItineraryEndTimeHour + ':' + inputItineraryEndTimeMinute + ':00';
-  //   setInputItineraryEndTime(endTime);
-  //   setInputItineraryEndTimeHour(e.target.value)
-  // };
-  // const onChangeInputItineraryEndTimeMinute = e => {
-  //   setInputItineraryEndTimeMinute(e.target.value)
-  // };
-  const onChangeInputItineraryHidden = e => setInputItineraryHidden(e.target.value);
-  const onChangeInputItineraryDetail = e => setInputItineraryDetail(e.target.value);
-  const onChangeInputItineraryCost = e => setInputItineraryCost(e.target.value);
+  const onChangeInputItinerary= e => {
+    const { value, name } = e.target;
+    setInputItinerary({
+      ...inputItinerary,
+      [name]: value
+    });
+  }
 
   // onClick
   const onClickSearch = () => setSearchPlace(searchInputTemp);
   const onClickItineraryAddIcon = () => {
-    setInputItineraryName('');
-    setInputItineraryAddress('');
-    setInputItineraryStartTimeHour('');
-    setInputItineraryStartTimeMinute('');
-    setInputItineraryEndTimeHour('');
-    setInputItineraryEndTimeMinute('');
-    setInputItineraryDetail('');
-    setInputItineraryCost('');
+    setInputItinerary({
+      ...inputItinerary,
+      inputItineraryName:'',// 일정 추가 일정명 input
+      inputItineraryAddress:'', // 일정 추가 주소 input
+      inputItineraryStartTimeHour:'', // 일정 시작 시간 input
+      inputItineraryStartTimeMinute:'', // 일정 시작 분 input
+      inputItineraryEndTimeHour:'', // 일정 종료 시간 input
+      inputItineraryEndTimeMinute:'',// 일정 종료 분 input
+      inputItineraryDetail:'',// 일정 추가 일정 상세 input
+      inputItineraryCost:'' // 일정 추가 일정 비용 input
+    });
     setIsAddItineraryModal(true);
   }
   const onClickAddItinerary = () => {
@@ -169,9 +160,11 @@ const CoursePage = () => {
     }
     const startTime = thisPageDate + 'T' + startTimeHour + ':' + startTimeMinute + ':00';
     const endTime = thisPageDate + 'T' + endTimeHour + ':' + endTimeMinute + ':00';
-    setInputItineraryStartTime(startTime);
-    setInputItineraryEndTime(endTime);
-
+    setInputItinerary({
+      ...inputItinerary,
+      inputItineraryStartTime:startTime,
+      iInputItineraryEndTime:endTime, 
+    });
     if (inputItineraryName === '') {
       alert('일정명을 입력해주세요');
     }
@@ -188,19 +181,6 @@ const CoursePage = () => {
       commutePostCreateItinerary(inputItineraryName, inputItineraryAddress, startTime, endTime, false);
       setIsAddItineraryModal(false);
     }
-    // const newItineraryArray = itineraryArray.concat({ 
-    //   itineraryStartTime: inputItineraryStartTime, 
-    //   itineraryEndTime: inputItineraryEndTime, 
-    //   itineraryDetail: inputItineraryDetail,
-    //   itineraryCost: inputItineraryCost,
-    //   touristSpot: {
-    //     touristSpotName: inputItineraryName,
-    //     touristSpotAddress: inputItineraryAddress
-    //   }
-    // });
-    // setItineraryArray(newItineraryArray);
-    
-    // alert('itinerary add complete');
   }
   const onClickUpdateItinerary = () => {
     // 일정 수정
@@ -225,8 +205,12 @@ const CoursePage = () => {
     const endTime = thisPageDate + 'T' + endTimeHour + ':' + endTimeMinute + ':00';
     console.log(startTime);
     console.log(endTime);
-    setInputItineraryStartTime(startTime);
-    setInputItineraryEndTime(endTime);
+    setInputItinerary({
+      ...inputItinerary,
+      inputItineraryStartTime:startTime,
+      iInputItineraryEndTime:endTime, 
+    });
+  
 
     if (inputItineraryName === '') {
       alert('일정명을 입력해주세요');
@@ -297,25 +281,27 @@ const CoursePage = () => {
     }
   }
   const updateItinerary = (itinerary) => {
-    // 일정 수정 Modal을 위한 세팅
-    setInputItineraryId(itinerary.itineraryId);
-    setInputItineraryName(itinerary.touristSpot.touristSpotName);
-    setInputItineraryAddress(itinerary.touristSpot.touristSpotAddress);
-
-    // setInputItineraryStartTime(itinerary.itineraryStartTime);
-    // setInputItineraryEndTime(itinerary.itineraryEndTime);
+     // 일정 수정 Modal을 위한 세팅
     const startTimeHour = Number(itinerary.itineraryStartTime.substring(11, 13));
     const startTimeMinute = Number(itinerary.itineraryStartTime.substring(14, 16));
     const endTimeHour = Number(itinerary.itineraryEndTime.substring(11, 13));
     const endTimeMinute = Number(itinerary.itineraryEndTime.substring(14, 16));
-    setInputItineraryStartTimeHour(startTimeHour);
-    setInputItineraryStartTimeMinute(startTimeMinute);
-    setInputItineraryEndTimeHour(endTimeHour);
-    setInputItineraryEndTimeMinute(endTimeMinute);
+   
+    setInputItinerary({
+      ...inputItinerary,
+      inputItineraryId: itinerary.itineraryId,
+      inputItineraryName:itinerary.touristSpot.touristSpotName,
+      inputItineraryAddress:itinerary.touristSpot.touristSpotAddress,
 
-    setInputItineraryHidden(itinerary.itineraryHidden);
-    setInputItineraryDetail(itinerary.itineraryDetail);
-    setInputItineraryCost(itinerary.itineraryCost);
+      inputItineraryStartTimeHour: startTimeHour, 
+      inputItineraryStartTimeMinute:startTimeMinute,
+      inputItineraryEndTimeHour:endTimeHour,
+      inputItineraryEndTimeMinute:endTimeMinute,
+
+      inputItineraryHidden: itinerary.itineraryHidden,
+      inputItineraryDetail:itinerary.itineraryDetail,
+      inputItineraryCost:itinerary.itineraryCost,
+    });
 
     setIsUpdateItineraryModal(true);
   }
@@ -370,6 +356,7 @@ const CoursePage = () => {
       stompcli.disconnect();
     }
   };
+
   // 일정 날짜 조회
   const commuteGetItineraryDate = (courseId, day) => {
     fetch("/course/date?courseId="+courseId+"&day="+day)
@@ -395,10 +382,14 @@ const CoursePage = () => {
   }
   // 일정 등록
   const commutePostCreateItinerary = (itineraryName, itineraryAddress, startTime, endTime, isHidden) => {
-    setInputItineraryName(itineraryName);
-    setInputItineraryAddress(itineraryAddress);
-    setInputItineraryStartTime(startTime);
-    setInputItineraryEndTime(endTime);
+    setInputItinerary({
+      ...inputItinerary,
+      inputItineraryName: itineraryName,
+      inputItineraryAddress:itineraryAddress,
+      inputItineraryStartTime:startTime,
+      inputItineraryEndTime:endTime
+    });
+
 
     fetch("/course/itinerary", {
       method: 'post',
@@ -627,455 +618,131 @@ const CoursePage = () => {
     return formatTime;
   }
 
-  // 일정 시간표
-  const renderItineraryList = () => {
-    const renderResult = [];
-    const HOUR = 24;
-
-    for (let hour = 0; hour < HOUR; hour++) {
-      renderResult.push(
-        <div style={{display: 'flex', height: '60px'}}>
-          <span style={{flexBasis: '20%', textAlign: 'right', marginRight: '5px', marginLeft: '-5px', marginTop: '-13px'}}>
-            {hour !== 0 ? (
-              <>{hour} : 00</>
-            ) : null}
-            <span style={{}}></span>
-          </span>
-          {/* <span style={{flexBasis: '110%' , paddingTop: (hour === 0 && '10px')}}> -- {renderItineraryMinutesList(hour)}</span> */}
-          <span style={{flexBasis: '110%'}}>{renderItineraryMinutesList(hour)}</span>
-        </div>
-      );
-    }
-
-    return renderResult;
-  }
-
-  // 일정 분 단위로 나눔
-  const renderItineraryMinutesList = hour => {
-    const renderResult = [];
-    const MINUTE = 60;
-    let itineraryTitle = null;
-
-    for (let minute = 0; minute < MINUTE; minute+=10) {
-      let renderColor = '#FFFFFF';
-      let isTitlePosition = false;
-
-      let hourToStr = hour.toString();
-      let minuteToStr = minute.toString();
-
-      if (minuteToStr.length === 1) {
-        minuteToStr = "0" + minuteToStr;
-      }
-      if (hourToStr.length === 1) {
-        hourToStr = "0" + hourToStr;
-      }
-      
-      const thisTimeToStr = hourToStr + minuteToStr;
-      const thisTime = Number(thisTimeToStr);
-      const thisTimeFormat = hourToStr + ":" + minuteToStr;
-      
-      // 일정 등록시 한시간 자동으로 등록되게 임시 설정
-      let thisTimeAnHour, thisTimeAnHourFormat;
-      if ((hour+1).toString().length === 1) {
-        thisTimeAnHour = Number("0" + (hour+1).toString() + minuteToStr);
-        thisTimeAnHourFormat = "0" + (hour+1).toString() + ":" + minuteToStr;
-      }
-      else {
-        thisTimeAnHour = Number((hour+1).toString() + minuteToStr);
-        thisTimeAnHourFormat = (hour+1).toString() + ":" + minuteToStr;
-      }
-
-      let thisItinerary = null; // 수정시에 자동으로 input 설정하도록 할 일정
-      let isHidden = false; // 해당 시간대에 중복일정이 있을경우 true
-      let overlapCnt = 1; // 중복일정 개수
-      let overlapItineraryArray = []; // 중복일정 배열
-      let representativeStartTimeFormat = null; // 중복 일정 등록하려고 할때 대표 일정의 시작 시간
-      let representativeEndTimeFormat = null; // 중복 일정 등록하려고 할때 대표 일정의 종료 시간
-      // 일정별로 확인하여 렌더링할 데어터들 설정
-      itineraryArray.map((itinerary, itineraryIndex) => {
-        const startHourToStr = String(itinerary.itineraryStartTime).substring(11, 13);
-        const startMinuteToStr = String(itinerary.itineraryStartTime).substring(14, 16);
-        const startTimeToStr = startHourToStr + startMinuteToStr;
-        const startTime = Number(startTimeToStr);
-
-        const endHourToStr = String(itinerary.itineraryEndTime).substring(11, 13);
-        const endMinuteToStr = String(itinerary.itineraryEndTime).substring(14, 16);
-        const endTimeToStr = endHourToStr + endMinuteToStr;
-        const endTime = Number(endTimeToStr);
-
-        // 해당하는 시간일 경우 색상설정
-        if (thisTime >= startTime && thisTime < endTime) {
-          // itineraryHidden이 true일 경우 중복일정으로 설정
-          if (itinerary.itineraryHidden) {
-            isHidden = true;
-            overlapCnt++;
-            const newOverlapItineraryArray = overlapItineraryArray.concat(itinerary);
-            overlapItineraryArray = newOverlapItineraryArray;
-          }
-          else {
-            renderColor = colorList[itinerary.itineraryColor];
-            thisItinerary = itinerary;
-            representativeStartTimeFormat = timeToStringFormat(thisItinerary.itineraryStartTime.substring(11, 13), thisItinerary.itineraryStartTime.substring(14, 16));
-            representativeEndTimeFormat = timeToStringFormat(thisItinerary.itineraryEndTime.substring(11, 13), thisItinerary.itineraryEndTime.substring(14, 16));
-          }
-        }
-        // 일정 시간의 가장 상단일 경우 일정명 출력
-        if (thisTime === startTime && thisItinerary !== null) {
-          isTitlePosition = true;
-          itineraryTitle = thisItinerary.touristSpot.touristSpotName; 
-
-          // 중복 일정 등록 끝나고 나면 state에 값 설정
-          if (overlapItineraryArray !== []) {
-            // overlapItinerarySetting(overlapItineraryArray);
-          }
-        }
-      });
-      
-
-      // 일정이 있는 상황인지 확인
-      let isRenderColor = false;
-      if (renderColor !== '#FFFFFF' && '#ffffff' && 'white'){
-        if (!thisItinerary.itineraryHidden) {
-          isRenderColor = true;
-        }
-      }
-
-      renderResult.push(
-        <div 
-          style={{
-            height: '10px',
-            backgroundColor: (isRenderColor ? renderColor : null)
-          }} 
-          onClick={(e) => onClickItinerary(
-                    e,
-                    (renderColor === "#FFFFFF" && '#ffffff' && 'white'), 
-                    thisPageDate+"T"+thisTimeFormat, 
-                    thisPageDate+"T"+thisTimeAnHourFormat,
-                    thisPageDate+"T"+representativeStartTimeFormat,
-                    thisPageDate+"T"+representativeEndTimeFormat,
-                    thisItinerary
-                  )} 
-          onMouseOver={(e) => onMouseOverItinerary(e, thisTimeFormat)}
-          onMouseOut={(e) => onMouseOutItinerary(e, renderColor)}
-          data-tip data-for='itineraryTimeTooltip'
-        >
-          {isTitlePosition ? itineraryTitle : null}
-          {(isHidden && isTitlePosition) && 
-          <>
-            <span 
-              style={{
-                float: 'right',
-                marginRight: '5px', 
-                color:'#FF0000'
-              }}
-              onClick={(e) => onClickOverlap(e)} 
-              onMouseOver={() => onMouseOverOverlapItinerary(thisItinerary, thisPageDate+'T'+thisTimeFormat+':00')}
-              // onMouseOver={() => setIsOverlapMouseOver(true)}
-              // onMouseOut={() => setIsOverlapMouseOver(false)}
-              data-tip data-for='tooltip'
-            >
-              {overlapCnt}
-            </span>
-          </>
-          }
-        </div>
-      );
-    }
-
-    return renderResult;
-  }
-
-
-  // Modal
-  // 일정 추가 모달
-  const addItineraryModal = (
-    <Modal 
-      ariaHideApp={false} // allElement 경고창 제거
-      isOpen={isAddItineraryModal} 
-      onRequestClose={() => setIsAddItineraryModal(false)}
-      style={{
-        overlay: {
-          position: 'fixed',
-          zIndex: '2'
-        },
-        content: {
-          top: '200px',
-          left: '200px',
-          right: '200px',
-          bottom: '200px',
-
-          border: '1px solid'
-        }
-      }}
-    >
-      <div>추가할 일정의 정보를 입력하세요.</div>
-      <div>
-        <span>일정 명 : </span>
-        <input name="inputItineraryName" value={inputItineraryName} onChange={onChangeInputItineraryName} />
-      </div>
-      <div>
-        <span>일정 주소 : </span>
-        <input name="inputItineraryAddress" value={inputItineraryAddress} onChange={onChangeInputItineraryAddress} />
-      </div>
-      {/* <div>
-        <span>시작 시간 : </span>
-        <input name="inputItineraryStartTime" value={inputItineraryStartTime} onChange={onChangeInputItineraryStartTime} />
-      </div>
-      <div>
-        <span>종료 시간 : </span>
-        <input name="inputItineraryEndTime" value={inputItineraryEndTime} onChange={onChangeInputItineraryEndTime} />
-      </div> */}
-      <div>
-        <span>시작 시간 : </span>
-        <select onChange={onChangeInputItineraryStartTimeHour} value={inputItineraryStartTimeHour}>
-          {HOURS.map((hour) => (
-            <option value={hour} key={hour}>
-              {hour}
-            </option>
-          ))}
-        </select>시
-        &nbsp; {/* 공백 */}
-        <select onChange={onChangeInputItineraryStartTimeMinute} value={inputItineraryStartTimeMinute}>
-          {MINUTES.map((minute) => (
-            <option value={minute} key={minute}>
-              {minute}
-            </option>
-          ))}
-        </select>분
-      </div>
-      <div>
-        <span>종료 시간 : </span>
-        <select onChange={onChangeInputItineraryEndTimeHour} value={inputItineraryEndTimeHour}>
-          {HOURS.map((hour) => (
-            <option value={hour} key={hour}>
-              {hour}
-            </option>
-          ))}
-        </select>시
-        &nbsp; {/* 공백 */}
-        <select onChange={onChangeInputItineraryEndTimeMinute} value={inputItineraryEndTimeMinute}>
-          {MINUTES.map((minute) => (
-            <option value={minute} key={minute}>
-              {minute}
-            </option>
-          ))}
-        </select>분
-      </div>
-      <div>
-        <span>일정 상세 : </span>
-        <input name="inputItineraryDetail" value={inputItineraryDetail} onChange={onChangeInputItineraryDetail} />
-      </div>
-      <div>
-        <span>일정 비용 : </span>
-        <input name="inputItineraryCost" value={inputItineraryCost} onChange={onChangeInputItineraryCost} />
-      </div>
-      <button onClick={onClickAddItinerary}>일정 생성</button>
-      <button onClick={() => setIsAddItineraryModal(false)}>취소</button>
-    </Modal>
-  );
-  // 일정 수정 모달
-  const updateItineraryModal = (
-    <Modal 
-      ariaHideApp={false} // allElement 경고창 제거
-      isOpen={isUpdateItineraryModal} 
-      onRequestClose={() => setIsUpdateItineraryModal(false)}
-      style={{
-        overlay: {
-          position: 'fixed',
-          zIndex: '2'
-        },
-        content: {
-          top: '200px',
-          left: '200px',
-          right: '200px',
-          bottom: '200px',
-
-          border: '1px solid'
-        }
-      }}
-    >
-      <div>수정할 일정의 정보를 입력하세요.</div>
-      <div>
-        <span>일정 명 : </span>
-        <input name="inputItineraryName" value={inputItineraryName} onChange={onChangeInputItineraryName} />
-      </div>
-      <div>
-        <span>일정 주소 : </span>
-        <input name="inputItineraryAddress" value={inputItineraryAddress} onChange={onChangeInputItineraryAddress} />
-      </div>
-      {/* <div>
-        <span>시작 시간 : </span>
-        <input name="inputItineraryStartTime" value={inputItineraryStartTime} onChange={onChangeInputItineraryStartTime} />
-      </div>
-      <div>
-        <span>종료 시간 : </span>
-        <input name="inputItineraryEndTime" value={inputItineraryEndTime} onChange={onChangeInputItineraryEndTime} />
-      </div> */}
-      <div>
-        <span>시작 시간 : </span>
-        <select onChange={onChangeInputItineraryStartTimeHour} value={inputItineraryStartTimeHour}>
-          {HOURS.map((hour) => (
-            <option value={hour} key={hour}>
-              {hour}
-            </option>
-          ))}
-        </select>시
-        &nbsp; {/* 공백 */}
-        <select onChange={onChangeInputItineraryStartTimeMinute} value={inputItineraryStartTimeMinute}>
-          {MINUTES.map((minute) => (
-            <option value={minute} key={minute}>
-              {minute}
-            </option>
-          ))}
-        </select>분
-      </div>
-      <div>
-        <span>종료 시간 : </span>
-        <select onChange={onChangeInputItineraryEndTimeHour} value={inputItineraryEndTimeHour}>
-          {HOURS.map((hour) => (
-            <option value={hour} key={hour}>
-              {hour}
-            </option>
-          ))}
-        </select>시
-        &nbsp; {/* 공백 */}
-        <select onChange={onChangeInputItineraryEndTimeMinute} value={inputItineraryEndTimeMinute}>
-          {MINUTES.map((minute) => (
-            <option value={minute} key={minute}>
-              {minute}
-            </option>
-          ))}
-        </select>분
-      </div>
-      <div>
-        <span>일정 상세 : </span>
-        <input name="inputItineraryDetail" value={inputItineraryDetail} onChange={onChangeInputItineraryDetail} />
-      </div>
-      <div>
-        <span>일정 비용 : </span>
-        <input name="inputItineraryCost" type='number' value={inputItineraryCost} onChange={onChangeInputItineraryCost} />
-      </div>
-      <button onClick={onClickUpdateItinerary}>일정 수정</button>
-      <button onClick={onClickDeleteItinerary}>일정 삭제</button>
-      <button onClick={() => setIsUpdateItineraryModal(false)}>취소</button>
-    </Modal>
-  );
-
   // render
   return (
-    <>
-      {loading ? (
-        <div style={{position: 'absolute', left: '50%', top: '45%'}}>
-        <Ring 
-          size={40}
-          lineWeight={5}
-          speed={2} 
-          color="black"
-        />
-        </div>
-      ) : (
-        <MainScreenDiv>
-          <TitleDiv>
-            <span style={{fontSize: '40px', fontWeight: 'bold'}}>JEJU 제주</span>
-            <span style={{fontSize: '25px'}}> <IoMdSettings /> </span>
-          </TitleDiv>
-          
-          <ContentDiv>
-            <LeftScreenDiv>
-              <SearchDiv>
-                <SearchInput 
-                  type="text"
-                  placeholder='여행지를 입력하세요'
-                  onChange={onChangeSearch}
-                  onKeyPress={onKeyPressSearch}
-                />
-                <SearchButton onClick={onClickSearch}>검색</SearchButton>
-                <span style={{float: 'right', paddingRight: '10px', fontSize: '25px'}}> <BsFillPlusSquareFill onClick={() => onClickItineraryAddIcon()} /> </span>
-              </SearchDiv>
-              <MapDiv>
-                <MapContainer searchPlace={searchPlace} setIsMarkerClicked={setIsMarkerClicked} setMarkerInfo={setMarkerInfo} ref={mapContainerRef} ></MapContainer>
-              </MapDiv>
-            </LeftScreenDiv>
-    
-            <div>
-              <div style={{display: "flex", justifyContent: "space-evenly"}}>
-                <span> 
-                  {
-                    // 1일차일 경우 일차 감소 클릭 방지
-                    (params.day !== '1' ? (<Link to={linkDate(-1)}> <CgChevronLeftR /> </Link>) : (<CgChevronLeftR />))
-                  }
-                </span>
-                <span>{thisPageDate} ({params.day}일차)</span>
-                <span> 
-                  {
-                    // 가장 마지막 일차일 경우 일차 증가 클릭 방지
-                    (thisPageDate !== endPageDate ? (<Link to={linkDate(1)}> <CgChevronRightR /> </Link>) : <CgChevronRightR />)
-                  }
-                </span>
-              </div>
-              <ItineraryScreenDiv style={isMarkerClicked ? {opacity: '0.5'} : {opacity: '1'}}>
-                {renderItineraryList()}
-              </ItineraryScreenDiv>
-              {isMarkerClicked ? (<div style={{textAlign:'center'}}>일정을 등록하고자 하는 시간을 클릭하세요.</div>) : null}
-            </div>
-    
-            <RightScreenDiv>
-              {
-                isMemoOpen && (
-                  <Memo setIsMemoOpen={setIsMemoOpen}/>
-                )
-              }
-              <div>
-                {/* <RightScreenButton>히스토리</RightScreenButton>  */}
-                <RightScreenButton onClick={() => setIsMemoOpen(!isMemoOpen)}>메모</RightScreenButton>
-                <Link to={'/photoAlbum/'+String(params.courseId)+'/'+String(params.day)}>
-                  <RightScreenButton>사진</RightScreenButton> 
-                </Link>
-              </div>
-              <div>
-                <div><br/>제주 관광지 검색</div>
-                {/* <RightScreenButton>SNS</RightScreenButton> */}
-                <RightScreenButton onClick={() => window.open('https://search.naver.com/search.naver?where=view&sm=tab_jum&query=%EC%95%A0%EC%9B%94+%EB%A7%9B%EC%A7%91', '_blank')}>Blog</RightScreenButton>
-              </div>
-            </RightScreenDiv>
-          </ContentDiv>
-    
-          {/* 일정 추가 Modal */}
-          {addItineraryModal}
-    
-          {/* 일정 수정 Modal */}
-          {updateItineraryModal}
-    
-          {/* 중복 일정 툴팁, 마커 클릭 된 상태에서 띄우지 않음*/}
-          {
-            (!isMarkerClicked && 
-              <OverlapItineraryTooltip
-                overlapItineraryArray={overlapItineraryArrayState}
-              />
-            )
-          }
-    
-          {/* 중복 일정 Modal */}
-          <OverlapItineraryModal 
-            isOverlapItineraryModal={isOverlapItineraryModal} 
-            setIsOverlapItineraryModal={setIsOverlapItineraryModal}
-            thisItinerary={representativeItineraryState}
-            overlapItineraryArray={overlapItineraryArrayState}
-            onClickSetRepresentative={onClickSetRepresentative}
-          />
-    
-          {/* 마커 클릭 후 일정 mouseover 툴팁 */}
-          {
-            (isMarkerClicked &&
-              <ItineraryTimeTooltip
-                thisItineraryTime={thisItineraryTime}
-              />
-            )
-          }
-        </MainScreenDiv>
-      )}
-    </>
+     <>
+    {loading ? (
+      <div style={{position: 'absolute', left: '50%', top: '45%'}}>
+      <Ring 
+        size={40}
+        lineWeight={5}
+        speed={2} 
+        color="black"
+      />
+      </div> 
+     ) : (
+    <MainScreenDiv>
+      <CourseHeader inputCourseName={'JEJU 제주'} />
+  
+      <ContentDiv>
+        <LeftScreenDiv>
+          <SearchDiv>
+            <SearchInput 
+              type="text"
+              placeholder='여행지를 입력하세요'
+              onChange={onChangeSearch}
+              onKeyPress={onKeyPressSearch}
+            />
+            <SearchButton onClick={onClickSearch}>검색</SearchButton>
+            <span style={{float: 'right', paddingRight: '10px', fontSize: '25px'}}> <BsFillPlusSquareFill onClick={() => onClickItineraryAddIcon()} /> </span>
+          </SearchDiv>
+          {/* <MapDiv>
+              <MapContainer searchPlace={searchPlace} setIsMarkerClicked={setIsMarkerClicked} setMarkerInfo={setMarkerInfo} ref={mapContainerRef} ></MapContainer>
+          </MapDiv> */}
+        </LeftScreenDiv>
 
+        <ItineraryDateScreenDiv>
+          <div  style={{ width:"100%",display: "flex", justifyContent: "space-evenly", marginLeft:"25%"}}>
+            <span> 
+              {
+                // 1일차일 경우 일차 감소 클릭 방지
+                (params.day !== '1' ? (<Link to={linkDate(-1)}> <CgChevronLeftR /> </Link>) : (<CgChevronLeftR />))
+              }
+            </span>
+            <ItineraryDateDiv>
+                <span>{thisPageDate} ({params.day}일차)</span>
+            </ItineraryDateDiv>
+            <span> 
+              {
+                // 가장 마지막 일차일 경우 일차 증가 클릭 방지
+                (thisPageDate !== endPageDate ? (<Link to={linkDate(1)}> <CgChevronRightR /> </Link>) : <CgChevronRightR />)
+              }
+            </span>
+          </div >
+          <ItineraryScreenDiv style={isMarkerClicked ? {opacity: '0.5'} : {opacity: '1'}}>
+              <RenderItineraryList 
+                itineraryArray={itineraryArray}
+                timeToStringFormat={timeToStringFormat}
+                colorList={colorList}
+                thisPageDate={thisPageDate}
+                onClickItinerary={ onClickItinerary}
+                onMouseOverItinerary={onMouseOverItinerary}
+                onMouseOutItinerary={onMouseOutItinerary}
+                onClickOverlap={ onClickOverlap}
+                onMouseOverOverlapItinerary={onMouseOverOverlapItinerary} />
+          </ItineraryScreenDiv>
+          {isMarkerClicked ? (<div style={{textAlign:'center'}}>일정을 등록하고자 하는 시간을 클릭하세요.</div>) : null}
+        </ItineraryDateScreenDiv>
+
+        <RightScreenDiv>
+            {/* <RightScreenButton>히스토리</RightScreenButton>  */}
+          <ButtonDiv>
+             <RightScreenButton onClick={() => setIsMemoOpen(!isMemoOpen)}>메모</RightScreenButton>
+          </ButtonDiv>
+          <ButtonDiv>
+            <Link to={'/photoAlbum/'+String(params.courseId)+'/'+String(params.day)}>
+              <RightScreenButton>사진</RightScreenButton> 
+            </Link>
+          </ButtonDiv>
+          <BlogSharchDiv>
+            <BlogTitle>관광지 검색</BlogTitle>
+            {/* <RightScreenButton>SNS</RightScreenButton> */}
+            <RightScreenButton onClick={() => window.open('https://search.naver.com/search.naver?where=view&sm=tab_jum&query=%EC%95%A0%EC%9B%94+%EB%A7%9B%EC%A7%91', '_blank')}>Blog</RightScreenButton>
+          </BlogSharchDiv> 
+        </RightScreenDiv> 
+      </ContentDiv>
+
+      {/* 메모 오픈 */}
+      {isMemoOpen && (
+        <Memo setIsMemoOpen={setIsMemoOpen}/>
+      )}
+
+      {/* 일정 추가 Modal */}
+      <AddItineraryModal
+        HOURS={HOURS} MINUTES={MINUTES}
+        isAddItineraryModal={ isAddItineraryModal}
+        setIsAddItineraryModal={setIsAddItineraryModal}
+        inputItinerary={inputItinerary}
+        onChangeInputItinerary={onChangeInputItinerary}
+        onClickAddItinerary={onClickAddItinerary}
+        />
+
+      {/* 일정 수정 Modal */}
+      <UpdateItineraryModal
+        HOURS={HOURS} MINUTES={MINUTES}
+        isUpdateItineraryModal={isUpdateItineraryModal}
+        setIsUpdateItineraryModal={setIsUpdateItineraryModal}
+        inputItinerary={ inputItinerary}
+        onChangeInputItinerary={ onChangeInputItinerary}
+        onClickUpdateItinerary={onClickUpdateItinerary}
+        onClickDeleteItinerary={onClickDeleteItinerary} />
+        
+      {/* 중복 일정 툴팁, 마커 클릭 된 상태에서 띄우지 않음*/}
+      {(!isMarkerClicked && 
+          <OverlapItineraryTooltip
+            overlapItineraryArray={overlapItineraryArrayState}
+          />
+        )}
+
+      {/* 마커 클릭 후 일정 mouseover 툴팁 */}
+      { (isMarkerClicked &&
+          <ItineraryTimeTooltip
+            thisItineraryTime={thisItineraryTime}
+          />
+      )}
+    </MainScreenDiv>
+    )}
+  </>
   )
 };
 
@@ -1084,59 +751,130 @@ const CoursePage = () => {
 const MainScreenDiv = styled.div`
   height: 100vh;
 `;
-const TitleDiv = styled.div`
-  margin-left: 3%;
+const ItineraryDateScreenDiv = styled.div`
+  margin-left:2%;
+  width:20%;
+  
+`;
+
+const ItineraryDateDiv = styled.div`
+  background-color:white;
+  width:60%;
+  border-radius: 0.6rem;
+  text-align :center;
+  font-size:1.1rem;
+  font-weight:600;
+  padding:2%;
 `;
 const ContentDiv = styled.div`
   display: flex;
+  padding-top:6%;
+  background-color:	#F5F5F5;
+  height: 100vh;
 `;
 const LeftScreenDiv = styled.div`
-  flex-basis: 50%;
-
+  flex-basis: 55%;
   margin-left: 2%;
 `;
 const ItineraryScreenDiv = styled.div`
   flex-basis: 40%;
-  width: 350px;
+  width: 380px;
   overflow-y: scroll;
-  
-  height: 80vh;
-  margin-left: 3%;
+  background-color:	white;
+  height: 78vh;
   margin-top: 3%;
+  box-shadow: 0px 0px 2px lightgray;
+  border-radius: 0.6rem;
+  &::-webkit-scrollbar {
+    width:12px;
+    border-radius:3%;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: lightgray ;
+    border-radius:6px;
+    background-clip: padding-box;
+    border: 1px solid transparent;
+  }
+  &::-webkit-scrollbar-corner{
+    background-color:#F5F5F5 ;
+  }
+  
 `;
 const RightScreenDiv = styled.div`
-  flex-basis: 10%;
-  
-  margin-left: 1%;
+position:fixed;
+margin-left:92%;
   margin-top: 2%;
+  height: 100vh;
+  text-align: center;
+  z-index:1;
 `;
 const SearchDiv = styled.div`
+
+`;
+const ButtonDiv = styled.div`
+margin-top:20%;
+
 `;
 const MapDiv = styled.div`
   padding: 10px;
 `;
 
+const BlogSharchDiv = styled.div`
+margin-top:20%;
+
+`;
+
+const BlogTitle = styled.div`
+  font-size:0.8rem;
+  margin-bottom:5%;
+`;
 // input
 const SearchInput = styled.input`
+border-radius: 0.30rem;
+line-height: 2;
+border: 1px solid lightgray;
+width:40%;
+box-shadow: 0px 0px 2px lightgray;
   margin-left: 2%;
+  font-size: 0.9rem;
 `;
 
 // button
 const SearchButton = styled.button`
-  margin-left: 5px;
+  background-color:#FFFFFF;
+  border-radius: 0.30rem;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  width:15%;
+  height:2rem;
+  color:#4D9FE3;
+  display: inline-block;
+  margin:1%;
+  border: 1px solid  #4D9FE3;
+  box-shadow: 0px 0px 2px lightgray;
+  font-weight: bold;
+  &:hover{  
+    border: 1px solid  gray;
+    box-shadow: 0 0 3px  gray;
+}
 `;
 const RightScreenButton = styled.button`
-  margin-left: 5px;
 
-  padding: 3px 5px;
-  border-width: 1px;
-
-  border-style: solid;
-  border-radius: 10%;
-  border-color: #3498DB;
-  font-size: 13px;
-  background-color: gray;
-  color: white;
+background-color:#FFFFFF;
+border-radius: 0.30rem;
+font-size: 0.7rem;
+line-height: 1.6;
+width:80px;
+height:25px;
+color:#4D9FE3;
+margin:1%;
+border: 1px solid  #4D9FE3;
+box-shadow: 0px 0px 2px lightgray;
+font-weight: bold;
+&:hover{  
+  border: 1px solid  gray;
+  box-shadow: 0 0 3px  gray;
+}
 `;
 
 export default CoursePage;

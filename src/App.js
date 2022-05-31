@@ -11,8 +11,7 @@ import SearchIdPage from './pages/LoginPage/SearchIdPage.js';
 import SearchPwPage from './pages/LoginPage/SearchPwPage.js';
 import JoinPage from './pages/LoginPage/JoinPage.js';
 import PhotoPage from './pages/PhotoPage/PhotoPage.js';
-import CoursePage from './pages/CoursePage/CoursePage'
-import CoursePhotoPage from './pages/CoursePhotoPage/CoursePhotoPage'
+import CoursePage from './pages/CoursePage/CoursePage';
 
 const App = () => {
   return (
