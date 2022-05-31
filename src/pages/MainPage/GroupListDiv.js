@@ -262,7 +262,7 @@ const GroupUl = styled.ul`
   flex-direction: column;
   list-style: none;
   background-color:	#F5F5F5;
-  width:70%;
+  width:80%;
   height:80%;
   margin-left:6%;
   border-radius: 1rem;
