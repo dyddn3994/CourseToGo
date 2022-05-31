@@ -3,11 +3,11 @@ import styled, { css } from 'styled-components';
 
 const PhotoItem = ({item,checkedPhotos, addElementPhotos}) => {
 
-    const {image, id} = item;
+    const {photoImage, photoId} = item;
 
     return (
         < Photoli clicked = {checkedPhotos.includes(item) ? true : false}>
-            <PhotoInput type='image' key={id} value={image} src={image}  onClick={()=>addElementPhotos(item)}/>
+            <PhotoInput type='image' key={photoId} value={photoImage} src={photoImage}  onClick={()=>addElementPhotos(item)}/>
         </ Photoli>
     );
 };

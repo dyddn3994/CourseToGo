@@ -16,11 +16,11 @@ const GroupListDiv = forwardRef((props, ref) => {
   const [groups, setGroups] = useState([
     { groupId: 1, groupName: 'A그룹', groupMemberCount: 4, groupKey: 972184357, groupClicked: false, courses: [
         { courseId: 1, courseName: '1코스', courseStartDate: '2021-10-14', courseEndDate: '2021-11-16', city: '제주', check: true },
-        { courseId: 1, courseName: '2코스', courseStartDate: '2022-06-14', courseEndDate: '2022-06-15', city: '부산' }
+        { courseId: 1, courseName: '2코스', courseStartDate: '2022-06-14', courseEndDate: '2022-06-15', city: '부산', check: false }
       ]
     },
     { groupId: 2, groupName: 'B그룹', groupMemberCount: 3, groupKey: 157195250, groupClicked: false, courses: [
-        { courseId: 1, courseName: '1코스', courseStartDate: '2021-09-14', courseEndDate: '2021-09-16', city: '제주' },
+        { courseId: 1, courseName: '1코스', courseStartDate: '2021-09-14', courseEndDate: '2021-09-16', city: '제주', check: false },
       ]
     }
   ]);

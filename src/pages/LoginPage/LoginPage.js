@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import styled, { css } from 'styled-components';
-
+import { useNavigate } from 'react-router-dom';
 
 import MainLayout from "../../components/Login/MainLayout";
 import LogoHeader from "../../components/Login/LogoHeader";
 import InputForm from "../../components/InputForm";
 import ButtonType from "../../components/Login/ButtonType";
 
+
 const LoginPage = () => {
+  const navigate = useNavigate();
 
   // 입력되는 아이디와 비밀번호
   const [inputs, setInputs] = useState({
@@ -39,7 +41,7 @@ const LoginPage = () => {
       alert('비밀번호를 입력하세요.');
     }
     else {
-      fetch("/login?userId="+inputs.inputId+"&pwd="+inputs.inputPwd)
+      fetch("/login?userId="+userId+"&pwd="+pwd)
       .then((res)=>{
         return res.json();
       })

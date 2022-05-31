@@ -2,13 +2,13 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 
 const PhotoDetailView = ({currItem, editClickedHandler}) => {
-    const {image, itinerary, uploader} = currItem
+    const {photoImage, itinerary, uploader} = currItem
     return (
    
         <DetailVeiw>
              <OnclickedPhotoDiv>
             {/* 클릭된 이미지 */}
-                <OnclickedPhoto src = {image} alt = {itinerary}/> 
+                <OnclickedPhoto src = {photoImage} alt = {itinerary}/> 
             </OnclickedPhotoDiv>
             {/* 사진 정보 */}
             <InfoDiv>

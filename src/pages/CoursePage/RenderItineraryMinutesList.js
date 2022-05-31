@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled, { css } from 'styled-components';
   const RenderItineraryMinutesList = (
-      {hour, itineraryArray,formatTime, colorList, thisPageDate, onClickItinerary,onMouseOverItinerary, onMouseOutItinerary,onClickOverlap,onMouseOverOverlapItinerary}) => {
+      {hour, itineraryArray,timeToStringFormat, colorList, thisPageDate, onClickItinerary,onMouseOverItinerary, onMouseOutItinerary,onClickOverlap,onMouseOverOverlapItinerary}) => {
     const renderResult = [];
     const MINUTES = 60;
     let itineraryTitle = null;
@@ -65,8 +65,8 @@ import styled, { css } from 'styled-components';
           else {
             renderColor = colorList[itinerary.itineraryColor];
             thisItinerary = itinerary;
-            representativeStartTimeFormat = formatTime(thisItinerary.itineraryStartTime.substring(11, 13), thisItinerary.itineraryStartTime.substring(14, 16));
-            representativeEndTimeFormat = formatTime(thisItinerary.itineraryEndTime.substring(11, 13), thisItinerary.itineraryEndTime.substring(14, 16));
+            representativeStartTimeFormat = timeToStringFormat(thisItinerary.itineraryStartTime.substring(11, 13), thisItinerary.itineraryStartTime.substring(14, 16));
+            representativeEndTimeFormat = timeToStringFormat(thisItinerary.itineraryEndTime.substring(11, 13), thisItinerary.itineraryEndTime.substring(14, 16));
           }
         }
         // 일정 시간의 가장 상단일 경우 일정명 출력
@@ -82,6 +82,8 @@ import styled, { css } from 'styled-components';
       });
       
 
+      
+
       // 일정이 있는 상황인지 확인
       let isRenderColor = false;
       if (renderColor !== '#FFFFFF' && '#ffffff' && 'white'){
@@ -89,13 +91,12 @@ import styled, { css } from 'styled-components';
           isRenderColor = true;
         }
       }
-
       renderResult.push(
         <div 
           style={{
             height: '10px',
-            backgroundColor: (isRenderColor && renderColor),
-        }} 
+            backgroundColor: (isRenderColor ? renderColor : null)
+          }} 
           onClick={(e) => onClickItinerary(
                     e,
                     (renderColor === "#FFFFFF" && '#ffffff' && 'white'), 
@@ -109,15 +110,14 @@ import styled, { css } from 'styled-components';
           onMouseOut={(e) => onMouseOutItinerary(e, renderColor)}
           data-tip data-for='itineraryTimeTooltip'
         >
-          {isTitlePosition && itineraryTitle}
+          {isTitlePosition ? itineraryTitle : null}
           {(isHidden && isTitlePosition) && 
           <>
             <span 
               style={{
                 float: 'right',
                 marginRight: '5px', 
-                color:'#FF0000',
-                fontWeight :'600'
+                color:'#FF0000'
               }}
               onClick={(e) => onClickOverlap(e)} 
               onMouseOver={() => onMouseOverOverlapItinerary(thisItinerary, thisPageDate+'T'+thisTimeFormat+':00')}

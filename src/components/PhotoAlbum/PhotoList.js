@@ -1,5 +1,5 @@
-import React, { useState , useEffect} from "react";
-import styled, { css } from 'styled-components';
+import React from "react";
+import styled from 'styled-components';
 
 import PhotoItem from './PhotoItem';
 
@@ -11,7 +11,7 @@ const PhotoList = ({datas,checkedPhotos, addElementPhotos}) => {
             <Photos>
                 {
                 datas.map(item => 
-                    <PhotoItem  key= {item.id} item={item} checkedPhotos={checkedPhotos} addElementPhotos={addElementPhotos}/>)
+                    <PhotoItem  key= {item.photoId} item={item} checkedPhotos={checkedPhotos} addElementPhotos={addElementPhotos}/>)
                 }
             </Photos> 
         </PhotoListDiv>

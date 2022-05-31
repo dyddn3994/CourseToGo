@@ -27,6 +27,7 @@
     "react-scripts": "5.0.0",
     "react-stomp": "^5.1.0",
     "react-tooltip": "^4.2.21",
+    "serve": "^13.0.2",
     "sockjs-client": "^1.6.0",
     "styled-components": "^5.3.5",
     "web-vitals": "^2.1.0"
@@ -55,5 +56,6 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://122.199.121.202:9092"
+  "proxy": "http://192.168.235.226:9092",
+  "homepage": "./"
 }

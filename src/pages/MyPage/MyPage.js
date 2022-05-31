@@ -8,11 +8,12 @@ import userData from '../../assets/User/User';
 import CourseHeader from "../../components/CourseHeader";
 import InputForm from "../../components/InputForm";
 const CoursePhotoPage = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    // 프로필 사진을 얼굴 사진으로 쓸 것인지 체크 유무
-    const [checkedFaceProfile, setCheckedFaceProfile] = useState(false);
-      // 입력되는 정보
+  // 프로필 사진을 얼굴 사진으로 쓸 것인지 체크 유무
+  const [checkedFaceProfile, setCheckedFaceProfile] = useState(false);
+
+  // 입력되는 정보
   const [inputMemberInfo, setInputMemberInfo] = useState({
     userId: 'dddd',
     pwd: 'ddd',
@@ -34,6 +35,13 @@ const CoursePhotoPage = () => {
       [name]: value // name 키를 가진 값을 value 로
     });
   };
+  const onChangeFile = (e) => {
+    const { files, name } = e.target;
+    setInputMemberInfo({
+      ...inputMemberInfo,
+      [name]: files // name 키를 가진 값을 value 로
+    });
+  }
 
   const faceProfileCheckedFandeler = () => {
     if(!checkedFaceProfile){ // 프로필 사진을 얼굴 사진으로 등록하기 O
@@ -69,7 +77,7 @@ const CoursePhotoPage = () => {
           });
         });
       }
-    const commutePutMemberInfo= () => {
+    const commutePutMemberInfo = () => {
       fetch("/mypage/update", {
         method: 'put',
         headers: {
@@ -155,8 +163,8 @@ const CoursePhotoPage = () => {
                     </InputFormDiv>
           {/* 프로필 사진 업로드 및 선택 부분 */}
     
-          <InputForm  label={"프로필 사진"} name={"memberProfile"} type={"file"} onChange={onChange} value={memberProfile} />
-            {!checkedFaceProfile ?  <InputForm accept="image/*" label={"얼굴 등록"} name={"memberFace"} type={"file"} onChange={onChange} value={memberFace} /> 
+          <InputForm  label={"프로필 사진"} name={"memberProfile"} type={"file"} onChange={onChangeFile} value={memberProfile} />
+            {!checkedFaceProfile ?  <InputForm accept="image/*" label={"얼굴 등록"} name={"memberFace"} type={"file"} onChange={onChangeFile} value={memberFace} /> 
               :null}
               <ProfileCheckBoxDiv>
                   <input  onClick={faceProfileCheckedFandeler} type="checkbox" />
@@ -168,7 +176,7 @@ const CoursePhotoPage = () => {
             <SubmitButtonDiv>
                
                 < SubmitButton  buttonType={'update'} onClick={commutePutMemberInfo}>내 정보 수정</ SubmitButton>
-                < SubmitButton onClick={{deleteMember}}>탈퇴</ SubmitButton>
+                < SubmitButton onClick={deleteMember}>탈퇴</ SubmitButton>
               
             </SubmitButtonDiv>
           </ScrollDiv>

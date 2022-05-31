@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router';
 import { Ring } from '@uiball/loaders'
+import axios from 'axios'
 
 import data from '../../assets/Photo/Photo';
 import userData from '../../assets/User/User';
@@ -14,6 +15,8 @@ import BodyBlackoutStyle from "../../components/PhotoAlbum/BodyBlackoutStyle";
 import EditModal from "../../components/PhotoAlbum/EditModal";
 import CourseHeader from "../../components/CourseHeader";
 
+const SERVER_URL = 'http://192.168.235.226:9092/'
+
 const CoursePhotoPage = () => {
 
   // url 파라미터 
@@ -23,18 +26,8 @@ const CoursePhotoPage = () => {
 
   // useEffect
   useEffect(() => {
-    // new Promise((resolve, reject) => {
-    //   commuteGetMemberInfo();
-    //   commuteGetCoursePhoto();
-    // .then(() => {
-    //   setLoading(false);
-    // })
-    // .catch(() => {
-    //   console.log('err')
-    // })
     commuteGetMemberInfo();
     commuteGetCoursePhoto();
-    setLoading(false);
   }, []);
 
   // useRef
@@ -136,31 +129,25 @@ const CoursePhotoPage = () => {
   // 사진 업로드 클릭 시
   const photoUploadHandler = () => {
     photoInputRef.current.click();
+    console.log('a'+uploadPhotos+'b')
   }
 
   // 파일 input의 경우 e.targetvalue가 아닌 e.targetfiles로 처리
-  const onChangeFile = (e) => {
-    const { files, name } = e.target;
-
-    setInputs({
-      ...inputs,
-      [name]: files
-    });
+  const onChangeUploadFile = (e) => {
+    const fileData = e.target.files;
+    if (fileData !== '') {
+      commutePostCoursePhoto(fileData);
+    }
   }
     
   // 사진 리스트에서 하나 클릭해서 디테일 뷰 보여주기
   const onView = () => {
-    console.log(checkedPhotos);
-    if(checkedPhotos.length >0){
+    if(checkedPhotos.length > 0){
       const lastValue = checkedPhotos[checkedPhotos.length - 1];
       setCurrItem(datas.find(element => element.photoId === lastValue.photoId));
       return currItem;
     }
   };
-  
-  
-  // 통신
-  
 
   // 개별 체크 리스트에 추가 및 두 번 체크 시 해제
   const addElementPhotos = (item) => {
@@ -176,37 +163,41 @@ const CoursePhotoPage = () => {
   
   
   // 통신
-  // 코스 멤버 정보 조회
   const commuteGetMemberInfo = () => {
+    // 코스 멤버 정보 조회
     fetch("/course/member?courseId="+params.courseId)
     .then((res)=>{
       return res.json();
     })
     .then((memberData)=>{
+      const newMemberData = memberData.map(data => ({ ...data, memberProfile: SERVER_URL+data.memberProfile })); // 서버 url 연결해야 조회 가능
       setUser(memberData);
     });
   }
-  // 코스 사진 가져오기
   const commuteGetCoursePhoto = () => {
+    // 코스 사진 가져오기
     fetch("/course/photo?courseId="+params.courseId)
     .then((res)=>{
       return res.json();
     })
     .then((photoData)=>{
-      setData(photoData);
+      const newPhotoData = photoData.map(data => ({ ...data, photoImage: SERVER_URL+data.photoImage })); // 서버 url 연결해야 조회 가능
+      setData(newPhotoData);
+      setLoading(false);
     });
   }
-  // 사진 등록
-  const commutePostCoursePhoto = () => {
+  const commutePostCoursePhoto = (fileData) => {
+    // 사진 등록
+    setLoading(true);
+    const formData = new FormData();
+    formData.append('courseId', new Blob([JSON.stringify(params.courseId)], { type: 'application/json' }));
+    formData.append('images', fileData[0]);
     fetch("/course/photo", {
       method: 'post',
       headers: {
-        "Content-Type": "application/json",
+        // "Content-Type": "multipart/form-data", // 왜인지 모르겠는데 여기서는 contenttype 두면 오류남
       },
-      body : JSON.stringify({
-        courseId: params.courseId,
-        images: uploadPhotos
-      })
+      body : formData
     })
     .then((res)=>{
       return res.json();
@@ -214,12 +205,27 @@ const CoursePhotoPage = () => {
     .then((ack)=>{
       if (ack) {
         alert('사진 등록에 성공하였습니다.');
+        commuteGetCoursePhoto();
       }
       else {
         alert('사진 등록에 실패하였습니다.');
       }
     });
+    // // axios
+    // const config = {
+    //   headers: {
+    //     "content-type": "multipart/form-data"
+    //   }
+    // };
+    // axios.post(`course/photo`, formData, config)
+    // .then(res => {
+    //   console.log(res.data)
+    //   alert('사진 등록에 성공하였습니다.');
+    // // navigate('../');  //로그인 페이지로
+    // });
+    setLoading(false);
   }
+
   // 편집 클릭 시 
   const editClickedHandler = () => { 
     setIsEditModalOpen(true); //모달 오픈
@@ -266,6 +272,10 @@ const CoursePhotoPage = () => {
               <Button onClick={()=>clearCheckedHandler()}>선택해제</Button> 
               <Button onClick={(e) => allCheckedHandler(e)}>전체선택</Button>
               <Button onClick={(e) => filteringCheckedHandler(e)}>필터링</Button>
+              <Button onClick={() => photoUploadHandler()}>
+                <input name='uploadPhotos' type='file' accept='image/*' style={{display: 'none'}} ref={photoInputRef} onChange={onChangeUploadFile} />
+                사진등록
+              </Button>
             </ButtonDiv>
           </FilteringAndButton>
         </FixedButtonDiv> 
@@ -340,7 +350,7 @@ const UserDiv = styled.div`
 `;
  const ButtonDiv =  styled.div`
   width:60%;
-   margin-right: 3%;
+  margin-right: 3%;
   margin-top:1%;
 `;
 const Button=  styled.button`

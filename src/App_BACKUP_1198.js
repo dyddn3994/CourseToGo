@@ -3,6 +3,10 @@ import { Routes, Route } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 
 // components
+<<<<<<< HEAD
+=======
+// import ItineraryTest from './pages/ItineraryTest.js';
+>>>>>>> 4b2f8d07efa698c6f7ae6c46340af0dfcf7f406c
 import MainPage from './pages/MainPage/MainPage.js';
 import MyPage from './pages/MyPage/MyPage.js';
 
@@ -13,6 +17,11 @@ import JoinPage from './pages/LoginPage/JoinPage.js';
 import PhotoPage from './pages/PhotoPage/PhotoPage.js';
 import CoursePage from './pages/CoursePage/CoursePage'
 
+// import LoginPage from './pages/LoginPage/LoginPage'
+// import SignUpPage from './pages/LoginPage/SignUpPage'
+// import SearchIdPage from './pages/LoginPage/SearchIdPage'
+// import SearchPwPage from './pages/LoginPage/SearchPwPage'
+import CoursePhotoPage from './pages/CoursePhotoPage/CoursePhotoPage'
 
 const App = () => {
   return (
@@ -22,8 +31,10 @@ const App = () => {
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/course/:courseId/:day" element={<CoursePage />} />
       <Route path="/main" element={<MainPage />} />
+      {/* <Route path="/signUp" element={<SignUpPage />} /> */}
       <Route path="/searchId" element={<SearchIdPage />} />
       <Route path="/searchPw" element={<SearchPwPage />} />
+      {/* <Route path="/coursePhoto" element={<CoursePhotoPage />} /> */}
       <Route path="/join" element={<JoinPage />} />
       <Route path="/photoAlbum/:courseId/:day" element={<PhotoPage />} />
     </Routes>
