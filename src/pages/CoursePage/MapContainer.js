@@ -18,6 +18,7 @@ const MapContainer = forwardRef((props, ref) => {
 
   const { searchPlace, setIsMarkerClicked, setMarkerInfo } = props;
   const [thisCity, setThisCity] = useState('제주');
+  const [touristSpotInfo, setTouristSpotInfo] = useState({touristSpotAvgCost: 12, touristSpotAvgTime: 60});
   
   // 부모 컴포넌트에서 자식 함수 실행할 수 있도록 설정
   useImperativeHandle(ref, () => ({
@@ -102,14 +103,19 @@ const MapContainer = forwardRef((props, ref) => {
         position: new kakao.maps.LatLng(place.y, place.x),
       })
 
-      const renderPinContent = 
-        '<div >' +
-          '<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>' +
-          '<div style="padding:5px;font-size:12px;">' + place.address_name + '</div>' +
-          // '<button onClick={alert("test")}> test </button>' + 
-        '</div>';
+      let renderPinContent = 
+        '<div style="padding-bottom: 20px;">' +
+          '<div style="padding:5px;font-size:12px;">' + '이름: ' + place.place_name + '</div>' +
+          '<div style="padding:5px;font-size:12px;">' + '주소: ' + place.address_name + '</div>';
+      if (Object.keys(touristSpotInfo).length !== 0) {
+        renderPinContent = renderPinContent + 
+          '<div style="padding:5px;font-size:12px;">' + '평균 비용: ' + touristSpotInfo.touristSpotAvgCost + '원' + '</div>' +
+          '<div style="padding:5px;font-size:12px;">' + '평균 소요시간: ' + touristSpotInfo.touristSpotAvgTime + '시간' + '</div>';
+      }
+      renderPinContent = renderPinContent + '</div>';
 
       kakao.maps.event.addListener(marker, 'click', function () {
+        commuteGetMarkerInfo();
         isMarkerContent = !isMarkerContent;
         infowindow.setContent(
           renderPinContent
@@ -126,6 +132,18 @@ const MapContainer = forwardRef((props, ref) => {
       })
     }
   }, [searchPlace])
+
+  // 통신
+  const commuteGetMarkerInfo = (address, name) => {
+    // 마커 클릭했을때 보여질 정보 중 평균 수치들 출력
+    fetch("/course/spot?address="+address+"&name="+name)
+    .then(res => {
+      return res.json();
+    })
+    .then((touristSpotInfo) => {
+      setTouristSpotInfo(touristSpotInfo);
+    })
+  }
 
   return (
     <div>

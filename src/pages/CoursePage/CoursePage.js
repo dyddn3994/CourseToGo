@@ -50,12 +50,12 @@ const CoursePage = () => {
   const mapContainerRef = useRef();
 
   // useState
-  const [thisPageDate, setThisPageDate] = useState(''); // 현재 일정 날짜
+  const [thisPageDate, setThisPageDate] = useState('2021-09-12'); // 현재 일정 날짜
   const [endPageDate, setEndPageDate] = useState(''); // 마지막 일정 날짜
   const [searchPlace, setSearchPlace] = useState(''); // 장소 검색어
   const [itineraryArray, setItineraryArray] = useState([
     // 등록된 일정 리스트
-    {itineraryId: 1, itineraryStartTime: '2022-05-01t16:00', itineraryEndTime: '2022-05-01t17:30', itineraryColor: 1, itineraryHidden: false, touristSpot: {
+    {itineraryId: 1, itineraryStartTime: '2022-05-01T16:00', itineraryEndTime: '2022-05-01T17:30', itineraryColor: 1, itineraryHidden: false, touristSpot: {
       touristSpotName: "이호태우해수욕장", touristSpotAddress: "부산광역시 해운대구", touristSpotAvgCost: 0, touristSpotAvgTime: 0
     }},
     {itineraryId: 5, itineraryStartTime: '2022-05-01t16:00', itineraryEndTime: '2022-05-01t17:30', itineraryColor: 1, itineraryHidden: true, touristSpot: {
@@ -65,10 +65,10 @@ const CoursePage = () => {
       touristSpotName: "애월카페", touristSpotAddress: "거제시 여러분", touristSpotAvgCost: 0, touristSpotAvgTime: 0
     }},
     {itineraryId: 3, itineraryStartTime: '2022-05-01t09:30', itineraryEndTime: '2022-05-01t10:50', itineraryColor: 0, itineraryHidden: true, touristSpot: {
-      touristSpotName: "중복1", touristSpotAddress: "거제시 여러분", touristSpotAvgCost: 0, touristSpotAvgTime: 0
+      touristSpotName: "애월중복1", touristSpotAddress: "거제시 여러분", touristSpotAvgCost: 0, touristSpotAvgTime: 0
     }},
     {itineraryId: 4, itineraryStartTime: '2022-05-01t09:30', itineraryEndTime: '2022-05-01t10:50', itineraryColor: 0, itineraryHidden: true, touristSpot: {
-      touristSpotName: "중복2", touristSpotAddress: "거제시 여러분", touristSpotAvgCost: 0, touristSpotAvgTime: 0
+      touristSpotName: "애월중복2", touristSpotAddress: "거제시 여러분", touristSpotAvgCost: 0, touristSpotAvgTime: 0
     }},
   ]); 
   const [overlapItineraryArrayState, setOverlapItineraryArrayState] = useState([]);
@@ -111,37 +111,136 @@ const CoursePage = () => {
   const onChangeInputItineraryStartTimeMinute = e => setInputItineraryStartTimeMinute(e.target.value);
   const onChangeInputItineraryEndTimeHour = e => setInputItineraryEndTimeHour(e.target.value);
   const onChangeInputItineraryEndTimeMinute = e => setInputItineraryEndTimeMinute(e.target.value);
+  // const onChangeInputItineraryStartTimeHour = e => {
+  //   const startTime = thisPageDate + 'T' + e.target.value + ':' + inputItineraryStartTimeMinute + ':00';
+  //   setInputItineraryStartTime(startTime);
+  //   setInputItineraryStartTimeHour(e.target.value);
+  // };
+  // const onChangeInputItineraryStartTimeMinute = e => {
+  //   setInputItineraryStartTimeMinute(e.target.value)
+  // };
+  // const onChangeInputItineraryEndTimeHour = e => {
+  //   const endTime = thisPageDate + 'T' + inputItineraryEndTimeHour + ':' + inputItineraryEndTimeMinute + ':00';
+  //   setInputItineraryEndTime(endTime);
+  //   setInputItineraryEndTimeHour(e.target.value)
+  // };
+  // const onChangeInputItineraryEndTimeMinute = e => {
+  //   setInputItineraryEndTimeMinute(e.target.value)
+  // };
   const onChangeInputItineraryHidden = e => setInputItineraryHidden(e.target.value);
   const onChangeInputItineraryDetail = e => setInputItineraryDetail(e.target.value);
   const onChangeInputItineraryCost = e => setInputItineraryCost(e.target.value);
 
   // onClick
   const onClickSearch = () => setSearchPlace(searchInputTemp);
-  const onClickItineraryAddIcon = () => setIsAddItineraryModal(true);
+  const onClickItineraryAddIcon = () => {
+    setInputItineraryName('');
+    setInputItineraryAddress('');
+    setInputItineraryStartTimeHour('');
+    setInputItineraryStartTimeMinute('');
+    setInputItineraryEndTimeHour('');
+    setInputItineraryEndTimeMinute('');
+    setInputItineraryDetail('');
+    setInputItineraryCost('');
+    setIsAddItineraryModal(true);
+  }
   const onClickAddItinerary = () => {
-    const newItineraryArray = itineraryArray.concat({ 
-      // itineraryName: inputItineraryName, // 여기
-      // itineraryAddress: inputItineraryAddress, 
-      itineraryStartTime: inputItineraryStartTime, 
-      itineraryEndTime: inputItineraryEndTime, 
-      // itineraryColor: userColor, 색상 설정 자동화했으니 문제없으면 제거
-      itineraryDetail: inputItineraryDetail,
-      itineraryCost: inputItineraryCost,
-      touristSpot: {
-        touristSpotName: inputItineraryName,
-        touristSpotAddress: inputItineraryAddress
-      }
-    });
-    setItineraryArray(newItineraryArray);
+    // 일정 추가 버튼 onClick
+    // 시간 수정은 select 리스트로 하기 때문에 setter 호출
+    let startTimeHour = String(inputItineraryStartTimeHour);
+    let startTimeMinute = String(inputItineraryStartTimeMinute);
+    let endTimeHour = String(inputItineraryEndTimeHour);
+    let endTimeMinute = String(inputItineraryEndTimeMinute);
+    if (startTimeHour.length === 1) {
+      startTimeHour = '0' + startTimeHour
+    }
+    if (startTimeMinute.length === 1) {
+      startTimeMinute = '0' + startTimeMinute
+    }
+    if (endTimeHour.length === 1) {
+      endTimeHour = '0' + endTimeHour
+    }
+    if (endTimeMinute.length === 1) {
+      endTimeMinute = '0' + endTimeMinute
+    }
+    const startTime = thisPageDate + 'T' + startTimeHour + ':' + startTimeMinute + ':00';
+    const endTime = thisPageDate + 'T' + endTimeHour + ':' + endTimeMinute + ':00';
+    setInputItineraryStartTime(startTime);
+    setInputItineraryEndTime(endTime);
+
+    if (inputItineraryName === '') {
+      alert('일정명을 입력해주세요');
+    }
+    else if (inputItineraryAddress === '') {
+      alert('일정 주소를 입력해주세요');
+    }
+    else if (isTimeUnbalance(startTime, endTime)) {
+      alert('종료 시간은 시작 시간 이후여야 합니다.');
+    }
+    else if (isItineraryConflict(0, startTime, endTime)) {
+      alert('다른 일정과 시간이 겹치지 않도록 선택해주세요.');
+    }
+    else {
+      commutePostCreateItinerary(inputItineraryName, inputItineraryAddress, startTime, endTime, false);
+      setIsAddItineraryModal(false);
+    }
+    // const newItineraryArray = itineraryArray.concat({ 
+    //   itineraryStartTime: inputItineraryStartTime, 
+    //   itineraryEndTime: inputItineraryEndTime, 
+    //   itineraryDetail: inputItineraryDetail,
+    //   itineraryCost: inputItineraryCost,
+    //   touristSpot: {
+    //     touristSpotName: inputItineraryName,
+    //     touristSpotAddress: inputItineraryAddress
+    //   }
+    // });
+    // setItineraryArray(newItineraryArray);
     
-    alert('itinerary add complete');
-    setIsAddItineraryModal(false);
+    // alert('itinerary add complete');
   }
   const onClickUpdateItinerary = () => {
     // 일정 수정
-    commutePutUpdateItinerary(inputItineraryId);
-    commuteGetItineraryInfo(params.day);
-    setIsUpdateItineraryModal(false);
+    // 시간 수정은 select 리스트로 하기 때문에 setter 호출
+    let startTimeHour = String(inputItineraryStartTimeHour);
+    let startTimeMinute = String(inputItineraryStartTimeMinute);
+    let endTimeHour = String(inputItineraryEndTimeHour);
+    let endTimeMinute = String(inputItineraryEndTimeMinute);
+    if (startTimeHour.length === 1) {
+      startTimeHour = '0' + startTimeHour
+    }
+    if (startTimeMinute.length === 1) {
+      startTimeMinute = '0' + startTimeMinute
+    }
+    if (endTimeHour.length === 1) {
+      endTimeHour = '0' + endTimeHour
+    }
+    if (endTimeMinute.length === 1) {
+      endTimeMinute = '0' + endTimeMinute
+    }
+    const startTime = thisPageDate + 'T' + startTimeHour + ':' + startTimeMinute + ':00';
+    const endTime = thisPageDate + 'T' + endTimeHour + ':' + endTimeMinute + ':00';
+    console.log(startTime);
+    console.log(endTime);
+    setInputItineraryStartTime(startTime);
+    setInputItineraryEndTime(endTime);
+
+    if (inputItineraryName === '') {
+      alert('일정명을 입력해주세요');
+    }
+    else if (inputItineraryAddress === '') {
+      alert('일정 주소를 입력해주세요');
+    }
+    else if (isTimeUnbalance(startTime, endTime)) {
+      alert('종료 시간은 시작 시간 이후여야 합니다.');
+    }
+    else if (isItineraryConflict(inputItineraryId, startTime, endTime)) {
+      alert('다른 일정과 시간이 겹치지 않도록 선택해주세요.');
+    }
+    else {
+      commutePutUpdateItinerary(inputItineraryId, startTime, endTime);
+      commuteGetItineraryInfo(params.day);
+      setIsUpdateItineraryModal(false);
+    }
   }
   const onClickDeleteItinerary = () => {
     if (window.confirm("일정을 삭제하시겠습니까?") == true) {
@@ -176,11 +275,6 @@ const CoursePage = () => {
     // 중복 일정에서 대표 일정 설정
     // representativeItineraryId: 현재 설정되어 있는 대표 일정 id
     // overlapItineraryId: 대표 일정으로 바꿀 일정 id
-
-    // const newItineraryArray1 = itineraryArray.map(itinerary => (itinerary.itineraryId === representativeItineraryId ? { ...itinerary, itineraryHidden: true } : itinerary)); // 기존 대표 일정 숨김
-    // const newItineraryArray2 = newItineraryArray1.map(itinerary => (itinerary.itineraryId === overlapItineraryId ? { ...itinerary, itineraryHidden: false } : itinerary)); // 새로운 대표 일정 설정
-    // setItineraryArray(newItineraryArray2);
-
     commutePutSelectOverlapItinerary(representativeItineraryId, overlapItineraryId);
   }
 
@@ -203,8 +297,18 @@ const CoursePage = () => {
     setInputItineraryId(itinerary.itineraryId);
     setInputItineraryName(itinerary.touristSpot.touristSpotName);
     setInputItineraryAddress(itinerary.touristSpot.touristSpotAddress);
-    setInputItineraryStartTime(itinerary.itineraryStartTime);
-    setInputItineraryEndTime(itinerary.itineraryEndTime);
+
+    // setInputItineraryStartTime(itinerary.itineraryStartTime);
+    // setInputItineraryEndTime(itinerary.itineraryEndTime);
+    const startTimeHour = Number(itinerary.itineraryStartTime.substring(11, 13));
+    const startTimeMinute = Number(itinerary.itineraryStartTime.substring(14, 16));
+    const endTimeHour = Number(itinerary.itineraryEndTime.substring(11, 13));
+    const endTimeMinute = Number(itinerary.itineraryEndTime.substring(14, 16));
+    setInputItineraryStartTimeHour(startTimeHour);
+    setInputItineraryStartTimeMinute(startTimeMinute);
+    setInputItineraryEndTimeHour(endTimeHour);
+    setInputItineraryEndTimeMinute(endTimeMinute);
+
     setInputItineraryHidden(itinerary.itineraryHidden);
     setInputItineraryDetail(itinerary.itineraryDetail);
     setInputItineraryCost(itinerary.itineraryCost);
@@ -288,9 +392,9 @@ const CoursePage = () => {
     });
   }
   // 일정 등록
-  const commutePostCreateItinerary = (markerPlaceName, markerPlaceAddress, startTime, endTime, isHidden) => {
-    setInputItineraryName(markerPlaceName);
-    setInputItineraryAddress(markerPlaceAddress);
+  const commutePostCreateItinerary = (itineraryName, itineraryAddress, startTime, endTime, isHidden) => {
+    setInputItineraryName(itineraryName);
+    setInputItineraryAddress(itineraryAddress);
     setInputItineraryStartTime(startTime);
     setInputItineraryEndTime(endTime);
 
@@ -304,20 +408,15 @@ const CoursePage = () => {
         course: {
           courseId: params.courseId
         },
-        // itineraryStartTime: inputItineraryStartTime,
         itineraryStartTime: startTime,
-        // itineraryEndTime: inputItineraryEndTime,
         itineraryEndTime: endTime,
         itineraryHidden: isHidden,
         itineraryDetail: inputItineraryDetail,
         itineraryCost: inputItineraryCost,
         itineraryDay: params.day,
-        // itineraryColor: userColor, 색상 설정 자동화했으니 문제없으면 제거
         touristSpot: {
-          // touristSpotName: inputItineraryName,
-          touristSpotName: markerPlaceName,
-          // touristSpotAddress: inputItineraryAddress,
-          touristSpotAddress: markerPlaceAddress,
+          touristSpotName: itineraryName,
+          touristSpotAddress: itineraryAddress,
           touristSpotAvgCost: 0,
           touristSpotAvgTime: 0
         }
@@ -337,7 +436,7 @@ const CoursePage = () => {
     });
   }
   // 일정 수정
-  const commutePutUpdateItinerary = (updateItineraryId) => {
+  const commutePutUpdateItinerary = (updateItineraryId, startTime, endTime) => {
     fetch("/course/itinerary/update", {
       method: 'put',
       headers: {
@@ -349,8 +448,8 @@ const CoursePage = () => {
         course: {
           courseId: params.courseId
         },
-        itineraryStartTime: inputItineraryStartTime,
-        itineraryEndTime: inputItineraryEndTime,
+        itineraryStartTime: startTime,
+        itineraryEndTime: endTime,
         itineraryHidden: inputItineraryHidden,
         itineraryDetail: inputItineraryDetail,
         itineraryCost: inputItineraryCost,
@@ -461,13 +560,10 @@ const CoursePage = () => {
     });
   }
 
-  // 일정 등록이나 수정 시 다른 일정과 겹쳐지는지 확인
-  const isItineraryConflict = (startTime, endTime) => {
-    // 시작시간이나 종료시간이 다른 일정 시간의 사이에 있거나
-    // 시작시간끼리나 종료시간끼리 같거나
-    // 기존 일정의 시작시간이 새 일정의 사이에 있을때 겹쳐지므로 true 반환
-    const startTimeToNum = Number(startTime);
-    const endTimeToNum = Number(endTime);
+  const isItineraryConflict = (itineraryId, startTime, endTime) => {
+    // 일정 등록이나 수정 시 다른 일정과 겹쳐질 경우 true 반환
+    const startTimeToNum = Number(startTime.substring(11, 13) + startTime.substring(14, 16));
+    const endTimeToNum = Number(endTime.substring(11, 13) + endTime.substring(14, 16));
 
     let isConflict = false;
     for (let i = 0; i < itineraryArray.length; i++) {
@@ -475,28 +571,19 @@ const CoursePage = () => {
       const compareStartTimeToNum = Number(itinerary.itineraryStartTime.substring(11, 13) + itinerary.itineraryStartTime.substring(14, 16));
       const compareEndTimeToNum = Number(itinerary.itineraryEndTime.substring(11, 13) + itinerary.itineraryEndTime.substring(14, 16));
 
-      if ((startTimeToNum > compareStartTimeToNum) && (startTimeToNum < compareEndTimeToNum)) {
-        // 시작시간이 다른 일정 시간의 사이에 있는 경우
-        isConflict = true;
-        break;
+      if (itineraryId !== 0 && (itineraryId === itinerary.itineraryId || itinerary.itineraryHidden)) {
+        // 일정 수정시에는 같은 일정 비교 건너뛰어야하며 중복 일정의 경우에도 비교하지 않음(대표 일정으로 비교 가능)
+        continue;
       }
-      if ((endTimeToNum > compareStartTimeToNum) && (endTimeToNum < compareEndTimeToNum)) {
-        // 종료시간이 다른 일정 시간의 사이에 있는 경우
-        isConflict = true;
-        break;
-      }
-      if (startTimeToNum === compareStartTimeToNum) {
-        // 시작시간이 다른 일정 시작시간과 같은 경우
-        isConflict = true;
-        break;
-      }
-      if (endTimeToNum === compareEndTimeToNum) {
-        // 종료시간이 다른 일정 종료시간과 같은 경우
-        isConflict = true;
-        break;
-      }
-      if ((compareStartTimeToNum > startTimeToNum) && (compareStartTimeToNum < endTimeToNum)) {
-        // 종료시간이 다른 일정 종료시간과 같은 경우
+
+      if (
+        ((startTimeToNum > compareStartTimeToNum) && (startTimeToNum < compareEndTimeToNum)) || // 시작시간이 다른 일정 시간의 사이에 있는 경우
+        ((endTimeToNum > compareStartTimeToNum) && (endTimeToNum < compareEndTimeToNum)) || // 종료시간이 다른 일정 시간의 사이에 있는 경우
+        (startTimeToNum === compareStartTimeToNum) || // 시작시간이 다른 일정 시작시간과 같은 경우
+        (endTimeToNum === compareEndTimeToNum) || // 종료시간이 다른 일정 종료시간과 같은 경우
+        ((compareStartTimeToNum > startTimeToNum) && (compareStartTimeToNum < endTimeToNum))  // 종료시간이 다른 일정 종료시간과 같은 경우 
+        ) 
+      {
         isConflict = true;
         break;
       }
@@ -505,14 +592,21 @@ const CoursePage = () => {
     return isConflict;
   }
 
+  const isTimeUnbalance = (startTime, endTime) => {
+    // 종료 시간이 시작 시간 이전에 있을 경우 true 반환
+    const startTimeToNum = Number(startTime.substring(11, 13) + startTime.substring(14, 16));
+    const endTimeToNum = Number(endTime.substring(11, 13) + endTime.substring(14, 16));
+
+    let isUnbalance = false;
+    if (endTimeToNum <= startTimeToNum) {
+      isUnbalance = true;
+    }
+
+    return isUnbalance;
+  }
+
   const linkDate = (date) => {
-    // 날짜 이동. 오른쪽 화살표는 date:1, 왼쪽 화살표는 date:-1
-    // if () {
-    //   // 날짜 이동이 코스 일차 바깥으로 넘어가지 못하도록 제어
-    // }
-    // else {
-      return '/course/'+params.courseId+'/'+(Number(params.day)+date)
-    // }
+    return '/course/'+params.courseId+'/'+(Number(params.day)+date)
   }
 
   const timeToStringFormat = (hour, minute) => {
@@ -530,29 +624,6 @@ const CoursePage = () => {
 
     return formatTime;
   }
-
-  // const overlapItinerarySetting = (overlapItineraryArray) => {
-  //   // 중복 일정 state에 설정
-  //   const newOverlapItineraryArray = overlapItineraryArrayState.concat(overlapItineraryArray);
-  //   setOverlapItineraryArrayState(newOverlapItineraryArray);
-  // }
-
-  // const renderOverlapTooltip = (overlapItineraryArray) => {
-  //   return (
-  //     <ReactTooltip
-  //     id='tooltip'
-  //     place='right'
-  //     effect='solid'
-  //     type='dark'
-  //     // getContent={dataTip => 'sss' + dataTip}
-  //   >
-  //     <div>동일 시간대 중복 일정</div>
-  //     {overlapItineraryArray.map((overlapItinerary, overlapItineraryIndex) => (
-  //       <div>{overlapItineraryIndex+1}. {overlapItinerary.touristSpot.touristSpotName}</div>
-  //     ))}
-  //   </ReactTooltip>
-  //   )
-  // }
 
   // 일정 시간표
   const renderItineraryList = () => {
@@ -744,13 +815,49 @@ const CoursePage = () => {
         <span>일정 주소 : </span>
         <input name="inputItineraryAddress" value={inputItineraryAddress} onChange={onChangeInputItineraryAddress} />
       </div>
-      <div>
+      {/* <div>
         <span>시작 시간 : </span>
         <input name="inputItineraryStartTime" value={inputItineraryStartTime} onChange={onChangeInputItineraryStartTime} />
       </div>
       <div>
         <span>종료 시간 : </span>
         <input name="inputItineraryEndTime" value={inputItineraryEndTime} onChange={onChangeInputItineraryEndTime} />
+      </div> */}
+      <div>
+        <span>시작 시간 : </span>
+        <select onChange={onChangeInputItineraryStartTimeHour} value={inputItineraryStartTimeHour}>
+          {HOURS.map((hour) => (
+            <option value={hour} key={hour}>
+              {hour}
+            </option>
+          ))}
+        </select>시
+        &nbsp; {/* 공백 */}
+        <select onChange={onChangeInputItineraryStartTimeMinute} value={inputItineraryStartTimeMinute}>
+          {MINUTES.map((minute) => (
+            <option value={minute} key={minute}>
+              {minute}
+            </option>
+          ))}
+        </select>분
+      </div>
+      <div>
+        <span>종료 시간 : </span>
+        <select onChange={onChangeInputItineraryEndTimeHour} value={inputItineraryEndTimeHour}>
+          {HOURS.map((hour) => (
+            <option value={hour} key={hour}>
+              {hour}
+            </option>
+          ))}
+        </select>시
+        &nbsp; {/* 공백 */}
+        <select onChange={onChangeInputItineraryEndTimeMinute} value={inputItineraryEndTimeMinute}>
+          {MINUTES.map((minute) => (
+            <option value={minute} key={minute}>
+              {minute}
+            </option>
+          ))}
+        </select>분
       </div>
       <div>
         <span>일정 상세 : </span>
@@ -767,6 +874,7 @@ const CoursePage = () => {
   // 일정 수정 모달
   const updateItineraryModal = (
     <Modal 
+      ariaHideApp={false} // allElement 경고창 제거
       isOpen={isUpdateItineraryModal} 
       onRequestClose={() => setIsUpdateItineraryModal(false)}
       style={{
