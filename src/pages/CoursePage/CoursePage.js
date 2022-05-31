@@ -36,9 +36,9 @@ const CoursePage = () => {
 
   // useEffect
   useEffect(() => {
-    // commuteStomp();
+    commuteStomp();
     return () => {
-      // disconnectStomp();
+      disconnectStomp();
     }
   }, []);
   useEffect(() => {
@@ -381,7 +381,7 @@ const CoursePage = () => {
   }
   // 일정 정보 조회
   const commuteGetItineraryInfo = (day) => {
-    setLoading(false);
+    setLoading(true);
     fetch("/course/itinerary?courseId="+params.courseId+"&day="+day)
     .then((res)=>{
       return res.json();

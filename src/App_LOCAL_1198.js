@@ -12,6 +12,11 @@ import SearchPwPage from './pages/LoginPage/SearchPwPage.js';
 import JoinPage from './pages/LoginPage/JoinPage.js';
 import PhotoPage from './pages/PhotoPage/PhotoPage.js';
 import CoursePage from './pages/CoursePage/CoursePage'
+
+// import LoginPage from './pages/LoginPage/LoginPage'
+import SignUpPage from './pages/LoginPage/SignUpPage'
+// import SearchIdPage from './pages/LoginPage/SearchIdPage'
+// import SearchPwPage from './pages/LoginPage/SearchPwPage'
 import CoursePhotoPage from './pages/CoursePhotoPage/CoursePhotoPage'
 
 const App = () => {
@@ -22,8 +27,10 @@ const App = () => {
       <Route path="/mypage" element={<MyPage />} />
       <Route path="/course/:courseId/:day" element={<CoursePage />} />
       <Route path="/main" element={<MainPage />} />
+      <Route path="/signUp" element={<SignUpPage />} />
       <Route path="/searchId" element={<SearchIdPage />} />
       <Route path="/searchPw" element={<SearchPwPage />} />
+      {/* <Route path="/coursePhoto" element={<CoursePhotoPage />} /> */}
       <Route path="/join" element={<JoinPage />} />
       <Route path="/photoAlbum/:courseId/:day" element={<PhotoPage />} />
     </Routes>

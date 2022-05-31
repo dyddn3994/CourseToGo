@@ -145,7 +145,6 @@ const CoursePhotoPage = () => {
     if(checkedPhotos.length > 0){
       const lastValue = checkedPhotos[checkedPhotos.length - 1];
       setCurrItem(datas.find(element => element.photoId === lastValue.photoId));
-      console.log(currItem);
       return currItem;
     }
   };

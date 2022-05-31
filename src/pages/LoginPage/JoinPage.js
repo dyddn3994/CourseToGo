@@ -6,7 +6,7 @@ import axios from 'axios'
 
 // components
 import MainLayout from "../../components/Login/MainLayout";
-import InputForm from "../../components/Login/InputForm";
+import InputForm from "../../components/InputForm";
 import LogoHeader from "../../components/Login/LogoHeader";
 
 const Join = () => {
@@ -221,16 +221,6 @@ const Join = () => {
               </GenderDiv>
             </div>
           :null}
-          {/* <form>
-          <input type='file' id='image1' accept='img/*' onChange={onLoadFile1} />
-          <label htmlFor='image1'>파일 선택하기</label>
-          </form>
-          
-          <form>
-
-          <input type='file' id='image2' accept='img/*' onChange={onLoadFile2} />
-          <label htmlFor='image2'>파일 선택하기</label>
-          </form> */}
                  
          <SubmitButtonDiv>
             <SubmitButton  type="submit" onClick={sinUpClickHandler} >회원가입</SubmitButton>
