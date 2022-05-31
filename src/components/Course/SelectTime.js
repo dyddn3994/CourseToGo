@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled, { css } from 'styled-components';
-import Modal from 'react-modal';
 
-import InputForm from '../InputForm';
 import SelectTimeItem from './SelectTimeItem';
 
   // Modal
