@@ -6,11 +6,7 @@ import { BsQuestionSquareFill } from 'react-icons/bs';
 
 
 // 로그인페이지에 있는 로그인, 아이디찾기, 비번찾기, 회원가입 인풋폼
-<<<<<<< HEAD:src/components/Login/InputForm.js
-const InputForm = ({label, name, type, onChange, value, onKeyPressLogin}) => {
-=======
 const InputForm = ({label, name, type, onKeyPressLogin, onChange, value}) => {
->>>>>>> 4b2f8d07efa698c6f7ae6c46340af0dfcf7f406c:src/components/InputForm.js
 
     return (
         <InputFormDiv>

@@ -48,7 +48,7 @@ const LoginPage = () => {
       .then((data)=>{
         if (data === 1) {
           alert('로그인 성공!');
-          // navigate('/main');
+          navigate('/main');
         }
         else if (data === 2) {
           alert('탈퇴한 회원입니다. 다시 가입해주세요.');

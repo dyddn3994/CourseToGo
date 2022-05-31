@@ -36,9 +36,9 @@ const CoursePage = () => {
 
   // useEffect
   useEffect(() => {
-    commuteStomp();
+    // commuteStomp();
     return () => {
-      disconnectStomp();
+      // disconnectStomp();
     }
   }, []);
   useEffect(() => {
@@ -50,6 +50,10 @@ const CoursePage = () => {
   const mapContainerRef = useRef();
 
   // useState
+  // const socketJs = new SockJS("/socket");
+  // const stompcli = StompJs.over(socketJs);
+  const [socketJs, setSocketJs] = useState(new SockJS('/socket'));
+  const [stompcli, setStompcli] = useState(StompJs.over(socketJs));
   const [thisPageDate, setThisPageDate] = useState('2021-09-12'); // 현재 일정 날짜
   const [endPageDate, setEndPageDate] = useState(''); // 마지막 일정 날짜
   const [searchPlace, setSearchPlace] = useState(''); // 장소 검색어
@@ -350,8 +354,6 @@ const CoursePage = () => {
 
   // 통신
   // stomp
-  const socketJs = new SockJS("/socket");
-  const stompcli = StompJs.over(socketJs);
   const commuteStomp = () => {
     stompcli.connect({},() => {
       stompcli.subscribe('/topic/'+String(params.courseId), (data) => {// -> 받을때
