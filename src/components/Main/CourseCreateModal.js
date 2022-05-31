@@ -8,7 +8,7 @@ import SelectRegion from "./SelectRegion";
 const CourseCreateModal = ({isCourseCreateModalOpen, setIsCourseCreateModalOpen,  inputCreateCourse,setInputCreateCourse, onChangeInputCreatCourse ,onClickCreateCourseModal  }) => {
  
       const [openDatePicker, setOpenDatePicker] = useState(false);
-      const [startDate, setStartDate] = useState(new Date());
+      const [startDate, setStartDate] = useState('');
       const [endDate, setEndDate] = useState('');
   
       // 지역 선택을 위한 데이터

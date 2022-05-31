@@ -161,9 +161,12 @@ const GroupListDiv = forwardRef((props, ref) => {
     else if(inputCreateCourse.startDateDay ==='' || inputCreateCourse.inputCourseEndDate===''){
        alert('여행 날짜를 선택하세요');
     }
-    // else if(inputCreateCourse.inputCity===''){
-    //   alert('여행 할 지역을 선택하세요');
-    // }
+     else if(inputCreateCourse.inputCity===''){
+       setInputCreateCourse({
+         ...inputCreateCourse,
+         inputCity: 'apple'   // 제일 처음오는 기본 값 넣기~!~!~!
+        });
+     }
     else{
       commutePostCreateCourse(createCourseGroupId);
     }
@@ -244,7 +247,8 @@ const GroupListDiv = forwardRef((props, ref) => {
       inputCreateCourse={inputCreateCourse}
       setInputCreateCourse={setInputCreateCourse}
       onChangeInputCreatCourse ={onChangeInputCreatCourse} 
-      onClickCreateCourseModal={onClickCreateCourseModal}/>
+      onClickCreateCourseModal={onClickCreateCourseModal}
+    />
     </GroupUl>
   );
 });
@@ -258,7 +262,7 @@ const GroupUl = styled.ul`
   flex-direction: column;
   list-style: none;
   background-color:	#F5F5F5;
-  width:80%;
+  width:70%;
   height:80%;
   margin-left:6%;
   border-radius: 1rem;
