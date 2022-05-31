@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled, { css } from 'styled-components';
-import LogoImg from '../assets/logo.png';
+import { IoMdSettings } from 'react-icons/io';
 // import Img from '../assets/아무사진.jpg';
 
 
@@ -11,6 +11,7 @@ const CourseHeader = ({inputCourseName}) => {
         <HeaderDiv>
             <CourseNameDiv>
               <span style={{fontSize: '34px', fontWeight: 'bold'}}> {inputCourseName}</span>
+              <span style={{fontSize: '25px'}}> <IoMdSettings /> </span>
             </CourseNameDiv>
         </HeaderDiv>
 

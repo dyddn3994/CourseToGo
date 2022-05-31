@@ -1,22 +1,25 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect, useRef } from 'react';
+import styled, { css } from 'styled-components';
 import Modal from 'react-modal';
 
 import InputForm from '../../components/InputForm';
- //일정 수정 모달
-  const UpdateItineraryModal =({isUpdateItineraryModal,setIsUpdateItineraryModal,inputItinerary,
-                           onChangeInputItinerary,onClickUpdateItinerary,onClickDeleteItinerary  })=> {
-      return(
+
+  // Modal
+  // 일정 추가 모달
+  const AddItineraryModal =({isAddItineraryModal,setIsAddItineraryModal,inputItinerary,onChangeInputItinerary, onClickAddItinerary}) => {
+
+  return (
     <Modal 
-      isOpen={isUpdateItineraryModal} 
-      onRequestClose={() => setIsUpdateItineraryModal(false)}
+      ariaHideApp={false} // allElement 경고창 제거
+      isOpen={isAddItineraryModal} 
+      onRequestClose={() => setIsAddItineraryModal(false)}
       style={{
         overlay: {
           position: 'fixed',
           zIndex: '2'
         },
         content: {
-            top: '100px',
+          top: '100px',
             left: '340px',
             right: '340px',
             bottom: '100px',
@@ -25,21 +28,20 @@ import InputForm from '../../components/InputForm';
         }
       }}
     >
-    <MainDiv>
-       <div   style={{margin: '3%' }}></div>  
+     <MainDiv>
+        <div   style={{margin: '3%' }}></div>  
         <InputForm label={'일정 이름'} name="inputItineraryName" value={inputItinerary.inputItineraryName} onChange={onChangeInputItinerary} />
         <InputForm label={'주소'} name="inputItineraryAddress" value={inputItinerary.inputItineraryAddress} onChange={onChangeInputItinerary} />
-        <InputForm label={'시작 시간'} name="inputItineraryStartTime" value={inputItinerary.inputItineraryStartTime} onChange={onChangeInputItinerary} />
-        <InputForm label={'종료 시간'} name="inputItineraryEndTime" value={inputItinerary.inputItineraryEndTime} onChange={onChangeInputItinerary} />
+        <InputForm label={'시작시간'} name="inputItineraryStartTime" value={inputItinerary.inputItineraryStartTime} onChange={onChangeInputItinerary} />
+        <InputForm label={'종료시간'} name="inputItineraryEndTime" value={inputItinerary.inputItineraryEndTime} onChange={onChangeInputItinerary} />
         <InputForm label={'상세'}name="inputItineraryDetail" value={inputItinerary.inputItineraryDetail} onChange={onChangeInputItinerary} />
         <InputForm label={'예상 비용'} name="inputItineraryCost" value={inputItinerary.inputItineraryCost} onChange={onChangeInputItinerary} />
         <ButtonDiv>
-            <OptionButton   backgroundColor={'#4D9FE3'} color={'#FFFFFF'} onClick={onClickUpdateItinerary}>일정 수정</OptionButton>
-            <OptionButton  backgroundColor={'#FFFFFF'} color={'#4D9FE3'}  onClick={onClickDeleteItinerary}>일정 삭제</OptionButton>
-            <OptionButton backgroundColor={'#FFFFFF'} color={'#4D9FE3'}  onClick={() => setIsUpdateItineraryModal(false)}>취소</OptionButton>
+          <OptionButton   backgroundColor={'#4D9FE3'} color={'#FFFFFF'}  onClick={()=> onClickAddItinerary()}>일정 생성</OptionButton>
+          <OptionButton  backgroundColor={'#FFFFFF'} color={'#4D9FE3'} onClick={() => setIsAddItineraryModal(false)}>취소</OptionButton>
         </ButtonDiv>
-        </MainDiv>
-    </Modal>
+    </MainDiv>
+  </Modal>
   );
     };
     const MainDiv= styled.div`
@@ -66,4 +68,4 @@ import InputForm from '../../components/InputForm';
           box-shadow: 0 0 3px  gray;
     }
 `;
-export default UpdateItineraryModal;
+  export default  AddItineraryModal;

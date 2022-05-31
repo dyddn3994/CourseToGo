@@ -14,6 +14,10 @@ const Memo = ({ setIsMemoOpen }) => {
   const [memoArray, setMemoArray] = useState([
     {memoId: 2, content: "모이기", createDate: "2022-05-15T02:00:00"},
     {memoId: 1, content: "칫솔 챙기기", createDate: "2022-05-14T12:13:00"},
+    {memoId: 3, content: "모이기", createDate: "2022-05-15T02:00:00"},
+    {memoId: 4, content: "칫솔 챙기기", createDate: "2022-05-14T12:13:00"},
+    {memoId: 5, content: "모이기", createDate: "2022-05-15T02:00:00"},
+    {memoId: 6, content: "칫솔 챙기기", createDate: "2022-05-14T12:13:00"},
   ])
 
   const [inputContent, setInputContent] = useState(''); // 메모 입력
@@ -194,11 +198,17 @@ const Memo = ({ setIsMemoOpen }) => {
     memoArray.map((memo, memoIndex) => {
       renderResult.push(
         <ContentDiv>
-          {createDateFormatting(memo.createDate)} {memo.content}
-          <div>
-            <button style={{margin: '3px 5px 3px 0px'}} onClick={() => onClickUpdateMemo(memo)}>수정</button>
-            <button style={{margin: '3px 5px 3px 0px'}} onClick={() => onClickDeleteMemo(memo)}>삭제</button>
-          </div>
+          <TextDiv>
+            <div>   
+              {createDateFormatting(memo.createDate)}
+            </div>
+            {memo.content}
+          </TextDiv>
+          
+          <ButtonDiv>
+            <OptionButton onClick={() => onClickUpdateMemo(memo)}>수정</OptionButton>
+            <OptionButton onClick={() => onClickDeleteMemo(memo)}>삭제</OptionButton>
+          </ButtonDiv>
         </ContentDiv>
       )
     })
@@ -207,39 +217,76 @@ const Memo = ({ setIsMemoOpen }) => {
   }
 
   return (
-    <>
+    <MainDiv>
+      
       <BackgroundDiv>
-        <CancelButton onClick={() => setIsMemoOpen(false)}>x</CancelButton>
+        <CancelButtonDiv>
+          <CancelButton onClick={() => setIsMemoOpen(false)}>x</CancelButton>
+        </CancelButtonDiv>
         <FlexDiv>
           {renderContentList()}
         </FlexDiv>
+        
+       <InputContentDiv>
         <ContentInputTextarea name="inputContent" value={inputContent} onChange={onChangeInputContent} />
         <CreateMemoButton onClick={onClickCreateMemo}>메모 추가</CreateMemoButton>
-      </BackgroundDiv>
-    </>
+      </InputContentDiv>
+     </BackgroundDiv>
+    </MainDiv>
   );
 };  
 
 // styled compoents
 // div
+const MainDiv = styled.div`
+margin-left:27%;
+background-color: white;
+width: 80%;
+height: 100%;
+overflow-y: auto;
+position: fixed;
+left: 50%;
+top: 10%;
+text-align: center; 
+border-radius:1rem;
+margin-top:2%;
+z-index:3;
+font-size:0.8rem;
+line-height: 1.6;
+border: 1px solid;
+border-radius: 0.5rem;
+border: 1px solid  lightgray;
+box-shadow: 0 0 4px gray;
+`;
 const BackgroundDiv = styled.div`
-  background-color: #AFCFE7;
+background-color: white;
   width: 50vh;
   height: 80vh;
   position: absolute;
   transition: visibility 0.3s, right 0.3s;
 `;
+const CancelButtonDiv = styled.div`
+  width:100%;
+`;
 const FlexDiv = styled.div`
-  display: flex;
+  margin-top:15%;
   /* flex-direction: column-reverse; */
   flex-direction: column;
-  justify-content: flex-end;
+   justify-content: flex-end;
+   overflow-y: scroll;
+   height:63%;
 `;
 const ContentDiv = styled.div`
-  border: 1px solid black;
-  margin: 10px;
-  border-radius: 5px;
-  padding: 5px;
+  display:flex;
+  margin:3%;
+  font-size:0.7rem;
+  line-height: 1.6;
+  border: 1px solid;
+  border-radius: 0.5rem;
+  border: 1px solid  lightgray;
+  box-shadow: 0 0 3px lightgray;
+
+
 `;
 
 // button
@@ -247,18 +294,69 @@ const CancelButton = styled.button`
   float: right;
   margin-right: 10px;
   margin-top: 10px;
+
 `;
 const CreateMemoButton = styled.button`
-  float: right;
-  margin-right: 38px;
+background-color:#FFFFFF;
+  border-radius: 0.30rem;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  width:60%;
+  color:#4D9FE3;
+  display: inline-block;
+  margin:1%;
+  border: 1px solid  #4D9FE3;
+  box-shadow: 0px 0px 2px lightgray;
+  &:hover{  
+    border: 1px solid  gray;
+    box-shadow: 0 0 3px  gray;
+}
 `
+
+const  TextDiv = styled.div`
+  width:60%;
+  text-align:left;
+  margin:2%;
+`;
+
+
+const   ButtonDiv = styled.div`
+  width:30%;
+  margin-left:10%;
+`;
+
+const InputContentDiv = styled.div`
+position: absolute;
+border-radius: 0.5rem;
+margin-left:6%;  
+`;
 
 // textarea
 const ContentInputTextarea = styled.textarea`
-  margin: 10px;
-  width: 85%;
-  height: 100px;
-  
+  margin-top:7%;
+  width: 100%;
+  height: 80px;
   resize: none;
+  font-size:0.8rem;
+line-height: 1.6;
+border: 1px solid;
+border-radius: 0.5rem;
+border: 1.3px solid gray;
+
 `;
+const OptionButton = styled.button`
+    font-size:0.6rem;
+    line-height: 1.6;
+    border: 1px solid #ffffff;
+    border-radius: 0.30rem;
+    background-color :  white;
+    color: gray;
+    &:hover{  
+  
+      color:black;
+
+    }
+  `;
+
+
 export default Memo;

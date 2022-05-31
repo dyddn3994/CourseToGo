@@ -18,7 +18,7 @@ import CoursePage from './pages/CoursePage/CoursePage'
 // import SignUpPage from './pages/LoginPage/SignUpPage'
 // import SearchIdPage from './pages/LoginPage/SearchIdPage'
 // import SearchPwPage from './pages/LoginPage/SearchPwPage'
-import CoursePhotoPage from './pages/CoursePhotoPage/CoursePhotoPage'
+
 
 const App = () => {
   return (
