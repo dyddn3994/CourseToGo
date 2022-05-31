@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Modal from 'react-modal';
 
 import InputForm from '../../components/InputForm';
+import SelectTime from '../../components/Course/SelectTime';
  //일정 수정 모달
   const UpdateItineraryModal =({MINUTES,HOURS,isUpdateItineraryModal,setIsUpdateItineraryModal,inputItinerary,
                            onChangeInputItinerary,onClickUpdateItinerary,onClickDeleteItinerary  })=> {
@@ -27,46 +28,12 @@ import InputForm from '../../components/InputForm';
     >
     <MainDiv>
        <div   style={{margin: '3%' }}></div>  
-        <InputForm label={'일정 이름'} name="inputItineraryName" value={inputItinerary.inputItineraryName} onChange={onChangeInputItinerary} />
+       <InputForm label={'일정 이름'} name="inputItineraryName" value={inputItinerary.inputItineraryName} onChange={onChangeInputItinerary} />
         <InputForm label={'주소'} name="inputItineraryAddress" value={inputItinerary.inputItineraryAddress} onChange={onChangeInputItinerary} />
-        <div>
-        <span>시작 시간 : </span>
-        <select onChange={onChangeInputItinerary}  name="inputItineraryStartTimeHour"  value={inputItinerary.inputItineraryStartTimeHour}>
-          {HOURS.map((hour) => (
-            <option value={hour} key={hour}>
-              {hour}
-            </option>
-          ))}
-        </select>시
-        &nbsp; {/* 공백 */}
-        <select onChange={onChangeInputItinerary}  name="inputItineraryStartTimeMinute"  value={inputItinerary.inputItineraryStartTimeMinute}>
-          {MINUTES.map((minute) => (
-            <option value={minute} key={minute}>
-              {minute}
-            </option>
-          ))}
-        </select>분
-      </div>
-      <div>
-        <span>종료 시간 : </span>
-        <select onChange={onChangeInputItinerary}  name="inputItineraryEndTimeHour"  value={inputItinerary.inputItineraryEndTimeHour}>
-          {HOURS.map((hour) => (
-            <option value={hour} key={hour}>
-              {hour}
-            </option>
-          ))}
-        </select>시
-        &nbsp; {/* 공백 */}
-        <select onChange={onChangeInputItinerary}  name="inputItineraryEndTimeMinute"  value={inputItinerary.inputItineraryEndTimeMinute}>
-          {MINUTES.map((minute) => (
-            <option value={minute} key={minute}>
-              {minute}
-            </option>
-          ))}
-        </select>분
-      </div>
-        <InputForm label={'상세'} name="inputItineraryDetail" value={inputItinerary.inputItineraryDetail} onChange={onChangeInputItinerary} />
+        <SelectTime HOURS ={HOURS} MINUTES={MINUTES} inputItinerary={inputItinerary} onChangeInputItinerary={onChangeInputItinerary} />
+        <InputForm label={'상세 정보'}name="inputItineraryDetail" value={inputItinerary.inputItineraryDetail} onChange={onChangeInputItinerary} />
         <InputForm label={'예상 비용'}  type='number' name="inputItineraryCost" value={inputItinerary.inputItineraryCost} onChange={onChangeInputItinerary} />
+
         <ButtonDiv>
             <OptionButton   backgroundColor={'#4D9FE3'} color={'#FFFFFF'} onClick={onClickUpdateItinerary}>일정 수정</OptionButton>
             <OptionButton  backgroundColor={'#FFFFFF'} color={'#4D9FE3'}  onClick={onClickDeleteItinerary}>일정 삭제</OptionButton>

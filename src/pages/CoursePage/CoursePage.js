@@ -14,15 +14,15 @@ import { BsFillPlusSquareFill } from 'react-icons/bs';
 import { CgChevronLeftR, CgChevronRightR } from 'react-icons/cg';
 
 // components
-import MapContainer from './MapContainer';
+import MapContainer from '../../components/Course/MapContainer';
 import Memo from './Memo.js'
 import OverlapItineraryModal from './OverlapItineraryModal';
-import OverlapItineraryTooltip from './OverlapItineraryTooltip';
-import ItineraryTimeTooltip from './ItineraryTimeTooltip';
+import OverlapItineraryTooltip from '../../components/Course/OverlapItineraryTooltip';
+import ItineraryTimeTooltip from '../../components/Course/ItineraryTimeTooltip';
 import AddItineraryModal from './AddItineraryModal';
 import UpdateItineraryModal from './UpdateItineraryModal';
 import CourseHeader from '../../components/CourseHeader';
-import RenderItineraryList from './RenderItineraryList';
+import RenderItineraryList from '../../components/Course/RenderItineraryList';
 // 사용자별 색 인덱스에 따라 색 지정
 const colorList = [
   '#aadc8e',
@@ -37,7 +37,6 @@ const CoursePage = () => {
   // day: 설정 일차(1, 2, ...)
   const params = useParams();
 
-  // useEffect
   useEffect(() => {
     commuteStomp();
     return () => {
@@ -355,6 +354,7 @@ const CoursePage = () => {
       stompcli.disconnect();
     }
   };
+
   // 일정 날짜 조회
   const commuteGetItineraryDate = (courseId, day) => {
     fetch("/course/date?courseId="+courseId+"&day="+day)
@@ -618,7 +618,7 @@ const CoursePage = () => {
 
   // render
   return (
-    <>
+     <>
     {loading ? (
       <div style={{position: 'absolute', left: '50%', top: '45%'}}>
       <Ring 
@@ -627,8 +627,8 @@ const CoursePage = () => {
         speed={2} 
         color="black"
       />
-      </div>
-    ) : (
+      </div> 
+     ) : (
     <MainScreenDiv>
       <CourseHeader inputCourseName={'JEJU 제주'} />
   
@@ -644,9 +644,9 @@ const CoursePage = () => {
             <SearchButton onClick={onClickSearch}>검색</SearchButton>
             <span style={{float: 'right', paddingRight: '10px', fontSize: '25px'}}> <BsFillPlusSquareFill onClick={() => onClickItineraryAddIcon()} /> </span>
           </SearchDiv>
-          <MapDiv>
+          {/* <MapDiv>
               <MapContainer searchPlace={searchPlace} setIsMarkerClicked={setIsMarkerClicked} setMarkerInfo={setMarkerInfo} ref={mapContainerRef} ></MapContainer>
-          </MapDiv>
+          </MapDiv> */}
         </LeftScreenDiv>
 
         <ItineraryDateScreenDiv>
@@ -739,7 +739,7 @@ const CoursePage = () => {
           />
       )}
     </MainScreenDiv>
-   )}
+    )}
   </>
   )
 };
@@ -762,6 +762,7 @@ const ItineraryDateDiv = styled.div`
   text-align :center;
   font-size:1.1rem;
   font-weight:600;
+  padding:2%;
 `;
 const ContentDiv = styled.div`
   display: flex;
@@ -778,7 +779,7 @@ const ItineraryScreenDiv = styled.div`
   width: 380px;
   overflow-y: scroll;
   background-color:	white;
-  height: 80vh;
+  height: 78vh;
   margin-top: 3%;
   box-shadow: 0px 0px 2px lightgray;
   border-radius: 0.6rem;

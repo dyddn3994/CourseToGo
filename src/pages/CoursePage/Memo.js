@@ -285,8 +285,6 @@ const ContentDiv = styled.div`
   border-radius: 0.5rem;
   border: 1px solid  lightgray;
   box-shadow: 0 0 3px lightgray;
-
-
 `;
 
 // button
@@ -328,7 +326,8 @@ const   ButtonDiv = styled.div`
 const InputContentDiv = styled.div`
 position: absolute;
 border-radius: 0.5rem;
-margin-left:6%;  
+margin-left:2%;  
+width:90%;
 `;
 
 // textarea
