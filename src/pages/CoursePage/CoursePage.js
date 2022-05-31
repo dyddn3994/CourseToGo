@@ -634,6 +634,7 @@ const ItineraryScreenDiv = styled.div`
   &::-webkit-scrollbar-corner{
     background-color:#F5F5F5 ;
   }
+  
 `;
 const RightScreenDiv = styled.div`
 position:fixed;
