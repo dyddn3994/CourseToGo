@@ -21,6 +21,7 @@ import ItineraryTimeTooltip from './ItineraryTimeTooltip';
 import AddItineraryModal from './AddItineraryModal';
 import UpdateItineraryModal from './UpdateItineraryModal';
 import CourseHeader from '../../components/CourseHeader';
+import RenderItineraryList from './RenderItineraryList';
 // 사용자별 색 인덱스에 따라 색 지정
 const colorList = [
   '#aadc8e',
@@ -456,157 +457,6 @@ const CoursePage = () => {
 
     return formatTime;
   }
-  // 일정 시간표
-  const renderItineraryList = () => {
-    const renderResult = [];
-    const HOURS = 24;
-
-    for (let hour = 0; hour < HOURS; hour++) {
-      renderResult.push(
-        <div style={{display: 'flex', height: '60px'}}>
-          <span style={{flexBasis: '20%', textAlign: 'right', marginRight: '5px', marginLeft: '-5px', marginTop: '-13px'}}>{hour} : 00</span>
-          {/* <span style={{flexBasis: '110%' , paddingTop: (hour === 0 && '10px')}}> -- {renderItineraryMinutesList(hour)}</span> */}
-          <span style={{flexBasis: '110%'}}>{renderItineraryMinutesList(hour)}</span>
-        </div>
-      );
-    }
-
-    return renderResult;
-  }
-
-  // 일정 분 단위로 나눔
-  const renderItineraryMinutesList = hour => {
-    const renderResult = [];
-    const MINUTES = 60;
-    let itineraryTitle = null;
-
-    for (let minute = 0; minute < MINUTES; minute+=10) {
-      let renderColor = '#FFFFFF';
-      let isTitlePosition = false;
-
-      let hourToStr = hour.toString();
-      let minuteToStr = minute.toString();
-
-      if (minuteToStr.length === 1) {
-        minuteToStr = "0" + minuteToStr;
-      }
-      if (hourToStr.length === 1) {
-        hourToStr = "0" + hourToStr;
-      }
-      
-      const thisTimeToStr = hourToStr + minuteToStr;
-      const thisTime = Number(thisTimeToStr);
-      const thisTimeFormat = hourToStr + ":" + minuteToStr;
-      
-      // 일정 등록시 한시간 자동으로 등록되게 임시 설정
-      let thisTimeAnHour, thisTimeAnHourFormat;
-      if ((hour+1).toString().length === 1) {
-        thisTimeAnHour = Number("0" + (hour+1).toString() + minuteToStr);
-        thisTimeAnHourFormat = "0" + (hour+1).toString() + ":" + minuteToStr;
-      }
-      else {
-        thisTimeAnHour = Number((hour+1).toString() + minuteToStr);
-        thisTimeAnHourFormat = (hour+1).toString() + ":" + minuteToStr;
-      }
-
-      let thisItinerary = null; // 수정시에 자동으로 input 설정하도록 할 일정
-      let isHidden = false; // 해당 시간대에 중복일정이 있을경우 true
-      let overlapCnt = 1; // 중복일정 개수
-      let overlapItineraryArray = []; // 중복일정 배열
-      let representativeStartTimeFormat = null; // 중복 일정 등록하려고 할때 대표 일정의 시작 시간
-      let representativeEndTimeFormat = null; // 중복 일정 등록하려고 할때 대표 일정의 종료 시간
-      // 일정별로 확인하여 렌더링할 데어터들 설정
-      itineraryArray.map((itinerary, itineraryIndex) => {
-        const startHourToStr = String(itinerary.itineraryStartTime).substring(11, 13);
-        const startMinuteToStr = String(itinerary.itineraryStartTime).substring(14, 16);
-        const startTimeToStr = startHourToStr + startMinuteToStr;
-        const startTime = Number(startTimeToStr);
-
-        const endHourToStr = String(itinerary.itineraryEndTime).substring(11, 13);
-        const endMinuteToStr = String(itinerary.itineraryEndTime).substring(14, 16);
-        const endTimeToStr = endHourToStr + endMinuteToStr;
-        const endTime = Number(endTimeToStr);
-
-        // 해당하는 시간일 경우 색상설정
-        if (thisTime >= startTime && thisTime < endTime) {
-          // itineraryHidden이 true일 경우 중복일정으로 설정
-          if (itinerary.itineraryHidden) {
-            isHidden = true;
-            overlapCnt++;
-            const newOverlapItineraryArray = overlapItineraryArray.concat(itinerary);
-            overlapItineraryArray = newOverlapItineraryArray;
-          }
-          else {
-            renderColor = colorList[itinerary.itineraryColor];
-            thisItinerary = itinerary;
-            representativeStartTimeFormat = formatTime(thisItinerary.itineraryStartTime.substring(11, 13), thisItinerary.itineraryStartTime.substring(14, 16));
-            representativeEndTimeFormat = formatTime(thisItinerary.itineraryEndTime.substring(11, 13), thisItinerary.itineraryEndTime.substring(14, 16));
-          }
-        }
-        // 일정 시간의 가장 상단일 경우 일정명 출력
-        if (thisTime === startTime && thisItinerary !== null) {
-          isTitlePosition = true;
-          itineraryTitle = thisItinerary.touristSpot.touristSpotName; 
-
-          // 중복 일정 등록 끝나고 나면 state에 값 설정
-          if (overlapItineraryArray !== []) {
-            // overlapItinerarySetting(overlapItineraryArray);
-          }
-        }
-      });
-      
-
-      // 일정이 있는 상황인지 확인
-      let isRenderColor = false;
-      if (renderColor !== '#FFFFFF' && '#ffffff' && 'white'){
-        if (!thisItinerary.itineraryHidden) {
-          isRenderColor = true;
-        }
-      }
-
-      renderResult.push(
-        <div 
-          style={{
-            height: '10px',
-            backgroundColor: (isRenderColor && renderColor)}} 
-          onClick={(e) => onClickItinerary(
-                    e,
-                    (renderColor === "#FFFFFF" && '#ffffff' && 'white'), 
-                    thisPageDate+"T"+thisTimeFormat, 
-                    thisPageDate+"T"+thisTimeAnHourFormat,
-                    thisPageDate+"T"+representativeStartTimeFormat,
-                    thisPageDate+"T"+representativeEndTimeFormat,
-                    thisItinerary
-                  )} 
-          onMouseOver={(e) => onMouseOverItinerary(e, thisTimeFormat)}
-          onMouseOut={(e) => onMouseOutItinerary(e, renderColor)}
-          data-tip data-for='itineraryTimeTooltip'
-        >
-          {isTitlePosition && itineraryTitle}
-          {(isHidden && isTitlePosition) && 
-          <>
-            <span 
-              style={{
-                float: 'right',
-                marginRight: '5px', 
-                color:'#FF0000'
-              }}
-              onClick={(e) => onClickOverlap(e)} 
-              onMouseOver={() => onMouseOverOverlapItinerary(thisItinerary, thisPageDate+'T'+thisTimeFormat+':00')}
-              // onMouseOver={() => setIsOverlapMouseOver(true)}
-              // onMouseOut={() => setIsOverlapMouseOver(false)}
-              data-tip data-for='tooltip'
-            >
-              {overlapCnt}
-            </span>
-          </>
-          }
-        </div>
-      );
-    }
-
-    return renderResult;
-  }
   // render
   return (
     <MainScreenDiv>
@@ -629,52 +479,60 @@ const CoursePage = () => {
           </MapDiv>
         </LeftScreenDiv>
 
-        <div>
-          <div style={{display: "flex", justifyContent: "space-evenly"}}>
+        <ItineraryDateScreenDiv>
+          <div  style={{ width:"100%",display: "flex", justifyContent: "space-evenly", marginLeft:"25%"}}>
             <span> 
               {
                 // 1일차일 경우 일차 감소 클릭 방지
                 (params.day !== '1' ? (<Link to={linkDate(-1)}> <CgChevronLeftR /> </Link>) : (<CgChevronLeftR />))
               }
             </span>
-            <span>{thisPageDate} ({params.day}일차)</span>
+            <ItineraryDateDiv>
+                <span>{thisPageDate} ({params.day}일차)</span>
+            </ItineraryDateDiv>
             <span> 
               {
                 // 가장 마지막 일차일 경우 일차 증가 클릭 방지
                 (thisPageDate !== endPageDate ? (<Link to={linkDate(1)}> <CgChevronRightR /> </Link>) : <CgChevronRightR />)
               }
             </span>
-          </div>
+          </div >
           <ItineraryScreenDiv style={isMarkerClicked ? {opacity: '0.5'} : {opacity: '1'}}>
-            {renderItineraryList()}
+              <RenderItineraryList 
+                             itineraryArray={itineraryArray}
+                             formatTime={formatTime}
+                             colorList={colorList}
+                             thisPageDate={thisPageDate}
+                             onClickItinerary={ onClickItinerary}
+                             onMouseOverItinerary={onMouseOverItinerary}
+                             onMouseOutItinerary={onMouseOutItinerary}
+                             onClickOverlap={ onClickOverlap}
+                             onMouseOverOverlapItinerary={onMouseOverOverlapItinerary}/>
           </ItineraryScreenDiv>
-        </div>
- {
-            isMemoOpen && (
-              <Memo setIsMemoOpen={setIsMemoOpen}/>
-            )
-          }
+        </ItineraryDateScreenDiv>
+
         <RightScreenDiv>
-         
-          
             {/* <RightScreenButton>히스토리</RightScreenButton>  */}
-            <ButtonDiv>
-               <RightScreenButton onClick={() => setIsMemoOpen(!isMemoOpen)}>메모</RightScreenButton>
-            </ButtonDiv>
-
-            <ButtonDiv>
+          <ButtonDiv>
+             <RightScreenButton onClick={() => setIsMemoOpen(!isMemoOpen)}>메모</RightScreenButton>
+          </ButtonDiv>
+          <ButtonDiv>
             <Link to={'/photoAlbum/'+String(params.courseId)+'/'+String(params.day)}>
-            <RightScreenButton>사진</RightScreenButton> 
+              <RightScreenButton>사진</RightScreenButton> 
             </Link>
-            </ButtonDiv>
-
+          </ButtonDiv>
           <BlogSharchDiv>
             <BlogTitle>관광지 검색</BlogTitle>
             {/* <RightScreenButton>SNS</RightScreenButton> */}
             <RightScreenButton onClick={() => window.open('https://search.naver.com/search.naver?where=view&sm=tab_jum&query=%EC%95%A0%EC%9B%94+%EB%A7%9B%EC%A7%91', '_blank')}>Blog</RightScreenButton>
           </BlogSharchDiv> 
-        </RightScreenDiv>
+        </RightScreenDiv> 
       </ContentDiv>
+
+      {/* 메모 오픈 */}
+      {isMemoOpen && (
+        <Memo setIsMemoOpen={setIsMemoOpen}/>
+      )}
 
       {/* 일정 추가 Modal */}
       <AddItineraryModal
@@ -684,6 +542,7 @@ const CoursePage = () => {
         onChangeInputItinerary={onChangeInputItinerary}
         onClickAddItinerary={onClickAddItinerary}
         />
+
       {/* 일정 수정 Modal */}
       <UpdateItineraryModal
         isUpdateItineraryModal={isUpdateItineraryModal}
@@ -729,30 +588,56 @@ const CoursePage = () => {
 const MainScreenDiv = styled.div`
   height: 100vh;
 `;
-const TitleDiv = styled.div`
-  margin-left: 3%;
+const ItineraryDateScreenDiv = styled.div`
+  margin-left:2%;
+  width:20%;
+  
+`;
+
+const ItineraryDateDiv = styled.div`
+  background-color:white;
+  width:60%;
+  border-radius: 0.6rem;
+  text-align :center;
+  font-size:1.1rem;
+  font-weight:600;
 `;
 const ContentDiv = styled.div`
   display: flex;
   padding-top:6%;
   background-color:	#F5F5F5;
+  height: 100vh;
 `;
 const LeftScreenDiv = styled.div`
-  flex-basis: 50%;
+  flex-basis: 55%;
   margin-left: 2%;
 `;
 const ItineraryScreenDiv = styled.div`
   flex-basis: 40%;
-  width: 350px;
+  width: 380px;
   overflow-y: scroll;
-  
+  background-color:	white;
   height: 80vh;
-  margin-left: 3%;
   margin-top: 3%;
+  box-shadow: 0px 0px 2px lightgray;
+  border-radius: 0.6rem;
+  &::-webkit-scrollbar {
+    width:12px;
+    border-radius:3%;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: lightgray ;
+    border-radius:6px;
+    background-clip: padding-box;
+    border: 1px solid transparent;
+  }
+  &::-webkit-scrollbar-corner{
+    background-color:#F5F5F5 ;
+  }
 `;
 const RightScreenDiv = styled.div`
 position:fixed;
-margin-left:90%;
+margin-left:92%;
   margin-top: 2%;
   height: 100vh;
   text-align: center;
