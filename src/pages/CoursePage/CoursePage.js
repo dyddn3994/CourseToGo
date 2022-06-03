@@ -18,7 +18,7 @@ import { CgChevronLeftR, CgChevronRightR } from 'react-icons/cg';
 
 // components
 import MapContainer from '../../components/Course/MapContainer';
-import Memo from './Memo.js'
+import Memo from '../../components/Course/Memo.js'
 import OverlapItineraryModal from './OverlapItineraryModal';
 import OverlapItineraryTooltip from '../../components/Course/OverlapItineraryTooltip';
 import ItineraryTimeTooltip from '../../components/Course/ItineraryTimeTooltip';
@@ -63,9 +63,6 @@ const CoursePage = () => {
     commuteGetItineraryInfo(params.day);
   }, [params]);
 
-  // useRef
-  const mapContainerRef = useRef();
-
   // useState
   // const socketJs = new SockJS("/socket");
   // const stompcli = StompJs.over(socketJs);
@@ -74,10 +71,11 @@ const CoursePage = () => {
 
   const [thisPageDate, setThisPageDate] = useState('2021-09-12'); // 현재 일정 날짜
   const [endPageDate, setEndPageDate] = useState(''); // 마지막 일정 날짜
-  const [thisCourseCity, setThisCourseCity] = useState('Busan'); // 코스 도시 정보
+  const [thisCourseCity, setThisCourseCity] = useState('Jeju'); // 코스 도시 정보
   const [groupId, setGroupId] = useState(0); // 그룹 id
 
   const [searchPlace, setSearchPlace] = useState(''); // 장소 검색어
+  const [ thisItinerary ,setThisItinerary ] = useState('');
   const [itineraryArray, setItineraryArray] = useState([
     // 등록된 일정 리스트
     {itineraryId: 1, itineraryStartTime: '2022-05-01T16:00', itineraryEndTime: '2022-05-01T17:30', itineraryColor: 1, itineraryHidden: false, touristSpot: {
@@ -96,7 +94,8 @@ const CoursePage = () => {
       touristSpotName: "애월중복2", touristSpotAddress: "거제시 여러분", touristSpotAvgCost: 0, touristSpotAvgTime: 0
     }},
   ]); 
-  
+  const [isOpenSearchList, setISOpenSearchList] = useState(false);	// 검색 리스트 열고 닫기 상태 
+
   const [overlapItineraryArrayState, setOverlapItineraryArrayState] = useState([]);
   const [representativeItineraryState, setRepresentativeItineraryState] = useState({});
   const [thisItineraryTime, setThisItineraryTime] = useState(''); // 마커 클릭 후 일정에 mouseover시 표현할 툴팁 내 시간
@@ -289,8 +288,10 @@ const CoursePage = () => {
       }
     }
   }
-  const onClickOverlap = (e) => {
+  const onClickOverlap = ( e, thisItinerary ) => {
     e.stopPropagation();  // 부모 요소 클릭 방지
+    // e.preventDefault();  // 부모 요소 클릭 방지
+    setThisItinerary(thisItinerary );
     setIsOverlapItineraryModal(true);
   }
   const onClickSetRepresentative = (representativeItineraryId, overlapItineraryId) => {
@@ -350,7 +351,6 @@ const CoursePage = () => {
         // alert(markerPlaceName + '일정이 ' + startTime.substring(11,16) + '부터 ' + endTime.substring(11, 16) + '까지로 등록되었습니다.');
       // }
       setIsMarkerClicked(false);
-      // mapContainerRef.current.setMarkerClose();
 
       commuteGetItineraryInfo(params.day);
     }
@@ -688,7 +688,6 @@ const CoursePage = () => {
     .then((courseInfo)=>{
       setThisCourseCity(courseInfo.city);
       setGroupId(courseInfo.group.groupId);
-      // mapContainerRef.current.setMapCity(courseInfo.city);
     });
   }
   const commuteDeleteGroup = () => {
@@ -793,25 +792,27 @@ const CoursePage = () => {
       />
       </div> 
      ) : (
-      <MainScreenDiv>
-        <CourseHeader inputCourseName={thisCourseCity} onClickCourseSettingIcon={onClickCourseSettingIcon} linkToBack={'/main'} />
-    
-        <ContentDiv>
-          <LeftScreenDiv>
-            <SearchDiv>
-              <SearchInput 
-                type="text"
-                placeholder='여행지를 입력하세요'
-                onChange={onChangeSearch}
-                onKeyPress={onKeyPressSearch}
-              />
-              <SearchButton onClick={onClickSearch}>검색</SearchButton>
-              <span style={{float: 'right', paddingRight: '10px', fontSize: '25px'}}> <BsFillPlusSquareFill onClick={() => onClickItineraryAddIcon()} /> </span>
-            </SearchDiv>
-            <MapDiv>
-                <MapContainer searchPlace={searchPlace} setIsMarkerClicked={setIsMarkerClicked} setMarkerInfo={setMarkerInfo} thisCourseCity={thisCourseCity} ></MapContainer>
-            </MapDiv>
-          </LeftScreenDiv>
+    <MainScreenDiv>
+      <CourseHeader inputCourseName={thisCourseCity} onClickCourseSettingIcon={onClickCourseSettingIcon} linkToBack={'/main'} />
+  
+      <ContentDiv>
+        <LeftScreenDiv>
+          <SearchDiv>
+            <SearchInput 
+              type="text"
+              placeholder='여행지를 입력하세요'
+              onChange={onChangeSearch}
+              onKeyPress={onKeyPressSearch}
+              // onMouseOver={}
+            />
+            <SearchButton onClick={onClickSearch}>검색</SearchButton>
+            <span style={{float: 'right', paddingRight: '10px', fontSize: '25px'}}> <BsFillPlusSquareFill onClick={() => onClickItineraryAddIcon()} /> </span>
+          </SearchDiv>
+          <MapDiv>
+              {/* <MapContainer searchPlace={searchPlace} setIsMarkerClicked={setIsMarkerClicked} setMarkerInfo={setMarkerInfo} thisCourseCity={thisCourseCity} ></MapContainer> */}
+              <MapContainer isOpenSearchList ={isOpenSearchList}searchPlace={searchPlace} setIsMarkerClicked={setIsMarkerClicked} setMarkerInfo={setMarkerInfo} thisCourseCity={thisCourseCity}></MapContainer>
+          </MapDiv>
+        </LeftScreenDiv>
 
           <ItineraryDateScreenDiv>
             <div  style={{ width:"100%",display: "flex", justifyContent: "space-evenly", marginLeft:"25%"}}>
@@ -852,7 +853,7 @@ const CoursePage = () => {
               <RightScreenButton onClick={() => setIsMemoOpen(!isMemoOpen)}>메모</RightScreenButton>
             </ButtonDiv>
             <ButtonDiv>
-              <Link to={'/photoAlbum/'+String(params.courseId)+'/'+String(params.day)}>
+              <Link to={'/photoAlbum/'+params.courseId+'/'+params.day}>
                 <RightScreenButton>사진</RightScreenButton> 
               </Link>
             </ButtonDiv>
@@ -926,8 +927,18 @@ const CoursePage = () => {
               thisItineraryTime={thisItineraryTime}
             />
         )}
-      </MainScreenDiv>
-    )}
+      {/* 중복 일정 리스트 */}
+      { isOverlapItineraryModal &&
+        <OverlapItineraryModal 
+          isOverlapItineraryModal={  isOverlapItineraryModal}
+          setIsOverlapItineraryModal={ setIsOverlapItineraryModal}
+          thisItinerary={thisItinerary}
+          overlapItineraryArray={overlapItineraryArrayState}
+          onClickSetRepresentative={onClickSetRepresentative}
+          />
+      }
+    </MainScreenDiv>
+    )} 
   </>
   )
 };
@@ -935,11 +946,15 @@ const CoursePage = () => {
 // styled components
 // div
 const MainScreenDiv = styled.div`
-  height: 100vh;
+position: absolute; 
+background-color:	#F5F5F5;
+width:100%;
+height: 100vh;
 `;
 const ItineraryDateScreenDiv = styled.div`
-  margin-left:2%;
   width:20%;
+  position:fixed;
+margin-left:60%;
   
 `;
 
@@ -957,9 +972,11 @@ const ContentDiv = styled.div`
   padding-top:6%;
   background-color:	#F5F5F5;
   height: 100vh;
+  position:fixed;
+  
 `;
 const LeftScreenDiv = styled.div`
-  flex-basis: 55%;
+  width:750px;  
   margin-left: 2%;
 `;
 const ItineraryScreenDiv = styled.div`
@@ -1019,7 +1036,7 @@ const SearchInput = styled.input`
 border-radius: 0.30rem;
 line-height: 2;
 border: 1px solid lightgray;
-width:40%;
+width:280px;
 box-shadow: 0px 0px 2px lightgray;
   margin-left: 2%;
   font-size: 0.9rem;

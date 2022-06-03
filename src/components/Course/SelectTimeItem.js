@@ -17,7 +17,7 @@ import styled, { css } from 'styled-components';
     border-radius: 0.30rem;
     line-height: 2;
     border: 1px solid lightgray;
-    width:40%;
+    width:80px;
     height:30px;
     box-shadow: 0px 0px 2px lightgray;
     margin-left:2%;

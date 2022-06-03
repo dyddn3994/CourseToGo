@@ -8,7 +8,7 @@ import SelectTimeItem from './SelectTimeItem';
   const SelectTime =({HOURS,MINUTES,inputItinerary,onChangeInputItinerary}) => {
 
   return (
-    <div>
+    <MainBox>
        <InputFormDiv>
         <InputLabel>   <label>시작 시간</label>   </InputLabel>
         <SelectTimeItem TIME={HOURS} onChangeInputItinerary={onChangeInputItinerary} name="inputItineraryStartTimeHour"  value={inputItinerary.inputItineraryStartTimeHour} />
@@ -25,20 +25,24 @@ import SelectTimeItem from './SelectTimeItem';
         <SelectTimeItem TIME={MINUTES} onChangeInputItinerary={onChangeInputItinerary}name="inputItineraryEndTimeMinute"  value={inputItinerary.inputItineraryEndTimeMinute} />
         분
         </InputFormDiv>
-      </div>
+      </MainBox>
   );
     };
-    const InputLabel =  styled.div`
-    margin-left:6%;
+    const MainBox =  styled.div`
+    margin-right:33%;
     font-size:0.9rem;
-    width:90%;
+
+  `;
+    const InputLabel =  styled.div`
+
+    font-size:0.9rem;
+    width:60%;
   `;
   const InputFormDiv =  styled.div`
-  width:70%;
+  width:100%;
   height:100%;
   display : flex; 
-  justify-content: space-around;
-  
+
   font-size:0.9rem;
   margin:2%;
 `;

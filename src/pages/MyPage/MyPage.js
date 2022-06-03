@@ -2,12 +2,9 @@ import React, { useState , useEffect} from "react";
 import styled, { css } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 
-import data from '../../assets/Photo/Photo';
-import userData from '../../assets/User/User';
-
 import CourseHeader from "../../components/CourseHeader";
 import InputForm from "../../components/InputForm";
-const CoursePhotoPage = () => {
+const  MyPage = () => {
   const navigate = useNavigate();
 
   // 프로필 사진을 얼굴 사진으로 쓸 것인지 체크 유무
@@ -36,11 +33,11 @@ const CoursePhotoPage = () => {
     });
   };
   const onChangeFile = (e) => {
-    const { files, name } = e.target;
     setInputMemberInfo({
       ...inputMemberInfo,
-      [name]: files // name 키를 가진 값을 value 로
+      [ e.target.name]: URL.createObjectURL(e.target.files[0]) // 파일 URL로 set
     });
+    console.log(inputMemberInfo);
   }
 
   const faceProfileCheckedFandeler = () => {
@@ -53,7 +50,8 @@ const CoursePhotoPage = () => {
     setCheckedFaceProfile(!checkedFaceProfile);
     return inputMemberInfo;
   }
-
+  
+  
     useEffect(() => {
         commuteGetMemberInfo();
       },[]);
@@ -139,56 +137,60 @@ const CoursePhotoPage = () => {
             <ScrollDiv>
                 <InputDiv>
 
-                    <InputForm label={"이름"} name={"memberName"} type={"text"} onChange={onChange} value={memberName} />
-                    <InputFormDiv>  
-                        <InputLabel>
-                            <label>아이디</label>
-                        </InputLabel>
-                        <FormDiv>
-                            <label>{userId}</label>
-                        </FormDiv>   
-                    </InputFormDiv>
-                    {/* <InputForm label={"아이디"} name={"userId"} type={"text"} onChange={onChange} value={userId} /> */}
-                    <InputForm label={"비밀번호"} name={"pwd"} type={"text"} onChange={onChange} value={pwd} />
-                    <InputForm label={"전화번호"} name={"phoneNumber"} type={"number"} onChange={onChange} value={phoneNumber} />
-                    <InputForm label={"이메일"} name={"email"} type={"text"} onChange={onChange} value={email} />
-                    <InputForm label={"나이"} name={"age"} type={"number"} onChange={onChange} value={age} />
-                    <InputFormDiv>  
-                        <InputLabel>
-                            <label>성별</label>
-                        </InputLabel>
-                        <FormDiv>
-                            <label>{gender}</label>
-                        </FormDiv>   
-                    </InputFormDiv>
-          {/* 프로필 사진 업로드 및 선택 부분 */}
-    
-          <InputForm  label={"프로필 사진"} name={"memberProfile"} type={"file"} onChange={onChangeFile} value={memberProfile} />
-            {!checkedFaceProfile ?  <InputForm accept="image/*" label={"얼굴 등록"} name={"memberFace"} type={"file"} onChange={onChangeFile} value={memberFace} /> 
-              :null}
-              <ProfileCheckBoxDiv>
-                  <input  onClick={faceProfileCheckedFandeler} type="checkbox" />
-                  <label> 프로필 사진으로 얼굴 등록하기</label>
-              </ProfileCheckBoxDiv>
-      
-     
-     </InputDiv>     
-            <SubmitButtonDiv>
-               
-                < SubmitButton  buttonType={'update'} onClick={commutePutMemberInfo}>내 정보 수정</ SubmitButton>
-                < SubmitButton onClick={deleteMember}>탈퇴</ SubmitButton>
-              
-            </SubmitButtonDiv>
-          </ScrollDiv>
-    
-     
+            <InputForm label={"이름"} name={"memberName"} type={"text"} onChange={onChange} value={memberName} />
+            <InputFormDiv>  
+              <InputLabel>
+                <label>아이디</label>
+              </InputLabel>
+              <FormDiv>
+                <label>{userId}</label>
+              </FormDiv>   
+            </InputFormDiv>
+            {/* <InputForm label={"아이디"} name={"userId"} type={"text"} onChange={onChange} value={userId} /> */}
+            <InputForm label={"비밀번호"} name={"pwd"} type={"text"} onChange={onChange} value={pwd} />
+            <InputForm label={"전화번호"} name={"phoneNumber"} type={"number"} onChange={onChange} value={phoneNumber} />
+            <InputForm label={"이메일"} name={"email"} type={"text"} onChange={onChange} value={email} />
+            <InputForm label={"나이"} name={"age"} type={"number"} onChange={onChange} value={age} />
+            <InputFormDiv>  
+              <InputLabel>
+                <label>성별</label>
+              </InputLabel>
+              <FormDiv>
+                <label>{gender}</label>
+              </FormDiv>   
+            </InputFormDiv>
+
+            {/* 프로필 사진 업로드 및 선택 부분 */}
+            <InputForm  label={"프로필 사진"} name={"memberProfile"} type={"file"} onChange={onChangeFile} /> 
+            {inputMemberInfo.memberProfile && (
+              <ImageDiv>
+                <UploadImg alt='profileImg' src={inputMemberInfo.memberProfile} style={{margin:'auto'}} />
+              </ImageDiv>
+             )}
+            {!checkedFaceProfile &&
+              <InputForm label={"얼굴 등록"} name={"memberFace"} type={"file"} onChange={onChangeFile} /> 
+            }
+            <ProfileCheckBoxDiv>
+              <input  onClick={faceProfileCheckedFandeler} type="checkbox" />
+              <label> 프로필 사진으로 얼굴 등록하기</label>
+            </ProfileCheckBoxDiv>
+            {(inputMemberInfo.memberFace && !checkedFaceProfile) && (
+              <ImageDiv>
+                <UploadImg alt='profileImg' src={inputMemberInfo.memberFace} style={{margin:'auto'}} />
+              </ImageDiv>
+             )}
+          </InputDiv>     
+          <SubmitButtonDiv>       
+            < SubmitButton  buttonType={'update'} onClick={commutePutMemberInfo}>내 정보 수정</ SubmitButton>
+            < SubmitButton onClick={deleteMember}>탈퇴</ SubmitButton>    
+          </SubmitButtonDiv>
+        </ScrollDiv>
      </MainDiv>
   );
 };
 
 // styled components
 // div
-
 
 const InputFormDiv =  styled.div`
 width:70%;
@@ -198,6 +200,16 @@ justify-content: space-around;
 margin-left:10%;
 `;
 
+const ImageDiv =  styled.div`
+width:100%;
+text-align: center;
+margin-bottom:3%;
+`;
+
+const UploadImg =  styled.img`
+max-width:400px;
+position:relative;
+`;
 const FormDiv=  styled.div`
 width:80%; 
 margin-bottom:3%;
@@ -217,9 +229,9 @@ const MainDiv = styled.div`
 
 const ScrollDiv =  styled.div`
   background-color:#FFFFFF;
-  width:60%;
-  height:80%;
-  margin-left:20%;
+  width:65%;
+  height:82%;
+  margin-left:18%;
   border-radius: 1rem;
   box-shadow: 0px 0px 4px lightgray;
   margin-top:6%;
@@ -247,14 +259,14 @@ const ProfileCheckBoxDiv =  styled.div`
 width:80%;
 height:100%;
 display : flex; 
-margin-left:10%;
+margin-left:51%;
 font-size:0.9rem;
-margin-top:1%;
-margin-bottom:3%;
-margin-left:25%;
+
+
 `;
 
 const SubmitButtonDiv =  styled.div`
+margin-top:3%;
   text-align: center;
     margin-left:8%;
   width:80%;
@@ -281,4 +293,4 @@ const SubmitButton = styled.button`
 }
 `;
 
-export default CoursePhotoPage ;
+export default MyPage ;

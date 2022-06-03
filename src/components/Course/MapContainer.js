@@ -1,4 +1,6 @@
 import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react'
+import styled, { css } from 'styled-components';
+import MapResultList from './MapResultList';
 
 import CITY from '../../assets/City/City';
 
@@ -18,7 +20,7 @@ const CITYLATLNG = [
 
 const MapContainer = forwardRef((props, ref) => {
 
-  const { searchPlace, setIsMarkerClicked, setMarkerInfo, thisCourseCity } = props;
+  const { isOpenSearchList, searchPlace, setIsMarkerClicked, setMarkerInfo, thisCourseCity } = props;
   const [thisCity, setThisCity] = useState(thisCourseCity);
   const [touristSpotInfo, setTouristSpotInfo] = useState({});
   
@@ -42,6 +44,7 @@ const MapContainer = forwardRef((props, ref) => {
     // var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 })
     var markers = []
     const container = document.getElementById('myMap')
+    // alert(thisCity);
     if (thisCity === '') {
       setThisCity('Jeju')
     }
@@ -171,8 +174,9 @@ const MapContainer = forwardRef((props, ref) => {
       <div
         id="myMap"
         style={{
-          // width: '700px',
-          height: '500px',
+           width: '100%',
+          height: '450px',
+          zIndex:'0'
         }}
       ></div>
       <div id="result-list" style={{
@@ -204,6 +208,7 @@ const MapContainer = forwardRef((props, ref) => {
         ))}
         <div id="pagination"></div>
       </div>
+      {/* <MapResultList places={places} isOpenSearchList={isOpenSearchList} /> */}
     </div>
   )
 });
