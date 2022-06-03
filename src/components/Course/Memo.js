@@ -99,6 +99,7 @@ const Memo = ({ setIsMemoOpen }) => {
       }
       else {
         alert('test : ' + memoId);
+        commuteGetMemos();
       }
     });
   }
@@ -127,6 +128,7 @@ const Memo = ({ setIsMemoOpen }) => {
       }
       else {
         alert('test : ' + memoId);
+        commuteGetMemos();
       }
     });
   }
@@ -148,6 +150,7 @@ const Memo = ({ setIsMemoOpen }) => {
       }
       else {
         alert('test : ' + ack);
+        commuteGetMemos();
       }
     });
   }

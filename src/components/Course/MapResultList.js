@@ -5,8 +5,7 @@ const MapResultList = ({places, isOpenSearchList, onMouseOverList, overSearchLis
 
   return (
     <>
-   {( overSearchList|| isOpenSearchList) &&
-
+   { isOpenSearchList&&
       <ResultList    onMouseOver={onMouseOverList } onMouseOut={onMouseOverList}>
         {places.map((item, i) => (
           <div key={i}>
@@ -61,10 +60,11 @@ const ResultList = styled.div`
   }
   `;
   const TextBox = styled.div`
-  border-bottom: 1.5px solid  #4D9FE3;
+  // border-bottom: 1.5px solid  #4D9FE3;
   margin:2%;
   padding:5%;
   font-size:0.9rem;
+  border-radius:1rem;
   &:hover{  
     background-color:lightgray ;
   }

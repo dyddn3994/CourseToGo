@@ -10,10 +10,10 @@ import ButtonType from "../../components/Login/ButtonType";
     const SearchIdPage = () => {
       const [inputs, setInputs] = useState({
         name: '',
-        email: ''
+        phoneNumber: ''
       });
     
-      const {name, email} = inputs;
+      const {name, phoneNumber} = inputs;
     
       const onChange = (e) => {
         const { value, name } = e.target;
@@ -31,38 +31,48 @@ import ButtonType from "../../components/Login/ButtonType";
   }
 
   const buttonClickHandler = () => {
-    if (inputs.name === '') {
+    if (name === '') {
       alert('이름를 입력하세요.');
     }
-    else if (inputs.email === '') {
-      alert('이메일를 입력하세요.');
+    else if (phoneNumber === '') {
+      alert('전화번호를 입력하세요.');
     }
     else {
-      // fetch("/login?userId="+inputs.inputId+"&pwd="+inputs.inputPwd)
-      // .then((res)=>{
-      //   return res.json();
-      // })
-      // .then((data)=>{
-      //   if (data === 1) {
-      //     alert('< 아이디 > 입니다');
-      //     navigate('/main');
-      //   }
-      //   else if (data === 2) {
-      //     alert('탈퇴한 회원입니다. 다시 가입해주세요.');
-      //   }
-      //   else if (data === 3) {
-      //     alert('등록되지 않은 회원 정보입니다');
-      //   }
-      // });
+      commuteGetFindId();
     }
   };
+
+  const commuteGetFindId = () => {
+    fetch("/find/id", {
+      method: 'post',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body : JSON.stringify({
+        memberName: name,
+        phoneNumber: phoneNumber
+      })
+    })
+    .then((res)=>{
+      return res.json();
+    })
+    .then((findId)=>{
+      // 찾는 id가 있으면 반환, 없으면 공백 반환
+      if (findId === '') {
+        alert('입력을 다시 확인해주세요.')
+      }
+      else {
+        alert('아이디: ' + findId)
+      }
+    });
+  }
 
       return(
           <MainLayout>
             <LoginDiv>
               <LogoHeader />
               <InputForm label={"이름"} name={"name"} type={"text"} onChange={onChange} value = {name} onKeyPressLogin={onKeyPressLogin}/>
-              <InputForm label={"이메일"} name={"email"} type={"text"} onChange={onChange} value = {email} onKeyPressLogin={onKeyPressLogin}/>
+              <InputForm label={"전화번호"} name={"phoneNumber"} type={"number"} onChange={onChange} value = {phoneNumber} onKeyPressLogin={onKeyPressLogin}/>
               <ButtonType type='searchId' clickedHandler={buttonClickHandler}/>
             </LoginDiv>
         </MainLayout> 

@@ -10,6 +10,8 @@ import GroupListItem from "../../components/Main/GroupListItem";
 
 const GroupListDiv = forwardRef((props, ref) => {
 
+  // const { setLoading } = props;
+
   useEffect(() => {
     commuteGetGroupInfo();
   },[]);
@@ -50,31 +52,8 @@ const GroupListDiv = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({
     // 그룹 정보 조회
     commuteGetGroupInfo() {
+      // setLoading(true);
       fetch("/group")
-        .then((res)=>{
-          return res.json();
-        })
-        .then((groupData)=>{
-          let newGroups = groupData.map(group => ({ ...group, groupClicked: false }));
-          newGroups.forEach((group) =>
-            fetch("/group/course?groupId=" + group.groupId)
-              .then((res)=>{
-                return res.json();
-              })
-              .then((courseData)=>{
-                newGroups = newGroups.map(item => (item.groupId === group.groupId ? { ...item, courses: courseData } : item));
-                setGroups(newGroups);
-              })
-          )
-          setGroups(newGroups);
-        });
-    }
-  }));
-
-  // 통신
-  // 그룹 정보 조회
-  const commuteGetGroupInfo = () => {
-    fetch("/group")
       .then((res)=>{
         return res.json();
       })
@@ -82,20 +61,46 @@ const GroupListDiv = forwardRef((props, ref) => {
         let newGroups = groupData.map(group => ({ ...group, groupClicked: false }));
         newGroups.forEach((group) =>
           fetch("/group/course?groupId=" + group.groupId)
-            .then((res)=>{
-              return res.json();
-            })
-            .then((courseData)=>{
-              newGroups = newGroups.map(item => (item.groupId === group.groupId ? { ...item, courses: courseData } : item));
-              setGroups(newGroups);
-            })
+          .then((res)=>{
+            return res.json();
+          })
+          .then((courseData)=>{
+            newGroups = newGroups.map(item => (item.groupId === group.groupId ? { ...item, courses: courseData } : item));
+            setGroups(newGroups);
+          })
         )
         setGroups(newGroups);
       });
+      // setLoading(false);
+    }
+  }));
+
+  // 통신
+  // 그룹 정보 조회
+  const commuteGetGroupInfo = () => {
+    // setLoading(true);
+    fetch("/group")
+    .then((res)=>{
+      return res.json();
+    })
+    .then((groupData)=>{
+      let newGroups = groupData.map(group => ({ ...group, groupClicked: false }));
+      newGroups.forEach((group) =>
+        fetch("/group/course?groupId=" + group.groupId)
+          .then((res)=>{
+            return res.json();
+          })
+          .then((courseData)=>{
+            newGroups = newGroups.map(item => (item.groupId === group.groupId ? { ...item, courses: courseData } : item));
+            setGroups(newGroups);
+          })
+      )
+      setGroups(newGroups);
+    });
+    // setLoading(false);
   }
   // 코스 추가
   const commutePostCreateCourse = (groupId) => {
-    console.log(inputCreateCourse);
     fetch("/course", {
       method: 'post',
       headers: {
@@ -164,7 +169,7 @@ const GroupListDiv = forwardRef((props, ref) => {
      else if(inputCreateCourse.inputCity===''){
        setInputCreateCourse({
          ...inputCreateCourse,
-         inputCity: 'apple'   // 제일 처음오는 기본 값 넣기~!~!~!
+         inputCity: 'seoul'   // 제일 처음오는 기본 값 넣기~!~!~!
         });
      }
     else{

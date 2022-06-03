@@ -17,7 +17,7 @@ import SelectTime from '../../components/Course/SelectTime';
       style={{
         overlay: {
           position: 'fixed',
-          zIndex: '2'
+          zIndex: '5'
         },
         content: {
           top: '100px',

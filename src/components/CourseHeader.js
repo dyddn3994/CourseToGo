@@ -1,30 +1,31 @@
 import React, { useState } from "react";
 import styled, { css } from 'styled-components';
+import ButtonType from '../components/Login/ButtonType'
+import { Link } from 'react-router-dom';
+
 import { IoMdSettings } from 'react-icons/io';
 // import Img from '../assets/아무사진.jpg';
 
 
-const CourseHeader = ({inputCourseName}) => {
+const CourseHeader = ({inputCourseName, onClickCourseSettingIcon, linkToBack}) => {
 
-  // render
   return (
-        <HeaderDiv>
-            <CourseNameDiv>
-              <span style={{fontSize: '34px', fontWeight: 'bold'}}> {inputCourseName}</span>
-              <span style={{fontSize: '25px'}}> <IoMdSettings /> </span>
-            </CourseNameDiv>
-        </HeaderDiv>
-
+    <HeaderDiv>
+      <CourseNameDiv>
+        <span style={{fontSize: '34px', fontWeight: 'bold'}} onClick={() => window.location.reload()}> {inputCourseName}</span>
+        {onClickCourseSettingIcon !== undefined && <span style={{fontSize: '25px'}} onClick={onClickCourseSettingIcon}> <IoMdSettings /> </span>}
+        <Link to={linkToBack}>
+          <button style={{float: 'right', marginRight: '25px', marginTop: '5px'}}>뒤로 가기</button>
+        </Link>
+      </CourseNameDiv>
+    </HeaderDiv>
   );
 };
 
 // styled components
-// div
-
 const CourseNameDiv = styled.div`
   margin-left: 1%;
 `;
-
 const HeaderDiv = styled.div`
   width:100%;
   heiht:40%;

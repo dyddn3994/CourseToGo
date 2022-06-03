@@ -2,6 +2,8 @@ import React, { useState, useRef } from "react";
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import Modal from 'react-modal';
+import { useNavigate } from 'react-router-dom';
+import { Ring } from '@uiball/loaders'
 
 // components
 import GroupListDiv from "./GroupListDiv.js";
@@ -10,12 +12,16 @@ import MainLayout from "../../components/Login/MainLayout";
 import GroupJoinModal from "../../components/Main/GroupJoinModal.js";
 
 const MainPage = () => {
+  const navigate = useNavigate();
+
   // useState
   const [isGroupCreateModalOpen, setIsGroupCreateModalOpen] = useState(false);
   const [isGroupJoinModalOpen, setIsGroupJoinModalOpen] = useState(false);
   const [inputGroupName, setInputGroupName] = useState('');
   const [inputGroupKey, setInputGroupKey] = useState('');
   const [addGroupState, setAddGroupState] = useState('');
+
+  // const [loading, setLoading] = useState(false);
 
   // useRef
   const groupListDivRef = useRef();
@@ -24,7 +30,7 @@ const MainPage = () => {
   const onClickGroupAddModal = () => setIsGroupCreateModalOpen(true);
   const onClickGroupJoinModal = () => setIsGroupJoinModalOpen(true);
   const onClickLogout = () => {
-    alert('logout');
+    commuteGetLogout();
   };
   const onClickGroupCreate = () => {
     if (inputGroupName) {
@@ -104,37 +110,64 @@ const MainPage = () => {
   const onChangeInputGroupName = e => setInputGroupName(e.target.value);
   const onChangeInputGroupKey = e => setInputGroupKey(e.target.value);
 
+  // 통신
+  const commuteGetLogout = () => {
+    // 로그아웃
+    fetch("/logout")
+    .then((res)=>{
+      return res.json();
+    })
+    .then((ack)=>{
+      // false일때 로그인이 안되어있는데 어짜피 그런 상태여도 로그인 화면으로 돌려야하므로 조건문 없음
+      alert('로그아웃 되었습니다.');
+      navigate('../');  //로그인 페이지로
+    });
+  }
+
   // render
   return (
-    <MainLayout isLogin={true} onClickLogout={onClickLogout}>
-      <GroupDiv>
-        <GroupTitleDiv>
-          <h1>그룹</h1>
-          <GroupButtonDiv>
-            <GroupButton onClick={onClickGroupAddModal}>그룹 생성</GroupButton>
-            <GroupButton onClick={onClickGroupJoinModal}>그룹 참가</GroupButton>
-          </GroupButtonDiv>
-        </GroupTitleDiv>
-        <GroupListDiv ref={groupListDivRef} />
-      </GroupDiv>
-      
-     {/* 그룹 추가 버튼 Modal */}
-      <GroupCreateModal 
-        inputGroupName={inputGroupName} 
-        setInputGroupName={setInputGroupName} 
-        isGroupCreateModalOpen={isGroupCreateModalOpen}
-        setIsGroupCreateModalOpen={setIsGroupCreateModalOpen} 
-        onClickGroupCreate={onClickGroupCreate}
-      />
+    <>
+      {/* {loading ? (
+        <div style={{position: 'absolute', left: '50%', top: '45%'}}>
+          <Ring 
+            size={40}
+            lineWeight={5}
+            speed={2} 
+            color="black"
+          />
+        </div> 
+      ) : ( */}
+        <MainLayout isLogin={true} onClickLogout={onClickLogout}>
+          <GroupDiv>
+            <GroupTitleDiv>
+              <h1>그룹</h1>
+              <GroupButtonDiv>
+                <GroupButton onClick={onClickGroupAddModal}>그룹 생성</GroupButton>
+                <GroupButton onClick={onClickGroupJoinModal}>그룹 참가</GroupButton>
+              </GroupButtonDiv>
+            </GroupTitleDiv>
+            <GroupListDiv ref={groupListDivRef} />
+          </GroupDiv>
+          
+        {/* 그룹 추가 버튼 Modal */}
+          <GroupCreateModal 
+            inputGroupName={inputGroupName} 
+            setInputGroupName={setInputGroupName} 
+            isGroupCreateModalOpen={isGroupCreateModalOpen}
+            setIsGroupCreateModalOpen={setIsGroupCreateModalOpen} 
+            onClickGroupCreate={onClickGroupCreate}
+          />
 
-       {/* 그룹 참가 버튼 Modal */}
-      <GroupJoinModal  
-        isGroupJoinModalOpen={isGroupJoinModalOpen}
-        setIsGroupJoinModalOpen={setIsGroupJoinModalOpen}
-        inputGroupKey={ inputGroupKey}
-        onChangeInputGroupKey={onChangeInputGroupKey}
-        onClickGroupJoin={onClickGroupJoin} />
-    </MainLayout>
+          {/* 그룹 참가 버튼 Modal */}
+          <GroupJoinModal  
+            isGroupJoinModalOpen={isGroupJoinModalOpen}
+            setIsGroupJoinModalOpen={setIsGroupJoinModalOpen}
+            inputGroupKey={ inputGroupKey}
+            onChangeInputGroupKey={onChangeInputGroupKey}
+            onClickGroupJoin={onClickGroupJoin} />
+        </MainLayout>
+      {/* )} */}
+    </>
   );
 };
 

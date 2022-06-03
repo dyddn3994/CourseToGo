@@ -157,7 +157,7 @@ const Join = () => {
       .then(res => {
         console.log(res.data)
         alert('회원가입에 성공하였습니다.');
-      // navigate('../');  //로그인 페이지로
+        navigate('../');  //로그인 페이지로
       });
       
     }
