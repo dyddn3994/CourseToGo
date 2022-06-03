@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router';
@@ -63,19 +63,13 @@ const CoursePage = () => {
     commuteGetItineraryInfo(params.day);
   }, [params]);
 
-  // useState
-  // const socketJs = new SockJS("/socket");
-  // const stompcli = StompJs.over(socketJs);
-  // const [socketJs, setSocketJs] = useState(new SockJS('/socket'));
-  // const [stompcli, setStompcli] = useState(StompJs.over(socketJs));
-
   const [thisPageDate, setThisPageDate] = useState('2021-09-12'); // 현재 일정 날짜
   const [endPageDate, setEndPageDate] = useState(''); // 마지막 일정 날짜
   const [thisCourseCity, setThisCourseCity] = useState('Jeju'); // 코스 도시 정보
   const [groupId, setGroupId] = useState(0); // 그룹 id
 
   const [searchPlace, setSearchPlace] = useState(''); // 장소 검색어
-  const [ thisItinerary ,setThisItinerary ] = useState('');
+  const [thisItinerary ,setThisItinerary ] = useState('');
   const [itineraryArray, setItineraryArray] = useState([
     // 등록된 일정 리스트
     {itineraryId: 1, itineraryStartTime: '2022-05-01T16:00', itineraryEndTime: '2022-05-01T17:30', itineraryColor: 1, itineraryHidden: false, touristSpot: {
@@ -785,23 +779,6 @@ const CoursePage = () => {
 
     return formatTime;
   }
-  const onMouseOverList = () => {
-    // setOverSearchList(!overSearchList);
-  }
-  const onMouseOverListOut = () => {
-    // if(isOpenSearchList){
-    //   setOverSearchList(!overSearchList);
-    // }
-  }
-  const searchListHidden =()=> {  
-      setISOpenSearchList(!isOpenSearchList);
-  }
-  const searchListHiddenOut =()=> {  
-    if(overSearchList){
-      setISOpenSearchList(!isOpenSearchList);
-    }
-    
-}
   // render
   return (
      <>
@@ -826,14 +803,14 @@ const CoursePage = () => {
               placeholder='여행지를 입력하세요'
               onChange={onChangeSearch}
               onKeyPress={onKeyPressSearch}
-              onMouseOver={searchListHidden}
-              onMouseOut={searchListHiddenOut}
+              onFocus={() => setISOpenSearchList(true)}
+              onBlur={() => setISOpenSearchList(false)}
             />
               <SearchButton onClick={onClickSearch}>검색</SearchButton>
               <span style={{float: 'right', paddingRight: '10px', fontSize: '25px'}}> <BsFillPlusSquareFill onClick={() => onClickItineraryAddIcon()} /> </span>
             </SearchDiv>
             <MapDiv>
-                <MapContainer isOpenSearchList={isOpenSearchList} onMouseOverList={onMouseOverList}  onMouseOverListOut ={ onMouseOverListOut} searchPlace={searchPlace} setIsMarkerClicked={setIsMarkerClicked} setMarkerInfo={setMarkerInfo} thisCourseCity={thisCourseCity} ></MapContainer>
+                <MapContainer isOpenSearchList={isOpenSearchList} searchPlace={searchPlace} setIsMarkerClicked={setIsMarkerClicked} setMarkerInfo={setMarkerInfo} thisCourseCity={thisCourseCity} ></MapContainer>
             </MapDiv>
           </LeftScreenDiv>
 

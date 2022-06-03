@@ -198,7 +198,7 @@ const MapContainer = forwardRef((props, ref) => {
         ))}
         <div id="pagination"></div>
       </div> */}
-      <MapResultList places={places} isOpenSearchList={isOpenSearchList}  onMouseOverList={ onMouseOverList}  overSearchList={overSearchList}/>
+      <MapResultList places={places} isOpenSearchList={isOpenSearchList}/>
     </div>
   )
 });

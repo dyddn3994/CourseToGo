@@ -1,12 +1,13 @@
 import React,{useState} from 'react'
 import styled, { css } from 'styled-components';
 
-const MapResultList = ({places, isOpenSearchList, onMouseOverList, overSearchList}) => {
+// const MapResultList = ({places, isOpenSearchList, onMouseOverList, overSearchList}) => {
+const MapResultList = ({places, isOpenSearchList}) => {
 
   return (
     <>
    { isOpenSearchList&&
-      <ResultList    onMouseOver={onMouseOverList } onMouseOut={onMouseOverList}>
+      <ResultList>
         {places.map((item, i) => (
           <div key={i}>
             <TextBox>
