@@ -18,7 +18,7 @@ const CITYLATLNG = [
 
 const MapContainer = forwardRef((props, ref) => {
 
-  const { isOpenSearchList,searchPlace, setIsMarkerClicked, setMarkerInfo } = props;
+  const { overSearchList, isOpenSearchList, onMouseOverList,searchPlace, setIsMarkerClicked, setMarkerInfo } = props;
   const [thisCity, setThisCity] = useState('제주');
   const [touristSpotInfo, setTouristSpotInfo] = useState({touristSpotAvgCost: 12, touristSpotAvgTime: 60});
   
@@ -157,7 +157,7 @@ const MapContainer = forwardRef((props, ref) => {
           zIndex:'0'
         }}
       ></div>
-      <MapResultList places={places} isOpenSearchList={isOpenSearchList} />
+      <MapResultList places={places} isOpenSearchList={isOpenSearchList}  onMouseOverList={ onMouseOverList}  overSearchList={overSearchList}/>
     </div>
   )
 });

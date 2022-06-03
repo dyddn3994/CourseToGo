@@ -1,12 +1,13 @@
-import React from 'react'
+import React,{useState} from 'react'
 import styled, { css } from 'styled-components';
 
-const MapResultList = ({places, isOpenSearchList}) => {
+const MapResultList = ({places, isOpenSearchList, onMouseOverList, overSearchList}) => {
+
   return (
     <>
-   {/* {isOpenSearchList && */}
+   {( overSearchList|| isOpenSearchList) &&
 
-      <ResultList>
+      <ResultList    onMouseOver={onMouseOverList } onMouseOut={onMouseOverList}>
         {places.map((item, i) => (
           <div key={i}>
             <TextBox>
@@ -26,7 +27,7 @@ const MapResultList = ({places, isOpenSearchList}) => {
         <div id="pagination"></div>
       </ResultList>
 
-   {/* } */}
+   }
    </>
   )
 };

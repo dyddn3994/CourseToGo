@@ -79,7 +79,8 @@ const CoursePage = () => {
     }},
   ]); 
   const [isOpenSearchList, setISOpenSearchList] = useState(false);	// 검색 리스트 열고 닫기 상태 
-
+  const [overSearchList, setOverSearchList] = useState(false);	// 검색 리스트 마우스 오버 상태
+ 
   const [overlapItineraryArrayState, setOverlapItineraryArrayState] = useState([]);
   const [representativeItineraryState, setRepresentativeItineraryState] = useState({});
   const [thisItineraryTime, setThisItineraryTime] = useState(''); // 마커 클릭 후 일정에 mouseover시 표현할 툴팁 내 시간
@@ -620,7 +621,23 @@ const CoursePage = () => {
 
     return formatTime;
   }
-
+  const onMouseOverList = () => {
+    setOverSearchList(!overSearchList);
+  }
+  const onMouseOverListOut = () => {
+    if(isOpenSearchList){
+      setOverSearchList(!overSearchList);
+    }
+  }
+  const searchListHidden =()=> {  
+      setISOpenSearchList(!isOpenSearchList);
+  }
+  const searchListHiddenOut =()=> {  
+    if(overSearchList){
+      setISOpenSearchList(!isOpenSearchList);
+    }
+    
+}
   // render
   return (
      <>
@@ -645,13 +662,14 @@ const CoursePage = () => {
               placeholder='여행지를 입력하세요'
               onChange={onChangeSearch}
               onKeyPress={onKeyPressSearch}
-              // onMouseOver={}
+              onMouseOver={searchListHidden}
+              onMouseOut={searchListHiddenOut}
             />
             <SearchButton onClick={onClickSearch}>검색</SearchButton>
             <span style={{float: 'right', paddingRight: '10px', fontSize: '25px'}}> <BsFillPlusSquareFill onClick={() => onClickItineraryAddIcon()} /> </span>
           </SearchDiv>
           <MapDiv>
-              <MapContainer isOpenSearchList ={isOpenSearchList}searchPlace={searchPlace} setIsMarkerClicked={setIsMarkerClicked} setMarkerInfo={setMarkerInfo} ref={mapContainerRef} ></MapContainer>
+              <MapContainer overSearchList={overSearchList} isOpenSearchList ={isOpenSearchList}  onMouseOverList={ onMouseOverList} searchPlace={searchPlace} setIsMarkerClicked={setIsMarkerClicked} setMarkerInfo={setMarkerInfo} ref={mapContainerRef} ></MapContainer>
           </MapDiv>
         </LeftScreenDiv>
 

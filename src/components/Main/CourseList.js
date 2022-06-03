@@ -19,7 +19,7 @@ const CoursesList =( {group,  onClickCourseLi, courseDateRender}) => {
 };
 
 const CourseUl = styled.ul`
-
+  list-style: none;
 `;
 
 const CourseLi = styled.li`

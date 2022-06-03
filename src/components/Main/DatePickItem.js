@@ -14,7 +14,8 @@ const DatePickerItem = ({openDatePicker, setOpenDatePicker,startDate,onChange,en
         onRequestClose={() => setOpenDatePicker(false)}
         style={{
             overlay: {
-              position: 'fixed'
+              position: 'fixed',
+              zIndex: '6'
             },
             content: {
               top: '150px',
