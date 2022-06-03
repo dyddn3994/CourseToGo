@@ -11,7 +11,7 @@ const FilteringUserItem = ({item, checkedHandler}) => {
         <UserButton style={{backgroundColor:backgroundColor }} onClick={()=>{checkedHandler(item);
                                                                         setBackgorundColor(backgroundColor==='#FFFFFF'? '#DCDCDC': '#FFFFFF'); }} >
             {/* 유저 프로필사진과 이름*/}
-            <ProfileDiv>{memberProfile}</ProfileDiv>
+            <ProfileDiv type='image' value={memberProfile} src={'http://122.199.121.202:9092/'+memberProfile}>{}</ProfileDiv>
             <InputUser type="button"  value={memberName}  />
         </UserButton>
     )
@@ -26,7 +26,7 @@ color:	#000000;
 font-size:0.6rem;
 `;
 
-const ProfileDiv =  styled.div`
+const ProfileDiv =  styled.input`
 background-color:#FFCC29;
 border-radius: 1rem;
 height:40px;

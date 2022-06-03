@@ -1,5 +1,7 @@
 import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react'
 
+import CITY from '../../assets/City/City';
+
 const { kakao } = window
 
 const CITYLATLNG = [
@@ -16,15 +18,18 @@ const CITYLATLNG = [
 
 const MapContainer = forwardRef((props, ref) => {
 
-  const { searchPlace, setIsMarkerClicked, setMarkerInfo } = props;
-  const [thisCity, setThisCity] = useState('제주');
-  const [touristSpotInfo, setTouristSpotInfo] = useState({touristSpotAvgCost: 12, touristSpotAvgTime: 60});
+  const { searchPlace, setIsMarkerClicked, setMarkerInfo, thisCourseCity } = props;
+  const [thisCity, setThisCity] = useState(thisCourseCity);
+  const [touristSpotInfo, setTouristSpotInfo] = useState({});
   
   // 부모 컴포넌트에서 자식 함수 실행할 수 있도록 설정
   useImperativeHandle(ref, () => ({
     // 그룹 정보 조회
-    setMarkerClose() {
-      infowindow.close();
+    // setMarkerClose() {
+    //   infowindow.close();
+    // },
+    setMapCity(city) {
+      setThisCity(city);
     }
   }));
 
@@ -37,8 +42,11 @@ const MapContainer = forwardRef((props, ref) => {
     // var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 })
     var markers = []
     const container = document.getElementById('myMap')
-    const lat = CITYLATLNG.find(item => item.city === 'busan').lat;
-    const lng = CITYLATLNG.find(item => item.city === 'busan').lng;
+    if (thisCity === '') {
+      setThisCity('Jeju')
+    }
+    const lat = CITY.find(item => item.value === thisCity).lat;
+    const lng = CITY.find(item => item.value === thisCity).lng;
     const options = {
       center: new kakao.maps.LatLng(lat, lng),
       level: 10,
@@ -79,7 +87,7 @@ const MapContainer = forwardRef((props, ref) => {
       for (i = 1; i <= pagination.last; i++) {
         var el = document.createElement('a')
         el.href = '#'
-        el.innerHTML = i
+        el.innerHTML = '<span>'+i+'</span>'
 
         if (i === pagination.current) {
           el.className = 'on'
@@ -103,20 +111,31 @@ const MapContainer = forwardRef((props, ref) => {
         position: new kakao.maps.LatLng(place.y, place.x),
       })
 
-      let renderPinContent = 
-        '<div style="padding-bottom: 20px;">' +
-          '<div style="padding:5px;font-size:12px;">' + '이름: ' + place.place_name + '</div>' +
-          '<div style="padding:5px;font-size:12px;">' + '주소: ' + place.address_name + '</div>';
-      if (Object.keys(touristSpotInfo).length !== 0) {
-        renderPinContent = renderPinContent + 
-          '<div style="padding:5px;font-size:12px;">' + '평균 비용: ' + touristSpotInfo.touristSpotAvgCost + '원' + '</div>' +
-          '<div style="padding:5px;font-size:12px;">' + '평균 소요시간: ' + touristSpotInfo.touristSpotAvgTime + '시간' + '</div>';
-      }
-      renderPinContent = renderPinContent + '</div>';
+      // let renderPinContent = 
+      //   '<div style="padding-bottom: 20px;">' +
+      //     '<div style="padding:5px;font-size:12px;">' + '이름: ' + place.place_name + '</div>' +
+      //     '<div style="padding:5px;font-size:12px;">' + '주소: ' + place.address_name + '</div>';
+      // if (Object.keys(touristSpotInfo).touristSpotAvgCost !== 0) {
+      //   renderPinContent = renderPinContent + 
+      //     '<div style="padding:5px;font-size:12px;">' + '평균 비용: ' + touristSpotInfo.touristSpotAvgCost + '원' + '</div>' +
+      //     '<div style="padding:5px;font-size:12px;">' + '평균 소요시간: ' + touristSpotInfo.touristSpotAvgTime + '시간' + '</div>';
+      // }
+      // renderPinContent = renderPinContent + '</div>';
 
       kakao.maps.event.addListener(marker, 'click', function () {
-        commuteGetMarkerInfo();
+        // const touristSpotInfos = commuteGetMarkerInfo(place.place_name, place.address_name);
+        // console.log(touristSpotInfos)
         isMarkerContent = !isMarkerContent;
+        let renderPinContent = 
+          '<div style="padding-bottom: 20px;">' +
+            '<div style="padding:5px;font-size:12px;">' + '이름: ' + place.place_name + '</div>' +
+            '<div style="padding:5px;font-size:12px;">' + '주소: ' + place.address_name + '</div>';
+        // if (touristSpotInfos.touristSpotAvgCost !== 0) {
+        //   renderPinContent = renderPinContent + 
+        //     '<div style="padding:5px;font-size:12px;">' + '평균 비용: ' + touristSpotInfos.touristSpotAvgCost + '원' + '</div>' +
+        //     '<div style="padding:5px;font-size:12px;">' + '평균 소요시간: ' + touristSpotInfos.touristSpotAvgTime + '시간' + '</div>';
+        // }
+        renderPinContent = renderPinContent + '</div>';
         infowindow.setContent(
           renderPinContent
         )
@@ -134,7 +153,7 @@ const MapContainer = forwardRef((props, ref) => {
   }, [searchPlace])
 
   // 통신
-  const commuteGetMarkerInfo = (address, name) => {
+  const commuteGetMarkerInfo = (name, address) => {
     // 마커 클릭했을때 보여질 정보 중 평균 수치들 출력
     fetch("/course/spot?address="+address+"&name="+name)
     .then(res => {
@@ -142,6 +161,8 @@ const MapContainer = forwardRef((props, ref) => {
     })
     .then((touristSpotInfo) => {
       setTouristSpotInfo(touristSpotInfo);
+      console.log('in commute: ' + touristSpotInfo.touristSpotAvgCost);
+      return touristSpotInfo;
     })
   }
 
@@ -154,20 +175,29 @@ const MapContainer = forwardRef((props, ref) => {
           height: '500px',
         }}
       ></div>
-      <div id="result-list" style={{overflowY: "scroll", height: "30vh"}}>
+      <div id="result-list" style={{
+        overflowY: "scroll", 
+        height: "25vh", 
+        width: '40vh', 
+        top: '-480px', 
+        left: '20px', 
+        zIndex: '3', 
+        position: 'relative',
+        backgroundColor: 'rgba(255, 255, 255, 0.5)',
+        scrollbarWidth: 'thin'
+      }}>
         {places.map((item, i) => (
-          <div key={i} style={{ marginTop: '20px' }}>
-            <span>{i + 1}</span>
+          <div key={i} style={{ marginBottom: '20px' }}>
             <div>
-              <h5>{item.place_name}</h5>
-              {item.road_address_name ? (
+              <div style={{fontWeight: 'bold'}}>{item.place_name}</div>
+              {/* {item.road_address_name ? (
                 <div>
                   <span>{item.road_address_name}</span>
                   <span>{item.address_name}</span>
                 </div>
-              ) : (
-                <span>{item.address_name}</span>
-              )}
+              ) : ( */}
+                <span style={{marginTop: '-10px'}}>{item.address_name}</span>
+              {/* )} */}
               <span>{item.phone}</span>
             </div>
           </div>

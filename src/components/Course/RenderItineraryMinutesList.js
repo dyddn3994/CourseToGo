@@ -133,6 +133,6 @@ import styled, { css } from 'styled-components';
       );
     }
 
-    return renderResult;
+    return (renderResult);
   }
   export default RenderItineraryMinutesList;

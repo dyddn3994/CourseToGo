@@ -5,18 +5,20 @@ import Modal from 'react-modal';
 import InputForm from '../InputForm';
 import DatePickerItem from "./DatePickItem";
 import SelectRegion from "./SelectRegion";
+
+import CITY from "../../assets/City/City";
 const CourseCreateModal = ({isCourseCreateModalOpen, setIsCourseCreateModalOpen,  inputCreateCourse,setInputCreateCourse, onChangeInputCreatCourse ,onClickCreateCourseModal  }) => {
  
       const [openDatePicker, setOpenDatePicker] = useState(false);
       const [startDate, setStartDate] = useState('');
       const [endDate, setEndDate] = useState('');
   
-      // 지역 선택을 위한 데이터
-      const OPTIONS = [
-	      { value: "apple", name: "사과" },
-	      { value: "banana", name: "바나나" },
-	      { value: "orange", name: "오렌지" },
-      ];
+      // // 지역 선택을 위한 데이터
+      // const OPTIONS = [
+	//       { value: "apple", name: "사과" },
+	//       { value: "banana", name: "바나나" },
+	//       { value: "orange", name: "오렌지" },
+      // ];
 
       const showDatePicker = () => {
             setOpenDatePicker(!openDatePicker);
@@ -45,12 +47,21 @@ const CourseCreateModal = ({isCourseCreateModalOpen, setIsCourseCreateModalOpen,
       const [start, end] = dates;
       setStartDate(start);
       setEndDate(end);
+
+      const startMonthNum = start.getMonth()+1
+      const endMonthNum = end.getMonth()+1
+
+      const startMonth = (startMonthNum.toString().length === 1 ? '0'+String(startMonthNum) : String(startMonthNum))
+      const startDate = (start.getDate().toString().length === 1 ? '0'+start.getDate() : start.getDate())
+      const endMonth = (endMonthNum.toString().length === 1 ? '0'+String(endMonthNum) : String(endMonthNum))
+      const endDate = (end.getDate().toString().length === 1 ? '0'+end.getDate() : end.getDate())
+      
       if(end!==null){
-             setInputCreateCourse({
-            ...inputCreateCourse,
-            inputCourseStartDate:start.getFullYear() + '-'+start.getMonth()+'-'+start.getDate() ,
-            inputCourseEndDate:end.getFullYear() + '-'+end.getMonth()+'-'+end.getDate()
-      });
+        setInputCreateCourse({
+          ...inputCreateCourse,
+          inputCourseStartDate:start.getFullYear() + '-'+startMonth+'-'+startDate ,
+          inputCourseEndDate:end.getFullYear() + '-'+endMonth+'-'+endDate
+        });
       }
      
       onDateStringSetting(start, end);  //날짜 String으로
@@ -120,7 +131,7 @@ const CourseCreateModal = ({isCourseCreateModalOpen, setIsCourseCreateModalOpen,
             <InputDiv>
                   <InputLabel>지역</InputLabel>
                   <FormDiv>
-                        <SelectRegion options={OPTIONS} selectOnChange={selectOnChange} defaultValue="apple"/>
+                        <SelectRegion options={CITY} selectOnChange={selectOnChange} defaultValue="seoul"/>
                   </FormDiv>
             </InputDiv>
             <ButtonDiv>

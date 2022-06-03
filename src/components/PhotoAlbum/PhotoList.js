@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import PhotoItem from './PhotoItem';
 
-const PhotoList = ({datas,checkedPhotos, addElementPhotos}) => {
+const PhotoList = ({datas, checkedPhotos, addElementPhotos}) => {
 
     return (
         <PhotoListDiv>

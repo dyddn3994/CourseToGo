@@ -26,7 +26,7 @@ import RenderItineraryMinutesList from './RenderItineraryMinutesList';
                 onMouseOutItinerary={onMouseOutItinerary}
                 onClickOverlap={ onClickOverlap}
                 onMouseOverOverlapItinerary={onMouseOverOverlapItinerary}
-                />
+              />
             </span>
         </div>
       );

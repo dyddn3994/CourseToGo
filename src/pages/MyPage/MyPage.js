@@ -110,7 +110,7 @@ const CoursePhotoPage = () => {
     }
   
     const deleteMember = () => {
-        commuteDeleteMemberInfo();
+      commuteDeleteMemberInfo();
     };
 
     const commuteDeleteMemberInfo= () => {
@@ -135,7 +135,7 @@ const CoursePhotoPage = () => {
       <MainDiv>
     
         {/* 코스명이 들어갈 부분 */}
-            <CourseHeader inputCourseName={'마이페이지'}/>
+            <CourseHeader inputCourseName={'마이페이지'} linkToBack={'/main'}/>
             <ScrollDiv>
                 <InputDiv>
 
