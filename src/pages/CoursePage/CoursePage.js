@@ -15,7 +15,7 @@ import { CgChevronLeftR, CgChevronRightR } from 'react-icons/cg';
 
 // components
 import MapContainer from '../../components/Course/MapContainer';
-import Memo from './Memo.js'
+import Memo from '../../components/Course/Memo.js'
 import OverlapItineraryModal from './OverlapItineraryModal';
 import OverlapItineraryTooltip from '../../components/Course/OverlapItineraryTooltip';
 import ItineraryTimeTooltip from '../../components/Course/ItineraryTimeTooltip';
@@ -59,6 +59,7 @@ const CoursePage = () => {
   const [thisPageDate, setThisPageDate] = useState('2021-09-12'); // 현재 일정 날짜
   const [endPageDate, setEndPageDate] = useState(''); // 마지막 일정 날짜
   const [searchPlace, setSearchPlace] = useState(''); // 장소 검색어
+  const [ thisItinerary ,setThisItinerary ] = useState('');
   const [itineraryArray, setItineraryArray] = useState([
     // 등록된 일정 리스트
     {itineraryId: 1, itineraryStartTime: '2022-05-01T16:00', itineraryEndTime: '2022-05-01T17:30', itineraryColor: 1, itineraryHidden: false, touristSpot: {
@@ -77,7 +78,8 @@ const CoursePage = () => {
       touristSpotName: "애월중복2", touristSpotAddress: "거제시 여러분", touristSpotAvgCost: 0, touristSpotAvgTime: 0
     }},
   ]); 
-  
+  const [isOpenSearchList, setISOpenSearchList] = useState(false);	// 검색 리스트 열고 닫기 상태 
+
   const [overlapItineraryArrayState, setOverlapItineraryArrayState] = useState([]);
   const [representativeItineraryState, setRepresentativeItineraryState] = useState({});
   const [thisItineraryTime, setThisItineraryTime] = useState(''); // 마커 클릭 후 일정에 mouseover시 표현할 툴팁 내 시간
@@ -254,9 +256,10 @@ const CoursePage = () => {
       }
     }
   }
-  const onClickOverlap = (e) => {
+  const onClickOverlap = ( e, thisItinerary ) => {
     e.stopPropagation();  // 부모 요소 클릭 방지
     // e.preventDefault();  // 부모 요소 클릭 방지
+    setThisItinerary(thisItinerary );
     setIsOverlapItineraryModal(true);
   }
   const onClickSetRepresentative = (representativeItineraryId, overlapItineraryId) => {
@@ -621,7 +624,7 @@ const CoursePage = () => {
   // render
   return (
      <>
-    {loading ? (
+    {/* {loading ? (
       <div style={{position: 'absolute', left: '50%', top: '45%'}}>
       <Ring 
         size={40}
@@ -630,7 +633,7 @@ const CoursePage = () => {
         color="black"
       />
       </div> 
-     ) : (
+     ) : ( */}
     <MainScreenDiv>
       <CourseHeader inputCourseName={'JEJU 제주'} />
   
@@ -642,17 +645,18 @@ const CoursePage = () => {
               placeholder='여행지를 입력하세요'
               onChange={onChangeSearch}
               onKeyPress={onKeyPressSearch}
+              // onMouseOver={}
             />
             <SearchButton onClick={onClickSearch}>검색</SearchButton>
             <span style={{float: 'right', paddingRight: '10px', fontSize: '25px'}}> <BsFillPlusSquareFill onClick={() => onClickItineraryAddIcon()} /> </span>
           </SearchDiv>
-          {/* <MapDiv>
-              <MapContainer searchPlace={searchPlace} setIsMarkerClicked={setIsMarkerClicked} setMarkerInfo={setMarkerInfo} ref={mapContainerRef} ></MapContainer>
-          </MapDiv> */}
+          <MapDiv>
+              <MapContainer isOpenSearchList ={isOpenSearchList}searchPlace={searchPlace} setIsMarkerClicked={setIsMarkerClicked} setMarkerInfo={setMarkerInfo} ref={mapContainerRef} ></MapContainer>
+          </MapDiv>
         </LeftScreenDiv>
 
         <ItineraryDateScreenDiv>
-          <div  style={{ width:"100%",display: "flex", justifyContent: "space-evenly", marginLeft:"25%"}}>
+          <div  style={{ width:"100%",display: "flex", justifyContent: "space-evenly", marginLeft:"18%"}}>
             <span> 
               {
                 // 1일차일 경우 일차 감소 클릭 방지
@@ -740,8 +744,18 @@ const CoursePage = () => {
             thisItineraryTime={thisItineraryTime}
           />
       )}
+      {/* 중복 일정 리스트 */}
+      { isOverlapItineraryModal &&
+        <OverlapItineraryModal 
+          isOverlapItineraryModal={  isOverlapItineraryModal}
+          setIsOverlapItineraryModal={ setIsOverlapItineraryModal}
+          thisItinerary={thisItinerary}
+          overlapItineraryArray={overlapItineraryArrayState}
+          onClickSetRepresentative={onClickSetRepresentative}
+          />
+      }
     </MainScreenDiv>
-    )}
+    {/* )} */}
   </>
   )
 };
@@ -749,11 +763,15 @@ const CoursePage = () => {
 // styled components
 // div
 const MainScreenDiv = styled.div`
-  height: 100vh;
+position: absolute; 
+background-color:	#F5F5F5;
+width:100%;
+height: 100vh;
 `;
 const ItineraryDateScreenDiv = styled.div`
-  margin-left:2%;
   width:20%;
+  position:fixed;
+margin-left:60%;
   
 `;
 
@@ -771,9 +789,11 @@ const ContentDiv = styled.div`
   padding-top:6%;
   background-color:	#F5F5F5;
   height: 100vh;
+  position:fixed;
+  
 `;
 const LeftScreenDiv = styled.div`
-  flex-basis: 55%;
+  width:750px;  
   margin-left: 2%;
 `;
 const ItineraryScreenDiv = styled.div`
@@ -833,7 +853,7 @@ const SearchInput = styled.input`
 border-radius: 0.30rem;
 line-height: 2;
 border: 1px solid lightgray;
-width:40%;
+width:280px;
 box-shadow: 0px 0px 2px lightgray;
   margin-left: 2%;
   font-size: 0.9rem;

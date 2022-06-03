@@ -1,4 +1,6 @@
 import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react'
+import styled, { css } from 'styled-components';
+import MapResultList from './MapResultList';
 
 const { kakao } = window
 
@@ -16,7 +18,7 @@ const CITYLATLNG = [
 
 const MapContainer = forwardRef((props, ref) => {
 
-  const { searchPlace, setIsMarkerClicked, setMarkerInfo } = props;
+  const { isOpenSearchList,searchPlace, setIsMarkerClicked, setMarkerInfo } = props;
   const [thisCity, setThisCity] = useState('제주');
   const [touristSpotInfo, setTouristSpotInfo] = useState({touristSpotAvgCost: 12, touristSpotAvgTime: 60});
   
@@ -150,30 +152,12 @@ const MapContainer = forwardRef((props, ref) => {
       <div
         id="myMap"
         style={{
-          // width: '700px',
-          height: '500px',
+           width: '100%',
+          height: '450px',
+          zIndex:'0'
         }}
       ></div>
-      <div id="result-list" style={{overflowY: "scroll", height: "30vh"}}>
-        {places.map((item, i) => (
-          <div key={i} style={{ marginTop: '20px' }}>
-            <span>{i + 1}</span>
-            <div>
-              <h5>{item.place_name}</h5>
-              {item.road_address_name ? (
-                <div>
-                  <span>{item.road_address_name}</span>
-                  <span>{item.address_name}</span>
-                </div>
-              ) : (
-                <span>{item.address_name}</span>
-              )}
-              <span>{item.phone}</span>
-            </div>
-          </div>
-        ))}
-        <div id="pagination"></div>
-      </div>
+      <MapResultList places={places} isOpenSearchList={isOpenSearchList} />
     </div>
   )
 });

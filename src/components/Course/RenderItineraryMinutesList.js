@@ -119,7 +119,7 @@ import styled, { css } from 'styled-components';
                 marginRight: '5px', 
                 color:'#FF0000'
               }}
-              onClick={(e) => onClickOverlap(e)} 
+              onClick={(e) => onClickOverlap( e,thisItinerary )} 
               onMouseOver={() => onMouseOverOverlapItinerary(thisItinerary, thisPageDate+'T'+thisTimeFormat+':00')}
               // onMouseOver={() => setIsOverlapMouseOver(true)}
               // onMouseOut={() => setIsOverlapMouseOver(false)}
