@@ -95,7 +95,8 @@ const CoursePage = () => {
     }},
   ]); 
   const [isOpenSearchList, setISOpenSearchList] = useState(false);	// 검색 리스트 열고 닫기 상태 
-
+  const [overSearchList, setOverSearchList] = useState(false);	// 검색 리스트 마우스 오버 상태
+ 
   const [overlapItineraryArrayState, setOverlapItineraryArrayState] = useState([]);
   const [representativeItineraryState, setRepresentativeItineraryState] = useState({});
   const [thisItineraryTime, setThisItineraryTime] = useState(''); // 마커 클릭 후 일정에 mouseover시 표현할 툴팁 내 시간
@@ -291,7 +292,7 @@ const CoursePage = () => {
   const onClickOverlap = ( e, thisItinerary ) => {
     e.stopPropagation();  // 부모 요소 클릭 방지
     // e.preventDefault();  // 부모 요소 클릭 방지
-    setThisItinerary(thisItinerary );
+    // setThisItinerary(thisItinerary );
     setIsOverlapItineraryModal(true);
   }
   const onClickSetRepresentative = (representativeItineraryId, overlapItineraryId) => {
@@ -688,6 +689,12 @@ const CoursePage = () => {
     .then((courseInfo)=>{
       setThisCourseCity(courseInfo.city);
       setGroupId(courseInfo.group.groupId);
+      setInputSettingCourse({
+        inputCourseName: courseInfo.courseName,
+        inputCourseStartDate: courseInfo.courseStartDate,
+        inputCourseEndDate: courseInfo.courseEndDate,
+        inputCity: courseInfo.city
+      })
     });
   }
   const commuteDeleteGroup = () => {
@@ -778,7 +785,23 @@ const CoursePage = () => {
 
     return formatTime;
   }
-
+  const onMouseOverList = () => {
+    // setOverSearchList(!overSearchList);
+  }
+  const onMouseOverListOut = () => {
+    // if(isOpenSearchList){
+    //   setOverSearchList(!overSearchList);
+    // }
+  }
+  const searchListHidden =()=> {  
+      setISOpenSearchList(!isOpenSearchList);
+  }
+  const searchListHiddenOut =()=> {  
+    if(overSearchList){
+      setISOpenSearchList(!isOpenSearchList);
+    }
+    
+}
   // render
   return (
      <>
@@ -790,12 +813,12 @@ const CoursePage = () => {
         speed={2} 
         color="black"
       />
-      </div> 
+      </div>  
      ) : (
-    <MainScreenDiv>
-      <CourseHeader inputCourseName={thisCourseCity} onClickCourseSettingIcon={onClickCourseSettingIcon} linkToBack={'/main'} />
-  
-      <ContentDiv>
+      <MainScreenDiv>
+        <CourseHeader inputCourseName={thisCourseCity} onClickCourseSettingIcon={onClickCourseSettingIcon} linkToBack={'/main'} />
+    
+        <ContentDiv>
         <LeftScreenDiv>
           <SearchDiv>
             <SearchInput 
@@ -803,16 +826,16 @@ const CoursePage = () => {
               placeholder='여행지를 입력하세요'
               onChange={onChangeSearch}
               onKeyPress={onKeyPressSearch}
-              // onMouseOver={}
+              onMouseOver={searchListHidden}
+              onMouseOut={searchListHiddenOut}
             />
-            <SearchButton onClick={onClickSearch}>검색</SearchButton>
-            <span style={{float: 'right', paddingRight: '10px', fontSize: '25px'}}> <BsFillPlusSquareFill onClick={() => onClickItineraryAddIcon()} /> </span>
-          </SearchDiv>
-          <MapDiv>
-              {/* <MapContainer searchPlace={searchPlace} setIsMarkerClicked={setIsMarkerClicked} setMarkerInfo={setMarkerInfo} thisCourseCity={thisCourseCity} ></MapContainer> */}
-              <MapContainer isOpenSearchList ={isOpenSearchList}searchPlace={searchPlace} setIsMarkerClicked={setIsMarkerClicked} setMarkerInfo={setMarkerInfo} thisCourseCity={thisCourseCity}></MapContainer>
-          </MapDiv>
-        </LeftScreenDiv>
+              <SearchButton onClick={onClickSearch}>검색</SearchButton>
+              <span style={{float: 'right', paddingRight: '10px', fontSize: '25px'}}> <BsFillPlusSquareFill onClick={() => onClickItineraryAddIcon()} /> </span>
+            </SearchDiv>
+            <MapDiv>
+                <MapContainer isOpenSearchList={isOpenSearchList} onMouseOverList={onMouseOverList}  onMouseOverListOut ={ onMouseOverListOut} searchPlace={searchPlace} setIsMarkerClicked={setIsMarkerClicked} setMarkerInfo={setMarkerInfo} thisCourseCity={thisCourseCity} ></MapContainer>
+            </MapDiv>
+          </LeftScreenDiv>
 
           <ItineraryDateScreenDiv>
             <div  style={{ width:"100%",display: "flex", justifyContent: "space-evenly", marginLeft:"25%"}}>
@@ -883,6 +906,18 @@ const CoursePage = () => {
           onClickAddItinerary={onClickAddItinerary}
           />
 
+      {/* 중복 일정 리스트 */}
+      { isOverlapItineraryModal &&
+        <OverlapItineraryModal 
+          isOverlapItineraryModal={  isOverlapItineraryModal}
+          setIsOverlapItineraryModal={ setIsOverlapItineraryModal}
+          thisItinerary={thisItinerary}
+          overlapItineraryArray={overlapItineraryArrayState}
+          onClickSetRepresentative={onClickSetRepresentative}
+          />
+      }
+
+
         {/* 일정 수정 Modal */}
         <UpdateItineraryModal
           HOURS={HOURS} MINUTES={MINUTES}
@@ -904,15 +939,6 @@ const CoursePage = () => {
           onClickSettingCourseModal={onClickSettingCourseModal}
           onClickDeleteGroup={onClickDeleteGroup}
         />
-
-        {/* 중복 일정 Modal */}
-        {/* <OverlapItineraryModal
-          isOverlapItineraryModal={isOverlapItineraryModal}
-          setIsOverlapItineraryModal={setIsOverlapItineraryModal}
-          thisItinerary={thisItinerary}
-          overlapItineraryArray={overlapItineraryArray}
-          onClickSetRepresentative={onClickSetRepresentative}
-        /> */}
           
         {/* 중복 일정 툴팁, 마커 클릭 된 상태에서 띄우지 않음*/}
         {(!isMarkerClicked && 
@@ -927,18 +953,9 @@ const CoursePage = () => {
               thisItineraryTime={thisItineraryTime}
             />
         )}
-      {/* 중복 일정 리스트 */}
-      { isOverlapItineraryModal &&
-        <OverlapItineraryModal 
-          isOverlapItineraryModal={  isOverlapItineraryModal}
-          setIsOverlapItineraryModal={ setIsOverlapItineraryModal}
-          thisItinerary={thisItinerary}
-          overlapItineraryArray={overlapItineraryArrayState}
-          onClickSetRepresentative={onClickSetRepresentative}
-          />
-      }
-    </MainScreenDiv>
-    )} 
+      </MainScreenDiv>
+    )}
+
   </>
   )
 };

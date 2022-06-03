@@ -1,9 +1,7 @@
 import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'react'
 import styled, { css } from 'styled-components';
 import MapResultList from './MapResultList';
-
 import CITY from '../../assets/City/City';
-
 const { kakao } = window
 
 const CITYLATLNG = [
@@ -20,7 +18,7 @@ const CITYLATLNG = [
 
 const MapContainer = forwardRef((props, ref) => {
 
-  const { isOpenSearchList, searchPlace, setIsMarkerClicked, setMarkerInfo, thisCourseCity } = props;
+  const { overSearchList, isOpenSearchList, onMouseOverList,searchPlace, setIsMarkerClicked, setMarkerInfo, thisCourseCity } = props;
   const [thisCity, setThisCity] = useState(thisCourseCity);
   const [touristSpotInfo, setTouristSpotInfo] = useState({});
   
@@ -171,15 +169,14 @@ const MapContainer = forwardRef((props, ref) => {
 
   return (
     <div>
-      <div
+    <div
         id="myMap"
         style={{
-           width: '100%',
-          height: '450px',
-          zIndex:'0'
+          // width: '700px',
+          height: '500px',
         }}
       ></div>
-      <div id="result-list" style={{
+      {/* <div id="result-list" style={{
         overflowY: "scroll", 
         height: "25vh", 
         width: '40vh', 
@@ -194,23 +191,16 @@ const MapContainer = forwardRef((props, ref) => {
           <div key={i} style={{ marginBottom: '20px' }}>
             <div>
               <div style={{fontWeight: 'bold'}}>{item.place_name}</div>
-              {/* {item.road_address_name ? (
-                <div>
-                  <span>{item.road_address_name}</span>
-                  <span>{item.address_name}</span>
-                </div>
-              ) : ( */}
-                <span style={{marginTop: '-10px'}}>{item.address_name}</span>
-              {/* )} */}
+              <span style={{marginTop: '-10px'}}>{item.address_name}</span>
               <span>{item.phone}</span>
             </div>
           </div>
         ))}
         <div id="pagination"></div>
-      </div>
-      {/* <MapResultList places={places} isOpenSearchList={isOpenSearchList} /> */}
+      </div> */}
+      <MapResultList places={places} isOpenSearchList={isOpenSearchList}  onMouseOverList={ onMouseOverList}  overSearchList={overSearchList}/>
     </div>
   )
 });
 
-export default MapContainer
+export default MapContainer;

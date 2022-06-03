@@ -133,9 +133,11 @@ const  MyPage = () => {
       <MainDiv>
     
         {/* 코스명이 들어갈 부분 */}
-            <CourseHeader inputCourseName={'마이페이지'} linkToBack={'/main'}/>
-            <ScrollDiv>
-                <InputDiv>
+
+        <CourseHeader inputCourseName={'마이페이지'} linkToBack={'/main'}/>
+        <ScrollDiv>
+          <InputDiv>
+
 
             <InputForm label={"이름"} name={"memberName"} type={"text"} onChange={onChange} value={memberName} />
             <InputFormDiv>  

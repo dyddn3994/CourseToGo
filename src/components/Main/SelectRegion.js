@@ -3,7 +3,8 @@ import styled from 'styled-components';
 
 const SelectRegion = (props) => {
 	return (
-		<SelectDiv onChange={props.selectOnChange}>
+		<SelectDiv onChange={props.selectOnChange} defaultValue={props.defaultValue}>
+			{console.log('props: ', props.defaultValue)}
 			{props.options.map((option) => (
 				<option
 					key={option.value}
