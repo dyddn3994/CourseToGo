@@ -28,6 +28,7 @@ const CoursePhotoPage = () => {
   useEffect(() => {
     commuteGetMemberInfo();
     commuteGetCoursePhoto();
+    commuteGetCourseInfo();
   }, []);
 
   // useRef
@@ -59,6 +60,7 @@ const CoursePhotoPage = () => {
   // const [isCheckedPhoto, setIsCheckedPhoto] = useState(false); //사진 선택여부
   // 사진 편집 클릭 유무
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); 
+  const [thisCourseCity, setThisCourseCity] = useState('');
 
   
   // useEffect(() => {
@@ -320,6 +322,16 @@ const CoursePhotoPage = () => {
     //   console.log(ack);
     // });
   }
+  const commuteGetCourseInfo = () => {
+    // 코스 정보 조회
+    fetch("/course?courseId="+params.courseId)
+    .then((res)=>{
+      return res.json();
+    })
+    .then((courseInfo)=>{
+      setThisCourseCity(courseInfo.city);
+    });
+  }
 
   // 편집 클릭 시 
   const editClickedHandler = () => { 
@@ -350,7 +362,7 @@ const CoursePhotoPage = () => {
 
     
         {/* 코스명이 들어갈 부분 */}
-        <CourseHeader inputCourseName={'JEJU 제주'} linkToBack={'/course/'+params.courseId+'/'+params.day}/>
+        <CourseHeader thisCourseCity={thisCourseCity} linkToBack={'/course/'+params.courseId+'/'+params.day}/>
 
 
         {/* 필터링 및 선택 다운로드 부분  */}

@@ -33,6 +33,7 @@ const Memo = ({ setIsMemoOpen }) => {
       commutePostCreateMemo();
       commuteGetMemos();
       sortMemos();
+      console.log(inputContent);
       setInputContent('');
     }
   }
@@ -204,6 +205,7 @@ const Memo = ({ setIsMemoOpen }) => {
           <TextDiv>
             <div>   
               {createDateFormatting(memo.createDate)}
+            <span style={{marginLeft: '20px'}}>작성자 : {memo.member.memberName}</span>
             </div>
             {memo.content}
           </TextDiv>

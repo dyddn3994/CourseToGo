@@ -189,7 +189,6 @@ const MapContainer = forwardRef((props, ref) => {
         height: '500px',
       }}
     ></div>
-    <button onClick={() => infowindow.setContent('tt')}>te</button>
       {/* <div id="result-list" style={{
         overflowY: "scroll", 
         height: "25vh", 

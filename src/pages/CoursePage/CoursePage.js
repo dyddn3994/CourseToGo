@@ -648,25 +648,20 @@ const CoursePage = () => {
     setLoading(false);
   }
   const commutePutCourseUpdate = () => {
-    console.log('Number(params.courseId):', Number(params.courseId));
-    console.log('inputSettingCourse.inputCourseName: ', inputSettingCourse.inputCourseName);
-    console.log('inputSettingCourse.inputCourseStartDate: ', inputSettingCourse.inputCourseStartDate);
-    console.log('inputSettingCourse.inputCourseEndDate: ', inputSettingCourse.inputCourseEndDate);
-    console.log('inputSettingCourse.inputCity: ', inputSettingCourse.inputCity);
     // 코스 수정
     fetch("/course/update", {
       method: 'put',
       headers: {
         "Content-Type": "application/json",
       },
-      body: {
-        courseId : 1,
-        courseName: "asd",
-        courseStartDate: "2022-04-26",
-        courseEndDate: "2022-04-26",
-        city: "Deagu2",
-        check: true
-    }
+      body: JSON.stringify({
+        courseId: Number(params.courseId),
+        courseName: inputSettingCourse.inputCourseName,
+        courseStartDate: inputSettingCourse.inputCourseStartDate,
+        courseEndDate: inputSettingCourse.inputCourseEndDate,
+        city: inputSettingCourse.inputCity,
+        isCheck: false
+      })
     })
     .then((res)=>{
       return res.json();
@@ -677,9 +672,8 @@ const CoursePage = () => {
         alert('코스 재설정에 실패하였습니다.');
       }
       else {
-        console.log('courseId: ', courseId);
         alert('코스가 재설정되었습니다. 다시 로그인해주세요.');
-        // navigate('../');  //로그인 페이지로
+        navigate('../');  //로그인 페이지로
       }
     });
   }
@@ -835,7 +829,7 @@ const CoursePage = () => {
       </div>  
      ) : (
       <MainScreenDiv>
-        <CourseHeader inputCourseName={thisCourseCity} onClickCourseSettingIcon={onClickCourseSettingIcon} linkToBack={'/main'} />
+        <CourseHeader thisCourseCity={thisCourseCity} onClickCourseSettingIcon={onClickCourseSettingIcon} linkToBack={'/main'} />
     
         <ContentDiv>
         <LeftScreenDiv>
