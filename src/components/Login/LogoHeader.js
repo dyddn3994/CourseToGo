@@ -21,6 +21,7 @@ height: 20%;
 const LogoImage = styled.img`
 width: 80%;
 display: inline-block;
+margin-left:10%;
 `;
 
 

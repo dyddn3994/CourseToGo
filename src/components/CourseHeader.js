@@ -15,7 +15,8 @@ const CourseHeader = ({thisCourseCity, onClickCourseSettingIcon, linkToBack}) =>
         <span style={{fontSize: '34px', fontWeight: 'bold'}} onClick={() => window.location.reload()}> {thisCourseCity}</span>
         {onClickCourseSettingIcon !== undefined && <span style={{fontSize: '25px'}} onClick={onClickCourseSettingIcon}> <IoMdSettings /> </span>}
         <Link to={linkToBack}>
-          <button style={{float: 'right', marginRight: '25px', marginTop: '5px'}}>뒤로 가기</button>
+          <button style={{float: 'right', marginRight: '25px', marginTop: '5px', fontSize:'1.2rem'
+            }}>뒤로 가기</button>
         </Link>
       </CourseNameDiv>
     </HeaderDiv>

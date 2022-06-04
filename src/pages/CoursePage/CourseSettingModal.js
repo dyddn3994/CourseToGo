@@ -24,13 +24,6 @@ const CourseSettingModal = (props) => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   
-  // // 지역 선택을 위한 데이터
-  // const OPTIONS = [
-  //   { value: "apple", name: "사과" },
-  //   { value: "banana", name: "바나나" },
-  //   { value: "orange", name: "오렌지" },
-  // ];
-
   const showDatePicker = () => {
     setOpenDatePicker(!openDatePicker);
   }
@@ -105,10 +98,10 @@ const CourseSettingModal = (props) => {
           zIndex: '5'
         },
         content: {
-          top: '120px',
-          left: '340px',
-          right: '340px',
-          bottom: '170px',
+          top: '200px',
+          left: '380px',
+          right: '380px',
+          bottom: '200px',
           borderRadius: '1rem',
           boxShadow: '0px 0px 4px lightgray',
         }
@@ -124,7 +117,7 @@ const CourseSettingModal = (props) => {
         </InputDiv>
   
         <InputDiv>
-          <InputLabel>여행 날짜</InputLabel>
+          <InputLabel style={{marginLeft:'2%'}}>여행 날짜</InputLabel>
           <DateFormDiv>
             <DateButton onClick={showDatePicker}>날짜 선택</DateButton>
             {dateSet.end === '' ? null :
@@ -161,6 +154,7 @@ const CourseSettingModal = (props) => {
 
 const MainDiv= styled.div`
   text-align: center;
+  font-size:1.2rem;
 `;
 const DatePickerDiv= styled.div`
   margin-left:30%;
@@ -175,6 +169,7 @@ const InputDiv= styled.div`
   display : flex; 
   justify-content: space-around;
   margin-left:10%;
+  margin-top:2%;
 `;
 
 const Form = styled.input`
@@ -183,6 +178,7 @@ const Form = styled.input`
   border: 1px solid lightgray;
   width:80%;
   box-shadow: 0px 0px 2px lightgray;
+  font-size:1.2rem;
 `;
 
 const FormDiv=  styled.div`
@@ -195,18 +191,18 @@ const DateFormDiv=  styled.div`
   display: flex;
   width:120%; 
   margin-bottom:2%;
-
+  font-size:1.2rem;
   justify-content: space-between;
 `;
 const InputLabel =  styled.div`
   width:40%;
-  font-size:0.9rem;
+  font-size:1.2rem;
 `;
 
 const OptionButton = styled.button`
   margin:5%;
   width:15%;
-  font-size:0.9rem;
+  font-size:1.3rem;
   line-height: 1.6;
   border: 1px solid;
   border-radius: 0.30rem;
@@ -224,20 +220,20 @@ const DateResultView=  styled.div`
   width:70%;
   font-size:0.9rem;
   margin-top:2%;
+  font-size:1.2rem;
 `;
 
 
 const DateButton = styled.button`
-  margin-left:24%;
+  margin-left:23%;
   width:25%;
   height:1.8rem;
-  font-size:0.7rem;
+  font-size:1.2rem;
   border: 1px solid;
   border-radius: 0.30rem;
   background-color: #ffffff; 
   border: 1px solid  lightgray;
   box-shadow: 0 0 1px lightgray;
-  font-weight: bold;
   &:hover{  
         border: 1px solid  gray;
         box-shadow: 0 0 3px  gray;

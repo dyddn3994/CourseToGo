@@ -30,12 +30,12 @@ const GroupCreateModal = props => {
           position: 'fixed',
         },
         content: {
-          top: '150px',
-          left: '340px',
-          right: '340px',
-          bottom: '200px',
+          top: '260px',
+          left: '400px',
+          right: '400px',
+          bottom: '340px',
           borderRadius: '1rem',
-          boxShadow: '0px 0px 4px lightgray',
+          boxShadow: '0px 0px 4px lightgraray',
         }
       }}
     >
@@ -52,11 +52,12 @@ const GroupCreateModal = props => {
 }
 const MainDiv= styled.div`
       text-align: center;
+      font-size:1.2rem;
 `;
 const OptionButton = styled.button`
       margin:5%;
       width:15%;
-      font-size:0.9rem;
+      font-size:1.3rem;
       line-height: 1.6;
       border: 1px solid;
       border-radius: 0.30rem;

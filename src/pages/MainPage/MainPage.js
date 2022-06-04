@@ -166,7 +166,7 @@ const MainPage = () => {
             onChangeInputGroupKey={onChangeInputGroupKey}
             onClickGroupJoin={onClickGroupJoin} />
         </MainLayout>
-      {/* )} */}
+      {/* )}  */}
     </>
   );
 };
@@ -175,14 +175,15 @@ const MainPage = () => {
 // div
 
 const GroupDiv = styled.div`
-  width:85vh;
-  height: 100vh;
+  width:80vh;
+  height: 95vh;
 `;
 const GroupTitleDiv = styled.div`
   display: flex;
   justify-content: space-between;
   padding-left: 5%;
   width: 100%;
+  font-size:1.2rem;
 
 `;
 const GroupButtonDiv = styled.div`
@@ -196,10 +197,10 @@ const GroupButton = styled.button`
   align-self: center;
   background-color: #4D9FE3;
   border-radius: 0.30rem;
-  font-size: 0.8rem;
+  font-size: 1.1rem;
   line-height: 1.6;
-  width:90px;
-  height:25px;
+  width:120px;
+  height:35px;
   color:#FFFFFF;
   display: inline-block;
   margin:3%;

@@ -21,6 +21,7 @@ const FilteringUserList = ({users,checkedHandler}) => {
 const UserDiv =  styled.div`
   display: flex;
   overflow: scroll;
+  height:120px;
   &::-webkit-scrollbar {
     width:0px;
     height:8px;

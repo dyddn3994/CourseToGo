@@ -34,10 +34,10 @@ const GroupButton = styled.button`
   align-self: center;
   background-color:#FFFFFF;
   border-radius: 0.30rem;
-  font-size: 0.7rem;
+  font-size: 1rem;
   line-height: 1.6;
-  width:80px;
-  height:25px;
+  width:100px;
+  height:28px;
   color:#4D9FE3;
   display: inline-block;
   margin:1%;

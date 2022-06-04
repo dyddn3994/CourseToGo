@@ -7,7 +7,7 @@ import RenderItineraryMinutesList from './RenderItineraryMinutesList';
 
     for (let hour = 0; hour < HOURS; hour++) {
       renderResult.push(
-        <div style={{display: 'flex', height: '60px'}}>
+        <div style={{display: 'flex', height: '60px', width:'100%'}}>
           <span style={{flexBasis: '20%', textAlign: 'right', marginRight: '5px', marginLeft: '-5px', marginTop: '-13px'}}>
             {hour !== 0 ? (
                <>{hour} : 00</>

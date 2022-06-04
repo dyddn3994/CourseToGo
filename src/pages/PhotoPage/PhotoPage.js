@@ -354,16 +354,9 @@ const CoursePhotoPage = () => {
         </div>
       ) : (
         <>
-          {/* 코스명이 들어갈 부분 */}
-            <HeaderDiv>
-             <span style={{marginLeft: '20px'}}>{courseName}</span>
-             <Link to={'/course/'+String(params.courseId)+'/'+String(params.day)} ><button style={{float: "right", marginRight: '20px'}}>뒤로가기</button></Link>
-            </HeaderDiv>
-
     
         {/* 코스명이 들어갈 부분 */}
         <CourseHeader thisCourseCity={thisCourseCity} linkToBack={'/course/'+params.courseId+'/'+params.day}/>
-
 
         {/* 필터링 및 선택 다운로드 부분  */}
         <FixedButtonDiv>
@@ -375,10 +368,11 @@ const CoursePhotoPage = () => {
         
             <ButtonDiv>
               <Button onClick={()=>deleteCheckedHandler()}>삭제</Button>
-              <Button onClick={()=>downloadCheckedHandler()}>다운로드</Button>
+             
               <Button onClick={()=>clearCheckedHandler()}>선택해제</Button> 
               <Button onClick={(e) => allCheckedHandler(e)}>전체선택</Button>
               <Button onClick={(e) => filteringCheckedHandler(e)}>필터링</Button>
+              <Button onClick={()=>downloadCheckedHandler()}>다운로드</Button>
               <Button onClick={() => photoUploadHandler()}>
                 <input name='uploadPhotos' type='file' multiple accept='image/*' style={{display: 'none'}} ref={photoInputRef} onChange={onChangeUploadFile} />
                 사진등록
@@ -422,16 +416,6 @@ const MainDiv = styled.div`
   height: 100vh;
 `;
 
-const HeaderDiv = styled.div`
-  width:100%;
-  height:40px;
-  background-color:#4D9FE3;
-  color:#FFFFFF;
-  padding-top:1%;
-  width:100%;
-  position:fixed;
-`;
-
 const   FixedButtonDiv = styled.div`
   background-color:	#F5F5F5;
   position:fixed;
@@ -453,17 +437,17 @@ const FilteringAndButton =  styled.div`
   box-shadow: 0px 0px 3px lightgray;
 `;
 const UserDiv = styled.div`
-  width:35%;
+  width:40%;
 `;
  const ButtonDiv =  styled.div`
-  width:60%;
+  width:50%;
   margin-right: 3%;
   margin-top:1%;
 `;
 const Button=  styled.button`
    background-color:#FFFFFF;
    border-radius: 0.30rem;
-   font-size: 0.8rem;
+   font-size: 1.1rem;
   line-height: 1.6;
   width:15%;
   height:28px;
@@ -486,7 +470,7 @@ const PhotoDiv = styled.div`
   display: flex;
   margin-left:3%; 
   z-index: 1;  
-  margin-top:8%;
+  margin-top:10%;
   display: flex;
   height:70%;
 `;

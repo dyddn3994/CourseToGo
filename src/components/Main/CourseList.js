@@ -19,11 +19,11 @@ const CoursesList =( {group,  onClickCourseLi, courseDateRender}) => {
 };
 
 const CourseUl = styled.ul`
-  list-style: none;
+  // list-style: none;
 `;
 
 const CourseLi = styled.li`
-    font-size:0.83rem;
+    font-size:1.1rem;
     color:black;
    
 `;

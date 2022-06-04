@@ -12,7 +12,7 @@ import SearchPwPage from './pages/LoginPage/SearchPwPage.js';
 import JoinPage from './pages/LoginPage/JoinPage.js';
 import PhotoPage from './pages/PhotoPage/PhotoPage.js';
 import CoursePage from './pages/CoursePage/CoursePage';
-
+import ConfirmCourse from './pages/CoursePage/ConfirmCourse';
 const App = () => {
   return (
 
@@ -25,6 +25,7 @@ const App = () => {
       <Route path="/searchPw" element={<SearchPwPage />} />
       <Route path="/join" element={<JoinPage />} />
       <Route path="/photoAlbum/:courseId/:day" element={<PhotoPage />} />
+      <Route path="/confirmCourse" element={<ConfirmCourse />} />
     </Routes>
   );
 };

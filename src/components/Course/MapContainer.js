@@ -186,7 +186,7 @@ const MapContainer = forwardRef((props, ref) => {
       id="myMap"
       style={{
         // width: '700px',
-        height: '500px',
+        height: '690px',
       }}
     ></div>
       {/* <div id="result-list" style={{
@@ -211,7 +211,7 @@ const MapContainer = forwardRef((props, ref) => {
         ))}
         <div id="pagination"></div>
       </div> */}
-      {/* <MapResultList places={places} isOpenSearchList={isOpenSearchList}/> */}
+      {/* <MapResultList places={places} isOpenSearchList={isOpenSearchList}  onMouseOverList={ onMouseOverList}  overSearchList={overSearchList}/> */}
    { (isOpenSearchList || isMouseOverMapList) ? (
       <ResultList onMouseOver={() => setIsMouseOverMapList(true)} onMouseOut={() => setIsMouseOverMapList(false)}>
         {places.map((item, i) => (

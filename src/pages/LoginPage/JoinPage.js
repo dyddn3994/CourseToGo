@@ -234,18 +234,25 @@ const Join = () => {
 
   const InputLabel =  styled.div`
   width:40%;
-  font-size:0.9rem;
+  font-size:1.2rem;
   `;
 const DuplicateButton =styled.button`
     height:90%;
-    width:13%;
-    font-size:0.7rem;
+    width:14%;
+    font-size:1.1rem;
     margin-left:3%;
     margin-top:1%;
     border-radius: 0.30rem;
    line-height: 1.6;
-   border: 1px solid lightgray;
-   
+   background-color:  #ffffff;
+   color:#4D9FE3;
+border: 1.3px solid  #4D9FE3;
+box-shadow: 0px 0px 2px gray;
+&:hover{  
+    background-color: #4D9FE3;
+    color:#ffffff;
+    box-shadow: 0px 0px 4px gray;
+}
 `;
 
 const RadioDiv =  styled.div`
@@ -253,14 +260,15 @@ const RadioDiv =  styled.div`
   height:100%;
   display : flex; 
   justify-content: space-around;
+  font-size:1.2rem;
 `;
 
 const GenderDiv =  styled.div`
+font-size:1.2rem;
   width:80%;
   height:100%;
   display : flex; 
-  margin-left:10%;
-  font-size:0.9rem;
+  margin-left:11.8%;
   margin-top:1%;
   margin-bottom:3%;
 `;
@@ -272,21 +280,25 @@ const IdCheckDiv=  styled.div`
 const SubmitButtonDiv =  styled.div`
     text-align: center;
     margin:8%;
+    margin-left:10%;
 
 `;
 
 const SubmitButton = styled.button`
-    margin-top:4%;
-     background-color:#FFCC29;
-    border-radius: 0.30rem;
-    font-size: 1.1rem;
-   line-height: 1.6;
-   border: 1px solid lightgray;
-   width:40%;
-   color:#FFFFFF;
-   display: inline-block;
-   font-weight:bold;
-   margin-bottom:20%;
-   margin-right: 3%;
+margin-left:2%;
+background-color:  #ffffff;
+border-radius: 0.30rem;
+font-size: 1.3rem;
+line-height: 1.6;
+width:30%;
+color:#4D9FE3;
+font-weight:bold;
+border: 1.3px solid  #4D9FE3;
+box-shadow: 0px 0px 2px gray;
+&:hover{  
+    background-color: #4D9FE3;
+    color:#ffffff;
+    box-shadow: 0px 0px 4px gray;
+}
 `;
 export default Join;

@@ -86,17 +86,17 @@ const CourseCreateModal = ({isCourseCreateModalOpen, setIsCourseCreateModalOpen,
           position: 'fixed'
         },
         content: {
-          top: '120px',
-          left: '340px',
-          right: '340px',
-          bottom: '170px',
-          borderRadius: '1rem',
-          boxShadow: '0px 0px 4px lightgray',
+            top: '200px',
+            left: '380px',
+            right: '380px',
+            bottom: '280px',
+            borderRadius: '1rem',
+            boxShadow: '0px 0px 4px lightgray',
         }
       }}
     >
       <MainDiv>
-            <div   style={{margin: '3%' }}>추가할 코스의 정보를 입력하세요.</div>
+            <div   style={{margin: '4%',      fontSize:'1.3rem' }}>추가할 코스의 정보를 입력하세요.</div>
             <InputDiv>
                   <InputLabel>코스 명</InputLabel>
                   <FormDiv>
@@ -152,9 +152,11 @@ const InputDiv= styled.div`
       display : flex; 
       justify-content: space-around;
       margin-left:10%;
+      margin-top:3%;
 `;
 
 const Form = styled.input`
+      font-size:1.2rem;
       border-radius: 0.30rem;
       line-height: 2;
       border: 1px solid lightgray;
@@ -172,18 +174,18 @@ const DateFormDiv=  styled.div`
       display: flex;
       width:120%; 
       margin-bottom:2%;
-    
+      font-size:1.2rem;
       justify-content: space-between;
 `;
 const InputLabel =  styled.div`
       width:40%;
-      font-size:0.9rem;
+      font-size:1.2rem;
 `;
 
 const OptionButton = styled.button`
       margin:5%;
       width:15%;
-      font-size:0.9rem;
+      font-size:1.3rem;
       line-height: 1.6;
       border: 1px solid;
       border-radius: 0.30rem;
@@ -199,22 +201,22 @@ const OptionButton = styled.button`
 `;
 const DateResultView=  styled.div`
       width:70%;
-      font-size:0.9rem;
-      margin-top:2%;
+
+      font-size:1.2rem;
 `;
 
 
 const DateButton = styled.button`
+font-size:1.2rem;
 margin-left:24%;
       width:25%;
       height:1.8rem;
-      font-size:0.7rem;
       border: 1px solid;
       border-radius: 0.30rem;
       background-color: #ffffff; 
       border: 1px solid  lightgray;
       box-shadow: 0 0 1px lightgray;
-      font-weight: bold;
+   
       &:hover{  
             border: 1px solid  gray;
             box-shadow: 0 0 3px  gray;

@@ -43,13 +43,13 @@ const EditModal = ({currItem, setIsEditModalOpen }) => {
   };
   const Image = styled.img`
     min-width: 300px;
-    max-width: 600px;
+    max-width: 800px;
 `;
 
   const EditModalDiv = styled.div`
     background-color: white;
     width: 60%;
-    height: 85%;
+    height: 75%;
     overflow-y: auto;
     position: fixed;
     left: 50%;
@@ -75,8 +75,8 @@ const EditModal = ({currItem, setIsEditModalOpen }) => {
   `;
   const OptionButton = styled.button`
     margin:5%;
-    width:30%;
-    font-size:0.8rem;
+    width:40%;
+    font-size:1.2rem;
     line-height: 1.6;
     border: 1px solid;
     border-radius: 0.30rem;

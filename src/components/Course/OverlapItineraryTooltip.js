@@ -16,9 +16,9 @@ const OverlapItineraryTooltip = props => {
       type='dark'
       // getContent={dataTip => 'sss' + dataTip}
     >
-      <div>동일 시간대 중복 일정</div>
+      <div style={{fontSize:'1.2rem'}}>동일 시간대 중복 일정</div>
       {overlapItineraryArray.map((overlapItinerary, overlapItineraryIndex) => (
-        <div>{overlapItineraryIndex+1}. {overlapItinerary.touristSpot.touristSpotName}</div>
+        <div style={{fontSize:'1.2rem'}}>{overlapItineraryIndex+1}. {overlapItinerary.touristSpot.touristSpotName}</div>
       ))}
     </ReactTooltip>
   )
