@@ -57,13 +57,22 @@ const CourseSettingModal = (props) => {
   const dateOnChange = (dates) =>{
     const [start, end] = dates;
     setStartDate(start);
-    console.log(start);
     setEndDate(end);
+
+    const startMonthNum = start.getMonth()+1
+    const endMonthNum = end.getMonth()+1
+
+    const startMonth = (startMonthNum.toString().length === 1 ? '0'+String(startMonthNum) : String(startMonthNum))
+    const startDate = (start.getDate().toString().length === 1 ? '0'+start.getDate() : start.getDate())
+    const endMonth = (endMonthNum.toString().length === 1 ? '0'+String(endMonthNum) : String(endMonthNum))
+    const endDate = (end.getDate().toString().length === 1 ? '0'+end.getDate() : end.getDate())
+    
+
     if (end!==null) {
       setInputSettingCourse({
         ...inputSettingCourse,
-        inputCourseStartDate:start.getFullYear() + '-'+start.getMonth()+'-'+start.getDate() ,
-        inputCourseEndDate:end.getFullYear() + '-'+end.getMonth()+'-'+end.getDate()
+        inputCourseStartDate:start.getFullYear() + '-'+startMonth+'-'+startDate ,
+        inputCourseEndDate:end.getFullYear() + '-'+endMonth+'-'+endDate
       });
     }
     

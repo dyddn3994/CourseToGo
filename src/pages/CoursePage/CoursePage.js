@@ -132,11 +132,14 @@ const CoursePage = () => {
 
   const [loading, setLoading] = useState(true); // 화면 로딩. true일때 로딩 애니메이션 render
 
+  const [searchInputTemp, setSearchInputTemp] = useState('');
+  const [isMouseOverMapList, setIsMouseOverMapList] = useState(false); // 검색 리스트에 마우스오버 하고있을 시 true
+
   // const [isOverlapMouseOver, setIsOverlapMouseOver] = useState(false);
 
   // onChange
-  let searchInputTemp = ''; // 검색 input값 임시 저장
-  const onChangeSearch = e => searchInputTemp = e.target.value;
+  // let searchInputTemp = ''; // 검색 input값 임시 저장
+  const onChangeSearch = e => setSearchInputTemp(e.target.value);
   const onChangeInputItinerary= e => {
     const { value, name } = e.target;
     setInputItinerary({
@@ -153,7 +156,9 @@ const CoursePage = () => {
   }
 
   // onClick
-  const onClickSearch = () => setSearchPlace(searchInputTemp);
+  const onClickSearch = () => {
+    setSearchPlace(searchInputTemp);
+  }
   const onClickItineraryAddIcon = () => {
     setInputItinerary({
       ...inputItinerary,
@@ -301,6 +306,7 @@ const CoursePage = () => {
   }
   const onClickSettingCourseModal = () => {
     // 코스 설정 Modal 설정 확인 클릭
+    commutePutCourseUpdate();
   }
   const onClickCourseSettingIcon = () => {
     // 코스 설정 아이콘 클릭
@@ -404,7 +410,7 @@ const CoursePage = () => {
   const onKeyPressSearch = e => {
     if (e.key === 'Enter') {
       onClickSearch();
-      sendStomp();
+      // sendStomp();
     }
   }
 
@@ -641,6 +647,42 @@ const CoursePage = () => {
     });
     setLoading(false);
   }
+  const commutePutCourseUpdate = () => {
+    console.log('Number(params.courseId):', Number(params.courseId));
+    console.log('inputSettingCourse.inputCourseName: ', inputSettingCourse.inputCourseName);
+    console.log('inputSettingCourse.inputCourseStartDate: ', inputSettingCourse.inputCourseStartDate);
+    console.log('inputSettingCourse.inputCourseEndDate: ', inputSettingCourse.inputCourseEndDate);
+    console.log('inputSettingCourse.inputCity: ', inputSettingCourse.inputCity);
+    // 코스 수정
+    fetch("/course/update", {
+      method: 'put',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: {
+        courseId : 1,
+        courseName: "asd",
+        courseStartDate: "2022-04-26",
+        courseEndDate: "2022-04-26",
+        city: "Deagu2",
+        check: true
+    }
+    })
+    .then((res)=>{
+      return res.json();
+    })
+    .then((courseId)=>{
+      // 성공 시 courseId 반환
+      if (courseId === -1) {
+        alert('코스 재설정에 실패하였습니다.');
+      }
+      else {
+        console.log('courseId: ', courseId);
+        alert('코스가 재설정되었습니다. 다시 로그인해주세요.');
+        // navigate('../');  //로그인 페이지로
+      }
+    });
+  }
   const commutePutCourseCheck = () => {
     // 코스 확정
     fetch("/course/check?courseId="+params.courseId, {
@@ -810,7 +852,15 @@ const CoursePage = () => {
               <span style={{float: 'right', paddingRight: '10px', fontSize: '25px'}}> <BsFillPlusSquareFill onClick={() => onClickItineraryAddIcon()} /> </span>
             </SearchDiv>
             <MapDiv>
-                <MapContainer isOpenSearchList={isOpenSearchList} searchPlace={searchPlace} setIsMarkerClicked={setIsMarkerClicked} setMarkerInfo={setMarkerInfo} thisCourseCity={thisCourseCity} ></MapContainer>
+                <MapContainer 
+                  isOpenSearchList={isOpenSearchList} 
+                  searchPlace={searchPlace}
+                  setIsMarkerClicked={setIsMarkerClicked} 
+                  setMarkerInfo={setMarkerInfo} 
+                  thisCourseCity={thisCourseCity} 
+                  isMouseOverMapList={isMouseOverMapList}
+                  setIsMouseOverMapList={setIsMouseOverMapList}
+                ></MapContainer>
             </MapDiv>
           </LeftScreenDiv>
 

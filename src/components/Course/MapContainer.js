@@ -4,23 +4,14 @@ import MapResultList from './MapResultList';
 import CITY from '../../assets/City/City';
 const { kakao } = window
 
-const CITYLATLNG = [
-  { city: 'seoul', lat: 37.56667, lng: 126.97806 },
-  { city: 'busan', lat: 35.17944, lng: 129.07556 },
-  { city: 'daegu', lat: 35.87222, lng: 128.60250 },
-  { city: 'incheon', lat: 37.45639, lng: 126.70528 },
-  { city: 'gwangju', lat: 35.15972, lng: 126.85306 },
-  { city: 'daejeon', lat: 36.35111, lng: 127.38500 },
-  { city: 'ulsan', lat: 35.53889, lng: 129.31667 },
-  { city: 'sejong', lat: 36.48750, lng: 127.28167 },
-  { city: 'jeju', lat: 33.375701, lng: 126.570667 }
-]
+
 
 const MapContainer = forwardRef((props, ref) => {
 
-  const { overSearchList, isOpenSearchList, onMouseOverList,searchPlace, setIsMarkerClicked, setMarkerInfo, thisCourseCity } = props;
+  const { overSearchList, isOpenSearchList,searchPlace, setIsMarkerClicked, setMarkerInfo, thisCourseCity, isMouseOverMapList, setIsMouseOverMapList } = props;
   const [thisCity, setThisCity] = useState(thisCourseCity);
   const [touristSpotInfo, setTouristSpotInfo] = useState({});
+  const [temp, setTemp] = useState([]); // 테스트용 임시
   
   // 부모 컴포넌트에서 자식 함수 실행할 수 있도록 설정
   useImperativeHandle(ref, () => ({
@@ -36,25 +27,41 @@ const MapContainer = forwardRef((props, ref) => {
   // 검색결과 배열에 담아줌
   const [places, setPlaces] = useState([])
   const [infowindow, setInfowindow] = useState(); // 마커에서 일정 등록 이후에 마커 클릭된 상태 닫으려고 한건데 안되네..
+  // const [container, setContainer] = useState();
+  // const [lat, setLat] = useState();
+  // const [lng, setLng] = useState();
+  // const [options, setOptions] = useState();
+  // const [map, setMap] = useState();
+  // const [ps, setPs] = useState();
   
+  let isMarkerContent = false;
   useEffect(() => {
-    setInfowindow(new kakao.maps.InfoWindow({ zIndex: 1 }))
     // var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 })
+    setInfowindow(new kakao.maps.InfoWindow({ zIndex: 1 }))
     var markers = []
     const container = document.getElementById('myMap')
-    // alert(thisCity);
+    // setContainer(document.getElementById('myMap'))
+
     if (thisCity === '') {
       setThisCity('Jeju')
     }
     const lat = CITY.find(item => item.value === thisCity).lat;
+    // setLat(CITY.find(item => item.value === thisCity).lat)
     const lng = CITY.find(item => item.value === thisCity).lng;
+    // setLng(CITY.find(item => item.value === thisCity).lng)
     const options = {
       center: new kakao.maps.LatLng(lat, lng),
       level: 10,
     }
+    // setOptions({
+    //   center: new kakao.maps.LatLng(lat, lng),
+    //   level: 10,
+    // })
     const map = new kakao.maps.Map(container, options)
+    // setMap(new kakao.maps.Map(container, options))
 
     const ps = new kakao.maps.services.Places();
+    // setPs(new kakao.maps.services.Places())
 
     ps.keywordSearch(searchPlace, placesSearchCB)
 
@@ -62,15 +69,17 @@ const MapContainer = forwardRef((props, ref) => {
       if (status === kakao.maps.services.Status.OK) {
         let bounds = new kakao.maps.LatLngBounds()
 
+        setPlaces(data)
+        setTemp(data);
+
         for (let i = 0; i < data.length; i++) {
           displayMarker(data[i])
           bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x))
         }
-
         map.setBounds(bounds)
+
         // 페이지 목록 보여주는 displayPagination() 추가
         displayPagination(pagination)
-        setPlaces(data)
       }
     }
 
@@ -105,36 +114,22 @@ const MapContainer = forwardRef((props, ref) => {
       paginationEl.appendChild(fragment)
     }
 
-    let isMarkerContent = false;
     function displayMarker(place) {
       let marker = new kakao.maps.Marker({
         map: map,
         position: new kakao.maps.LatLng(place.y, place.x),
       })
 
-      // let renderPinContent = 
-      //   '<div style="padding-bottom: 20px;">' +
-      //     '<div style="padding:5px;font-size:12px;">' + '이름: ' + place.place_name + '</div>' +
-      //     '<div style="padding:5px;font-size:12px;">' + '주소: ' + place.address_name + '</div>';
-      // if (Object.keys(touristSpotInfo).touristSpotAvgCost !== 0) {
-      //   renderPinContent = renderPinContent + 
-      //     '<div style="padding:5px;font-size:12px;">' + '평균 비용: ' + touristSpotInfo.touristSpotAvgCost + '원' + '</div>' +
-      //     '<div style="padding:5px;font-size:12px;">' + '평균 소요시간: ' + touristSpotInfo.touristSpotAvgTime + '시간' + '</div>';
-      // }
-      // renderPinContent = renderPinContent + '</div>';
-
       kakao.maps.event.addListener(marker, 'click', function () {
-        // const touristSpotInfos = commuteGetMarkerInfo(place.place_name, place.address_name);
-        // console.log(touristSpotInfos)
         isMarkerContent = !isMarkerContent;
         let renderPinContent = 
           '<div style="padding-bottom: 20px;">' +
             '<div style="padding:5px;font-size:12px;">' + '이름: ' + place.place_name + '</div>' +
             '<div style="padding:5px;font-size:12px;">' + '주소: ' + place.address_name + '</div>';
-        // if (touristSpotInfos.touristSpotAvgCost !== 0) {
+        // if (place.touristSpotAvgCost !== 0) {
         //   renderPinContent = renderPinContent + 
-        //     '<div style="padding:5px;font-size:12px;">' + '평균 비용: ' + touristSpotInfos.touristSpotAvgCost + '원' + '</div>' +
-        //     '<div style="padding:5px;font-size:12px;">' + '평균 소요시간: ' + touristSpotInfos.touristSpotAvgTime + '시간' + '</div>';
+        //     '<div style="padding:5px;font-size:12px;">' + '평균 비용: ' + place.touristSpotAvgCost + '원' + '</div>' +
+        //     '<div style="padding:5px;font-size:12px;">' + '평균 소요시간: ' + place.touristSpotAvgTime + '시간' + '</div>';
         // }
         renderPinContent = renderPinContent + '</div>';
         infowindow.setContent(
@@ -150,32 +145,51 @@ const MapContainer = forwardRef((props, ref) => {
           setIsMarkerClicked(false);
         }
       })
+
     }
   }, [searchPlace])
 
+  useEffect(() => {
+    setAvgDatas();
+  }, [temp, searchPlace])
+
+  const setAvgDatas = async () => {
+    let newDatas = [];
+    for await (const place of places) {
+      await commuteGetMarkerInfo(place, newDatas)
+    }
+    setPlaces(newDatas);
+  }
+
   // 통신
-  const commuteGetMarkerInfo = (name, address) => {
+  const commuteGetMarkerInfo = async (data, newDatas) => {
     // 마커 클릭했을때 보여질 정보 중 평균 수치들 출력
-    fetch("/course/spot?address="+address+"&name="+name)
+    await fetch("/course/spot?address="+data.address_name+"&name="+data.place_name)
     .then(res => {
       return res.json();
     })
     .then((touristSpotInfo) => {
-      setTouristSpotInfo(touristSpotInfo);
-      console.log('in commute: ' + touristSpotInfo.touristSpotAvgCost);
-      return touristSpotInfo;
+      const newPlaces = places.map((place) => {
+        if (place.address_name === data.address_name) {
+          newDatas.push({ ...place, touristSpotAvgCost: touristSpotInfo.touristSpotAvgCost, touristSpotAvgTime: touristSpotInfo.touristSpotAvgTime });
+        }
+        return (place.address_name === data.address_name 
+        ? { ...place, touristSpotAvgCost: touristSpotInfo.touristSpotAvgCost, touristSpotAvgTime: touristSpotInfo.touristSpotAvgTime } 
+        : place)});
+
     })
   }
 
   return (
     <div>
     <div
-        id="myMap"
-        style={{
-          // width: '700px',
-          height: '500px',
-        }}
-      ></div>
+      id="myMap"
+      style={{
+        // width: '700px',
+        height: '500px',
+      }}
+    ></div>
+    <button onClick={() => infowindow.setContent('tt')}>te</button>
       {/* <div id="result-list" style={{
         overflowY: "scroll", 
         height: "25vh", 
@@ -198,9 +212,64 @@ const MapContainer = forwardRef((props, ref) => {
         ))}
         <div id="pagination"></div>
       </div> */}
-      <MapResultList places={places} isOpenSearchList={isOpenSearchList}/>
+      {/* <MapResultList places={places} isOpenSearchList={isOpenSearchList}/> */}
+   { (isOpenSearchList || isMouseOverMapList) ? (
+      <ResultList onMouseOver={() => setIsMouseOverMapList(true)} onMouseOut={() => setIsMouseOverMapList(false)}>
+        {places.map((item, i) => (
+          <div key={i} onMouseOver={() => setIsMouseOverMapList(true)}>
+            <TextBox onMouseOver={() => setIsMouseOverMapList(true)}>
+              <div style={{fontWeight:'880', fontSize:'0.95rem',marginBottom:'3%'}}>{item.place_name}</div>
+              <div>주소: {item.address_name}</div>
+              <div>전화번호: {item.phone}</div>
+              <div>평균시간: {item.touristSpotAvgTime}</div>
+              <div>평균비용: {item.touristSpotAvgCost}</div>
+            </TextBox>
+          </div>
+        ))}
+        <div id="pagination"></div>
+      </ResultList>
+   ): null
+   }
     </div>
   )
 });
 
+const ResultList = styled.div`
+  overflow-y: scroll;
+  height: 70%;
+  background-color: #ffffff;
+  opacity: 0.9;
+  width:280px;
+  position: fixed;
+  margin-left:0.1%;
+  top: 100px;
+  padding: 5px;
+  z-index:1;
+  border-radius:1rem;
+  margin-top:2%;
+  box-shadow: 0px 0px 3px gray;
+  &::-webkit-scrollbar {
+    width:12px;
+    border-radius:3%;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: lightgray ;
+    border-radius:6px;
+    background-clip: padding-box;
+    border: 1px solid transparent;
+  }
+  &::-webkit-scrollbar-corner{
+    background-color:#F5F5F5 ;
+  }
+  `;
+  const TextBox = styled.div`
+  // border-bottom: 1.5px solid  #4D9FE3;
+  margin:2%;
+  padding:5%;
+  font-size:0.9rem;
+  border-radius:1rem;
+  &:hover{  
+    background-color:lightgray ;
+  }
+  `;
 export default MapContainer;
