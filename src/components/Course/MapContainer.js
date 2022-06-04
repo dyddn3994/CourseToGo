@@ -215,8 +215,8 @@ const MapContainer = forwardRef((props, ref) => {
    { (isOpenSearchList || isMouseOverMapList) ? (
       <ResultList onMouseOver={() => setIsMouseOverMapList(true)} onMouseOut={() => setIsMouseOverMapList(false)}>
         {places.map((item, i) => (
-          <div key={i} onMouseOver={() => setIsMouseOverMapList(true)}>
-            <TextBox onMouseOver={() => setIsMouseOverMapList(true)}>
+          <div key={i}>
+            <TextBox>
               <div style={{fontWeight:'880', fontSize:'0.95rem',marginBottom:'3%'}}>{item.place_name}</div>
               <div>주소: {item.address_name}</div>
               <div>전화번호: {item.phone}</div>
