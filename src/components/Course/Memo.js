@@ -242,9 +242,9 @@ const Memo = ({ setIsMemoOpen }) => {
 // styled compoents
 // div
 const MainDiv = styled.div`
-margin-left:27%;
+margin-left:22%;
 background-color: white;
-width: 80%;
+width: 90%;
 height: 100%;
 overflow-y: auto;
 position: fixed;
@@ -254,7 +254,7 @@ text-align: center;
 border-radius:1rem;
 margin-top:2%;
 z-index:3;
-font-size:0.8rem;
+font-size:1.2rem;
 line-height: 1.6;
 border: 1px solid;
 border-radius: 0.5rem;
@@ -278,11 +278,25 @@ const FlexDiv = styled.div`
    justify-content: flex-end;
    overflow-y: scroll;
    height:63%;
+   border-radius: 0.6rem;
+   &::-webkit-scrollbar {
+     width:12px;
+     border-radius:3%;
+   }
+   &::-webkit-scrollbar-thumb {
+     background-color: lightgray ;
+     border-radius:6px;
+     background-clip: padding-box;
+     border: 1px solid transparent;
+   }
+   &::-webkit-scrollbar-corner{
+     background-color:#F5F5F5 ;
+   }
 `;
 const ContentDiv = styled.div`
   display:flex;
   margin:3%;
-  font-size:0.7rem;
+  font-size:1.2rem;
   line-height: 1.6;
   border: 1px solid;
   border-radius: 0.5rem;
@@ -300,7 +314,7 @@ const CancelButton = styled.button`
 const CreateMemoButton = styled.button`
 background-color:#FFFFFF;
   border-radius: 0.30rem;
-  font-size: 0.8rem;
+  font-size: 1.3rem;
   line-height: 1.6;
   width:60%;
   color:#4D9FE3;
@@ -315,14 +329,15 @@ background-color:#FFFFFF;
 `
 
 const  TextDiv = styled.div`
-  width:60%;
+  width:100%;
   text-align:left;
   margin:2%;
 `;
 
 
 const   ButtonDiv = styled.div`
-  width:30%;
+  width:40%;
+  height:10px;
   margin-left:10%;
 `;
 
@@ -337,9 +352,9 @@ width:90%;
 const ContentInputTextarea = styled.textarea`
   margin-top:7%;
   width: 100%;
-  height: 80px;
+  height: 120px;
   resize: none;
-  font-size:0.8rem;
+  font-size:1.3rem;
 line-height: 1.6;
 border: 1px solid;
 border-radius: 0.5rem;
@@ -347,7 +362,7 @@ border: 1.3px solid gray;
 
 `;
 const OptionButton = styled.button`
-    font-size:0.6rem;
+    font-size:1rem;
     line-height: 1.6;
     border: 1px solid #ffffff;
     border-radius: 0.30rem;

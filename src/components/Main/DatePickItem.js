@@ -28,7 +28,7 @@ const DatePickerItem = ({openDatePicker, setOpenDatePicker,startDate,onChange,en
           }}
         >
         <div style={{ textAlign: 'center'}}>    
-        <DatePicker
+        <MyDatePicker
             locale="ko"
             selected={startDate}
             onChange={onChange}
@@ -41,5 +41,13 @@ const DatePickerItem = ({openDatePicker, setOpenDatePicker,startDate,onChange,en
      </Modal>
     )
 };
-
+const MyDatePicker = styled(DatePicker)`
+width:800px;
+height:3rem;
+font-size:1.6rem;
+font-weight:bold;
+background-color:transparent;
+color:white;
+border: 1px solid;
+`
 export default DatePickerItem;

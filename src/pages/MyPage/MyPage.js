@@ -137,8 +137,6 @@ const  MyPage = () => {
         <CourseHeader inputCourseName={'마이페이지'} linkToBack={'/main'}/>
         <ScrollDiv>
           <InputDiv>
-
-
             <InputForm label={"이름"} name={"memberName"} type={"text"} onChange={onChange} value={memberName} />
             <InputFormDiv>  
               <InputLabel>
@@ -199,7 +197,9 @@ width:70%;
 height:100%;
 display : flex; 
 justify-content: space-around;
-margin-left:10%;
+margin-left:12%;
+font-size:1.2rem;
+margin-bottom:1%;
 `;
 
 const ImageDiv =  styled.div`
@@ -216,11 +216,11 @@ const FormDiv=  styled.div`
 width:80%; 
 margin-bottom:3%;
 margin-left:10%;
-font-size:0.9rem;
+font-size:1.2rem;
 `;
 const InputLabel =  styled.div`
 width:40%;
-font-size:0.9rem;
+font-size:1.2rem;
 `;
 const MainDiv = styled.div`
   position: absolute; 
@@ -261,14 +261,14 @@ const ProfileCheckBoxDiv =  styled.div`
 width:80%;
 height:100%;
 display : flex; 
-margin-left:51%;
-font-size:0.9rem;
-
+margin-left:40%;
+font-size:1.2rem;
+margin-bottom:3%;
 
 `;
 
 const SubmitButtonDiv =  styled.div`
-margin-top:3%;
+margin-top:5%;
   text-align: center;
     margin-left:8%;
   width:80%;
@@ -280,7 +280,7 @@ const SubmitButton = styled.button`
     margin-left:3%;
   background-color: ${(props)=>props.buttonType==='update' ? '#4D9FE3' :'#ffffff' };
   border-radius: 0.30rem;
-  font-size: 0.9rem;
+  font-size: 1.3rem;
   line-height: 1.6;
  border: 1px solid lightgray;
  width:20%;

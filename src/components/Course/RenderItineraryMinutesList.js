@@ -117,7 +117,8 @@ import styled, { css } from 'styled-components';
               style={{
                 float: 'right',
                 marginRight: '5px', 
-                color:'#FF0000'
+                color:'#FF0000',
+                fontSize:'1.1rem'
               }}
               onClick={(e) => onClickOverlap( e,thisItinerary )} 
               onMouseOver={() => onMouseOverOverlapItinerary(thisItinerary, thisPageDate+'T'+thisTimeFormat+':00')}

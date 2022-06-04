@@ -44,10 +44,10 @@ const MyPageButtonDiv = styled.div`
 const MyPageButton = styled.button`
   background-color:#FFFFFF;
   border-radius: 0.30rem;
-  font-size: 0.7rem;
+  font-size: 1.2rem;
   line-height: 1.6;
-  width:90px;
-  height:28px;
+  width:120px;
+  height:32px;
   color:#4D9FE3;
   display: inline-block;
   margin:1%;
@@ -84,8 +84,8 @@ const RightScreenDiv = styled.div`
   position: fixed;
   height: 100vh;
   object-fit: cover; 
-  width:60%; 
-  margin-left:40%;
+  width:55%; 
+  margin-left:45%;
   box-shadow: 0px 0px 12px lightgray;
 `;
 

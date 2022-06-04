@@ -20,17 +20,17 @@ const FilteringUserItem = ({item, checkedHandler}) => {
 const InputUser=  styled.input`
 border:0;
 outline:0;
-width: 50px;
+width: 80px;
 text-align: center;
 color:	#000000;
-font-size:0.6rem;
+font-size:1.2em;
 `;
 
 const ProfileDiv =  styled.input`
 background-color:#FFCC29;
 border-radius: 1rem;
-height:40px;
-width:40px;
+height:80px;
+width:80px;
 display: inline-block;
 `;
 
@@ -38,8 +38,8 @@ const UserButton =  styled.button`
 margin-bottom:10%;
 border:0;
 outline:0;
-width: 80px;
-height:60px;
+width: 100px;
+height:120px;
 margin:0.2%;
 margin-left:2%;
 text-align: center;

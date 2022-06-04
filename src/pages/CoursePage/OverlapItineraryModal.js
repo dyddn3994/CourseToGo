@@ -28,13 +28,13 @@ const OverlapItineraryModal = props => {
           right: '340px',
           bottom: '200px',
           borderRadius: '1rem',
-          boxShadow: '0px 0px 4px lightgray',  
+          boxShadow: '0px 0px 4px lightgray',
           backgroundColor:	'white',
         }
       }}
     >
       <>
-        <div>중복 일정</div>
+     
         <div style={{}}>
           <ContentBox>
             <div>&lt;대표 일정&gt;</div>
@@ -44,7 +44,7 @@ const OverlapItineraryModal = props => {
             <div>&lt;중복 일정&gt;</div>
             <div style={{display: 'flex'}}>
               {overlapItineraryArray.map((overlapItinerary, overlapItineraryIndex) => (
-                <span style={{margin: '10px', fontSize:'0.9rem'}}>
+                <span style={{margin: '10px', fontSize:'1.2rem', fontWeight:'100'}}>
                   <div style={{textAlign: 'center'}}>{overlapItinerary.touristSpot.touristSpotName}</div>
                   <OptionButton onClick={() => onClickSetRepresentative(thisItinerary.itineraryId, overlapItinerary.itineraryId)}>대표 일정으로 설정</OptionButton>
                 </span>
@@ -58,18 +58,19 @@ const OverlapItineraryModal = props => {
 }
 const ContentBox = styled.span`
 display: flex;
-margin: 1%;
  border-radius:5px;
  padding: 2%;
  border: 1px solid  #4D9FE3;
 box-shadow: 0px 0px 2px lightgray;
 font-weight: bold;
+font-size:1.2rem;
+margin:5%;
 `;
 
 const OptionButton = styled.button`
 margin:5%;
 width:100%;
-font-size:0.8rem;
+font-size:1.1rem;
 line-height: 1.6;
 border: 1px solid;
 border-radius: 0.30rem;

@@ -172,7 +172,7 @@ const MapContainer = forwardRef((props, ref) => {
         id="myMap"
         style={{
           // width: '700px',
-          height: '500px',
+          height: '690px',
         }}
       ></div>
       <MapResultList places={places} isOpenSearchList={isOpenSearchList}  onMouseOverList={ onMouseOverList}  overSearchList={overSearchList}/>

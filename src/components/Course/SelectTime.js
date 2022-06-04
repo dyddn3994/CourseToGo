@@ -29,21 +29,20 @@ import SelectTimeItem from './SelectTimeItem';
   );
     };
     const MainBox =  styled.div`
-    margin-right:33%;
-    font-size:0.9rem;
+
+    font-size:1.2rem;
 
   `;
     const InputLabel =  styled.div`
 
-    font-size:0.9rem;
+    font-size:1.2rem;
     width:60%;
   `;
   const InputFormDiv =  styled.div`
   width:100%;
   height:100%;
   display : flex; 
-
-  font-size:0.9rem;
-  margin:2%;
+  font-size:1.2rem;
+  margin-bottom:5%;
 `;
   export default SelectTime;

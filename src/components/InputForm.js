@@ -49,7 +49,8 @@ const InputFormDiv =  styled.div`
   height:100%;
   display : flex; 
   justify-content: space-around;
-  margin-left:10%;
+  margin-left:12%;
+  font-size:1.2rem;
 `;
 
 const Form = styled.input`
@@ -58,6 +59,7 @@ const Form = styled.input`
   border: 1px solid lightgray;
   width:100%;
   box-shadow: 0px 0px 2px lightgray;
+  font-size:1.2rem;
 `;
 
 const FormDiv=  styled.div`
@@ -67,7 +69,7 @@ const FormDiv=  styled.div`
 `;
 const InputLabel =  styled.div`
   width:40%;
-  font-size:0.9rem;
+  font-size:1.2rem;
 `;
 
 export default InputForm;

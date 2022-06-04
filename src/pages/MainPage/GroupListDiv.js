@@ -270,6 +270,7 @@ const GroupUl = styled.ul`
   width:80%;
   height:80%;
   margin-left:6%;
+  margin-top:5%;
   border-radius: 1rem;
   // border: solid #4D9FE3;
   box-shadow: 0px 0px 4px lightgray;
@@ -290,6 +291,7 @@ const GroupUl = styled.ul`
 `;
 
 const GroupLi = styled.li`
+font-size:1.2rem;
   margin: 10px;
   margin-left: -30px;
   padding: 10px;

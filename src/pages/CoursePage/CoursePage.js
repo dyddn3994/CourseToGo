@@ -814,7 +814,6 @@ const CoursePage = () => {
      ) : (
       <MainScreenDiv>
         <CourseHeader inputCourseName={thisCourseCity} onClickCourseSettingIcon={onClickCourseSettingIcon} linkToBack={'/main'} />
-    
         <ContentDiv>
         <LeftScreenDiv>
           <SearchDiv>
@@ -835,7 +834,7 @@ const CoursePage = () => {
           </LeftScreenDiv>
 
           <ItineraryDateScreenDiv>
-            <div  style={{ width:"100%",display: "flex", justifyContent: "space-evenly", marginLeft:"25%"}}>
+            <div  style={{ width:"100%",display: "flex", justifyContent: "space-evenly"}}>
               <span> 
                 {
                   // 1일차일 경우 일차 감소 클릭 방지
@@ -883,7 +882,11 @@ const CoursePage = () => {
               <RightScreenButton onClick={() => window.open('https://search.naver.com/search.naver?where=view&query='+CITY.find(item => item.value === thisCourseCity).name+' 관광지', '_blank')}>Blog</RightScreenButton>
             </BlogSharchDiv> 
             <ButtonDiv>
-              <RightScreenButton onClick={() => onClickCourseConfirm()}>코스 확정</RightScreenButton> 
+            {/* <Link to='/confirmCourse'> */}
+              <RightScreenButton 
+              onClick={() => onClickCourseConfirm()}
+              >코스 확정</RightScreenButton> 
+              {/* </Link> */}
             </ButtonDiv>
           </RightScreenDiv> 
         </ContentDiv>
@@ -892,16 +895,6 @@ const CoursePage = () => {
         {isMemoOpen && (
           <Memo setIsMemoOpen={setIsMemoOpen}/>
         )}
-
-        {/* 일정 추가 Modal */}
-        <AddItineraryModal
-          HOURS={HOURS} MINUTES={MINUTES}
-          isAddItineraryModal={ isAddItineraryModal}
-          setIsAddItineraryModal={setIsAddItineraryModal}
-          inputItinerary={inputItinerary}
-          onChangeInputItinerary={onChangeInputItinerary}
-          onClickAddItinerary={onClickAddItinerary}
-          />
 
       {/* 중복 일정 리스트 */}
       { isOverlapItineraryModal &&
@@ -914,6 +907,16 @@ const CoursePage = () => {
           />
       }
 
+      
+        {/* 일정 추가 Modal */}
+        <AddItineraryModal
+          HOURS={HOURS} MINUTES={MINUTES}
+          isAddItineraryModal={ isAddItineraryModal}
+          setIsAddItineraryModal={setIsAddItineraryModal}
+          inputItinerary={inputItinerary}
+          onChangeInputItinerary={onChangeInputItinerary}
+          onClickAddItinerary={onClickAddItinerary}
+          />
 
         {/* 일정 수정 Modal */}
         <UpdateItineraryModal
@@ -966,18 +969,18 @@ width:100%;
 height: 100vh;
 `;
 const ItineraryDateScreenDiv = styled.div`
-  width:20%;
+
   position:fixed;
 margin-left:60%;
-  
+  margin-top:1%;
 `;
 
 const ItineraryDateDiv = styled.div`
   background-color:white;
-  width:60%;
+  width:40%;
   border-radius: 0.6rem;
   text-align :center;
-  font-size:1.1rem;
+  font-size:1.3rem;
   font-weight:600;
   padding:2%;
 `;
@@ -990,15 +993,16 @@ const ContentDiv = styled.div`
   
 `;
 const LeftScreenDiv = styled.div`
-  width:750px;  
-  margin-left: 2%;
+  width:900px;  
+  margin-left: 7%;
 `;
 const ItineraryScreenDiv = styled.div`
-  flex-basis: 40%;
-  width: 380px;
+  font-size:1.1rem;
+  flex-basis: 50%;
+  width: 480px;
   overflow-y: scroll;
   background-color:	white;
-  height: 78vh;
+  height: 75vh;
   margin-top: 3%;
   box-shadow: 0px 0px 2px lightgray;
   border-radius: 0.6rem;
@@ -1026,7 +1030,7 @@ margin-left:92%;
   z-index:1;
 `;
 const SearchDiv = styled.div`
-
+  margin-bottom:2%;
 `;
 const ButtonDiv = styled.div`
 margin-top:20%;
@@ -1042,28 +1046,28 @@ margin-top:20%;
 `;
 
 const BlogTitle = styled.div`
-  font-size:0.8rem;
+  font-size:1.2rem;
   margin-bottom:5%;
 `;
 // input
 const SearchInput = styled.input`
-border-radius: 0.30rem;
-line-height: 2;
-border: 1px solid lightgray;
-width:280px;
-box-shadow: 0px 0px 2px lightgray;
+  border-radius: 0.30rem;
+  line-height: 2;
+  border: 1px solid lightgray;
+  width:350px;
+  height: 40px;
+  box-shadow: 0px 0px 2px lightgray;
   margin-left: 2%;
-  font-size: 0.9rem;
+  font-size: 1.2rem;
 `;
 
 // button
 const SearchButton = styled.button`
   background-color:#FFFFFF;
   border-radius: 0.30rem;
-  font-size: 0.8rem;
-  line-height: 1.6;
+  font-size: 1.1rem;
+  height: 40px;
   width:15%;
-  height:2rem;
   color:#4D9FE3;
   display: inline-block;
   margin:1%;
@@ -1079,10 +1083,10 @@ const RightScreenButton = styled.button`
 
 background-color:#FFFFFF;
 border-radius: 0.30rem;
-font-size: 0.7rem;
+font-size: 1.1rem;
 line-height: 1.6;
-width:80px;
-height:25px;
+width:100%;
+height:40px;
 color:#4D9FE3;
 margin:1%;
 border: 1px solid  #4D9FE3;
@@ -1093,5 +1097,4 @@ font-weight: bold;
   box-shadow: 0 0 3px  gray;
 }
 `;
-
 export default CoursePage;

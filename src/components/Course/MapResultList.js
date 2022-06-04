@@ -10,7 +10,7 @@ const MapResultList = ({places, isOpenSearchList, onMouseOverList, overSearchLis
         {places.map((item, i) => (
           <div key={i}>
             <TextBox>
-              <div style={{fontWeight:'880', fontSize:'0.95rem',marginBottom:'3%'}}>{item.place_name}</div>
+              <div style={{fontWeight:'880', fontSize:'1.2rem',marginBottom:'3%'}}>{item.place_name}</div>
               {item.road_address_name ? (
                 <div>
                   <span>주소: {item.road_address_name}</span>
@@ -36,10 +36,10 @@ const ResultList = styled.div`
   height: 70%;
   background-color: #ffffff;
   opacity: 0.9;
-  width:280px;
+  width:350px;
   position: fixed;
   margin-left:0.1%;
-  top: 100px;
+  top: 113px;
   padding: 5px;
   z-index:1;
   border-radius:1rem;
@@ -63,7 +63,7 @@ const ResultList = styled.div`
   // border-bottom: 1.5px solid  #4D9FE3;
   margin:2%;
   padding:5%;
-  font-size:0.9rem;
+  font-size:1.1rem;
   border-radius:1rem;
   &:hover{  
     background-color:lightgray ;

@@ -22,7 +22,7 @@ line-height: 2;
 border: 1px solid lightgray;
 width:82%;
 height:140%;
-font-size:0.8rem;
+font-size:1.2rem;
 text-align: center;
 box-shadow: 0px 0px 2px lightgray;
 

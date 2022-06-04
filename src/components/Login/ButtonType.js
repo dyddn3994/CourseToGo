@@ -53,6 +53,7 @@ const SearchDiv =  styled.div`
 const ButtonTypeDiv =  styled.div`
     width:100%;
     text-align: center;
+    margin:5%;
 `;
 
 const SubmitButtonDiv =  styled.div`
@@ -63,7 +64,7 @@ const SubmitButtonDiv =  styled.div`
 const SubmitButton = styled.button`
     background-color:  #ffffff;
     border-radius: 0.30rem;
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     line-height: 1.6;
     width:40%;
     color:#4D9FE3;
@@ -77,7 +78,7 @@ const SubmitButton = styled.button`
     }
 `;
 const ButtonDiv = styled.div`
-font-size: 0.8rem;
+font-size: 1.1rem;
 margin-top:3rem;
 display : flex; 
 justify-content: space-around;

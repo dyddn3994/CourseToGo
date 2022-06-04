@@ -14,6 +14,7 @@ import styled, { css } from 'styled-components';
   );
     };
     const Form = styled.select`
+    font-size:1.2rem;
     border-radius: 0.30rem;
     line-height: 2;
     border: 1px solid lightgray;
