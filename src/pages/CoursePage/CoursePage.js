@@ -997,7 +997,7 @@ const LeftScreenDiv = styled.div`
   margin-left: 7%;
 `;
 const ItineraryScreenDiv = styled.div`
-  font-size:1.1rem;
+  font-size:1rem;
   flex-basis: 50%;
   width: 480px;
   overflow-y: scroll;
