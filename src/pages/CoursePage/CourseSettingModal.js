@@ -30,11 +30,11 @@ const CourseSettingModal = (props) => {
       
   const onDateStringSetting = (start, end) =>{    //선택된 날짜 문자열로 출력
     if (start&&end) {
-      const startDay = start.getFullYear().toString() + '/'
-        + (start.getMonth() +1).toString() + '/'
+      const startDay = start.getFullYear().toString() + '-'
+        + (start.getMonth() +1).toString() + '-'
         + start.getDate().toString() ;
-      const endDay = end.getFullYear().toString() + '/'
-        + (end.getMonth() +1).toString()  + '/'
+      const endDay = end.getFullYear().toString() + '-'
+        + (end.getMonth() +1).toString()  + '-'
         + end.getDate().toString();
 
       return setDateSet({
@@ -50,13 +50,22 @@ const CourseSettingModal = (props) => {
   const dateOnChange = (dates) =>{
     const [start, end] = dates;
     setStartDate(start);
-    console.log(start);
     setEndDate(end);
+
+    const startMonthNum = start.getMonth()+1
+    const endMonthNum = end.getMonth()+1
+
+    const startMonth = (startMonthNum.toString().length === 1 ? '0'+String(startMonthNum) : String(startMonthNum))
+    const startDate = (start.getDate().toString().length === 1 ? '0'+start.getDate() : start.getDate())
+    const endMonth = (endMonthNum.toString().length === 1 ? '0'+String(endMonthNum) : String(endMonthNum))
+    const endDate = (end.getDate().toString().length === 1 ? '0'+end.getDate() : end.getDate())
+    
+
     if (end!==null) {
       setInputSettingCourse({
         ...inputSettingCourse,
-        inputCourseStartDate:start.getFullYear() + '-'+start.getMonth()+'-'+start.getDate() ,
-        inputCourseEndDate:end.getFullYear() + '-'+end.getMonth()+'-'+end.getDate()
+        inputCourseStartDate:start.getFullYear() + '-'+startMonth+'-'+startDate ,
+        inputCourseEndDate:end.getFullYear() + '-'+endMonth+'-'+endDate
       });
     }
     
@@ -67,7 +76,7 @@ const CourseSettingModal = (props) => {
     }
   }
 
-  const [dateSet, setDateSet] = useState({start:'', end:''}); // 문자열로 날짜 넣을 곳
+  const [dateSet, setDateSet] = useState({start:inputSettingCourse.inputCourseStartDate, end:inputSettingCourse.inputCourseEndDate}); // 문자열로 날짜 넣을 곳
 
   // 지역 선택 시
   const selectOnChange = (e) => {
@@ -111,7 +120,7 @@ const CourseSettingModal = (props) => {
           <InputLabel style={{marginLeft:'2%'}}>여행 날짜</InputLabel>
           <DateFormDiv>
             <DateButton onClick={showDatePicker}>날짜 선택</DateButton>
-            {endDate === '' ? null :
+            {dateSet.end === '' ? null :
             <DateResultView>
               {dateSet.start && dateSet.start} ~ {dateSet.end && dateSet.end}
             </DateResultView> }
@@ -128,7 +137,7 @@ const CourseSettingModal = (props) => {
         <InputDiv>
           <InputLabel>지역</InputLabel>
           <FormDiv>
-            <SelectRegion options={CITY} selectOnChange={selectOnChange} defaultValue="seoul"/>
+            <SelectRegion options={CITY} selectOnChange={selectOnChange} defaultValue={inputSettingCourse.inputCity}/>
           </FormDiv>
         </InputDiv>
         <ButtonDiv>

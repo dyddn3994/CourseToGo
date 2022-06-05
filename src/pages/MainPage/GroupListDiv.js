@@ -114,7 +114,7 @@ const GroupListDiv = forwardRef((props, ref) => {
         courseStartDate: inputCourseStartDate,
         courseEndDate: inputCourseEndDate,
         city: inputCity,
-        check: false // 코스 확정 여부
+        isCheck: false // 코스 확정 여부
       })
     })
     .then((res)=>{

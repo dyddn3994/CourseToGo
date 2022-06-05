@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import { useParams } from 'react-router';
@@ -63,22 +63,13 @@ const CoursePage = () => {
     commuteGetItineraryInfo(params.day);
   }, [params]);
 
-  // useRef
-  const mapContainerRef = useRef();
-
-  // useState
-  // const socketJs = new SockJS("/socket");
-  // const stompcli = StompJs.over(socketJs);
-  // const [socketJs, setSocketJs] = useState(new SockJS('/socket'));
-  // const [stompcli, setStompcli] = useState(StompJs.over(socketJs));
-
   const [thisPageDate, setThisPageDate] = useState('2021-09-12'); // 현재 일정 날짜
   const [endPageDate, setEndPageDate] = useState(''); // 마지막 일정 날짜
-  const [thisCourseCity, setThisCourseCity] = useState('Busan'); // 코스 도시 정보
+  const [thisCourseCity, setThisCourseCity] = useState('Jeju'); // 코스 도시 정보
   const [groupId, setGroupId] = useState(0); // 그룹 id
 
   const [searchPlace, setSearchPlace] = useState(''); // 장소 검색어
-  const [ thisItinerary ,setThisItinerary ] = useState('');
+  const [thisItinerary ,setThisItinerary ] = useState('');
   const [itineraryArray, setItineraryArray] = useState([
     // 등록된 일정 리스트
     {itineraryId: 1, itineraryStartTime: '2022-05-01T16:00', itineraryEndTime: '2022-05-01T17:30', itineraryColor: 1, itineraryHidden: false, touristSpot: {
@@ -141,11 +132,14 @@ const CoursePage = () => {
 
   const [loading, setLoading] = useState(true); // 화면 로딩. true일때 로딩 애니메이션 render
 
+  const [searchInputTemp, setSearchInputTemp] = useState('');
+  const [isMouseOverMapList, setIsMouseOverMapList] = useState(false); // 검색 리스트에 마우스오버 하고있을 시 true
+
   // const [isOverlapMouseOver, setIsOverlapMouseOver] = useState(false);
 
   // onChange
-  let searchInputTemp = ''; // 검색 input값 임시 저장
-  const onChangeSearch = e => searchInputTemp = e.target.value;
+  // let searchInputTemp = ''; // 검색 input값 임시 저장
+  const onChangeSearch = e => setSearchInputTemp(e.target.value);
   const onChangeInputItinerary= e => {
     const { value, name } = e.target;
     setInputItinerary({
@@ -162,7 +156,9 @@ const CoursePage = () => {
   }
 
   // onClick
-  const onClickSearch = () => setSearchPlace(searchInputTemp);
+  const onClickSearch = () => {
+    setSearchPlace(searchInputTemp);
+  }
   const onClickItineraryAddIcon = () => {
     setInputItinerary({
       ...inputItinerary,
@@ -294,6 +290,8 @@ const CoursePage = () => {
   }
   const onClickOverlap = ( e, thisItinerary ) => {
     e.stopPropagation();  // 부모 요소 클릭 방지
+    // e.preventDefault();  // 부모 요소 클릭 방지
+    // setThisItinerary(thisItinerary );
     setIsOverlapItineraryModal(true);
   }
   const onClickSetRepresentative = (representativeItineraryId, overlapItineraryId) => {
@@ -308,6 +306,7 @@ const CoursePage = () => {
   }
   const onClickSettingCourseModal = () => {
     // 코스 설정 Modal 설정 확인 클릭
+    commutePutCourseUpdate();
   }
   const onClickCourseSettingIcon = () => {
     // 코스 설정 아이콘 클릭
@@ -353,7 +352,6 @@ const CoursePage = () => {
         // alert(markerPlaceName + '일정이 ' + startTime.substring(11,16) + '부터 ' + endTime.substring(11, 16) + '까지로 등록되었습니다.');
       // }
       setIsMarkerClicked(false);
-      // mapContainerRef.current.setMarkerClose();
 
       commuteGetItineraryInfo(params.day);
     }
@@ -412,7 +410,7 @@ const CoursePage = () => {
   const onKeyPressSearch = e => {
     if (e.key === 'Enter') {
       onClickSearch();
-      sendStomp();
+      // sendStomp();
     }
   }
 
@@ -649,6 +647,36 @@ const CoursePage = () => {
     });
     setLoading(false);
   }
+  const commutePutCourseUpdate = () => {
+    // 코스 수정
+    fetch("/course/update", {
+      method: 'put',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        courseId: Number(params.courseId),
+        courseName: inputSettingCourse.inputCourseName,
+        courseStartDate: inputSettingCourse.inputCourseStartDate,
+        courseEndDate: inputSettingCourse.inputCourseEndDate,
+        city: inputSettingCourse.inputCity,
+        isCheck: false
+      })
+    })
+    .then((res)=>{
+      return res.json();
+    })
+    .then((courseId)=>{
+      // 성공 시 courseId 반환
+      if (courseId === -1) {
+        alert('코스 재설정에 실패하였습니다.');
+      }
+      else {
+        alert('코스가 재설정되었습니다. 다시 로그인해주세요.');
+        navigate('../');  //로그인 페이지로
+      }
+    });
+  }
   const commutePutCourseCheck = () => {
     // 코스 확정
     fetch("/course/check?courseId="+params.courseId, {
@@ -691,7 +719,12 @@ const CoursePage = () => {
     .then((courseInfo)=>{
       setThisCourseCity(courseInfo.city);
       setGroupId(courseInfo.group.groupId);
-      // mapContainerRef.current.setMapCity(courseInfo.city);
+      setInputSettingCourse({
+        inputCourseName: courseInfo.courseName,
+        inputCourseStartDate: courseInfo.courseStartDate,
+        inputCourseEndDate: courseInfo.courseEndDate,
+        inputCity: courseInfo.city
+      })
     });
   }
   const commuteDeleteGroup = () => {
@@ -782,23 +815,6 @@ const CoursePage = () => {
 
     return formatTime;
   }
-  const onMouseOverList = () => {
-    // setOverSearchList(!overSearchList);
-  }
-  const onMouseOverListOut = () => {
-    // if(isOpenSearchList){
-    //   setOverSearchList(!overSearchList);
-    // }
-  }
-  const searchListHidden =()=> {  
-      setISOpenSearchList(!isOpenSearchList);
-  }
-  const searchListHiddenOut =()=> {  
-    if(overSearchList){
-      setISOpenSearchList(!isOpenSearchList);
-    }
-    
-}
   // render
   return (
      <>
@@ -813,7 +829,8 @@ const CoursePage = () => {
       </div>  
      ) : (
       <MainScreenDiv>
-        <CourseHeader inputCourseName={thisCourseCity} onClickCourseSettingIcon={onClickCourseSettingIcon} linkToBack={'/main'} />
+        <CourseHeader thisCourseCity={thisCourseCity} onClickCourseSettingIcon={onClickCourseSettingIcon} linkToBack={'/main'} />
+    
         <ContentDiv>
         <LeftScreenDiv>
           <SearchDiv>
@@ -822,14 +839,22 @@ const CoursePage = () => {
               placeholder='여행지를 입력하세요'
               onChange={onChangeSearch}
               onKeyPress={onKeyPressSearch}
-              onMouseOver={searchListHidden}
-              onMouseOut={searchListHiddenOut}
+              onFocus={() => setISOpenSearchList(true)}
+              onBlur={() => setISOpenSearchList(false)}
             />
               <SearchButton onClick={onClickSearch}>검색</SearchButton>
               <span style={{float: 'right', paddingRight: '10px', fontSize: '25px'}}> <BsFillPlusSquareFill onClick={() => onClickItineraryAddIcon()} /> </span>
             </SearchDiv>
             <MapDiv>
-                <MapContainer isOpenSearchList={isOpenSearchList} onMouseOverList={onMouseOverList}  onMouseOverListOut ={ onMouseOverListOut} searchPlace={searchPlace} setIsMarkerClicked={setIsMarkerClicked} setMarkerInfo={setMarkerInfo} thisCourseCity={thisCourseCity} ></MapContainer>
+                <MapContainer 
+                  isOpenSearchList={isOpenSearchList} 
+                  searchPlace={searchPlace}
+                  setIsMarkerClicked={setIsMarkerClicked} 
+                  setMarkerInfo={setMarkerInfo} 
+                  thisCourseCity={thisCourseCity} 
+                  isMouseOverMapList={isMouseOverMapList}
+                  setIsMouseOverMapList={setIsMouseOverMapList}
+                ></MapContainer>
             </MapDiv>
           </LeftScreenDiv>
 
@@ -872,7 +897,7 @@ const CoursePage = () => {
               <RightScreenButton onClick={() => setIsMemoOpen(!isMemoOpen)}>메모</RightScreenButton>
             </ButtonDiv>
             <ButtonDiv>
-              <Link to={'/photoAlbum/'+String(params.courseId)+'/'+String(params.day)}>
+              <Link to={'/photoAlbum/'+params.courseId+'/'+params.day}>
                 <RightScreenButton>사진</RightScreenButton> 
               </Link>
             </ButtonDiv>
