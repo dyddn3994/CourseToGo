@@ -28,7 +28,7 @@ import CourseSettingModal from './CourseSettingModal';
 import CITY from '../../assets/City/City';
 import RenderItineraryList from '../../components/Course/RenderItineraryList';
 import ItineraryInfoTooltip from '../../components/Course/ItineraryInfoTooltip.js';
-import MapContainer from '../../components/Course/MapContainer.js';
+import ConfirmMapContainer from '../../components/Course/ConfirmMapContainer.js';
 
 // 사용자별 색 인덱스에 따라 색 지정
 const colorList = [
@@ -383,7 +383,7 @@ const ConfirmCourse= () => {
   }
 
   const linkDate = (date) => {
-    return '/course/'+params.courseId+'/'+(Number(params.day)+date)
+    return '/confirmCourse/'+params.courseId+'/'+(Number(params.day)+date)
   }
 
   const timeToStringFormat = (hour, minute) => {
@@ -432,7 +432,7 @@ const ConfirmCourse= () => {
               <span style={{float: 'right', paddingRight: '10px', fontSize: '25px'}}> <BsFillPlusSquareFill onClick={() => onClickItineraryAddIcon()} /> </span>
             </SearchDiv> */}
             <MapDiv>
-              <MapContainer 
+              <ConfirmMapContainer 
                 isOpenSearchList={isOpenSearchList} 
                 searchPlace={searchPlace}
                 setIsMarkerClicked={setIsMarkerClicked} 
@@ -440,7 +440,8 @@ const ConfirmCourse= () => {
                 thisCourseCity={thisCourseCity} 
                 isMouseOverMapList={isMouseOverMapList}
                 setIsMouseOverMapList={setIsMouseOverMapList}
-              ></MapContainer>
+                itineraryArray={itineraryArray}
+              />
             </MapDiv>
           </LeftScreenDiv>
 

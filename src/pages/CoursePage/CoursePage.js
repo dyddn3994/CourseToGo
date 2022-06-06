@@ -116,10 +116,12 @@ const CoursePage = () => {
     inputItineraryEndTimeMinute:0,// 일정 종료 분 input
     inputItineraryHidden: false,// 일정 추가 중복 일정 숨김 input
     inputItineraryDetail:'',// 일정 추가 일정 상세 input
-    inputItineraryCost:0 // 일정 추가 일정 비용 input
+    inputItineraryCost:0, // 일정 추가 일정 비용 input
+    itineraryLat: '', // 위도
+    itineraryLng: '', // 경도
   });
-  const { inputItineraryId,inputItineraryName, inputItineraryAddress, inputItineraryStartTime,  inputItineraryEndTime,
-    inputItineraryStartTimeHour, inputItineraryStartTimeMinute,  inputItineraryEndTimeHour,inputItineraryEndTimeMinute,inputItineraryHidden, inputItineraryDetail, inputItineraryCost }= inputItinerary;
+  const { inputItineraryId,inputItineraryName, inputItineraryAddress, inputItineraryStartTime,  inputItineraryEndTime, inputItineraryStartTimeHour, inputItineraryStartTimeMinute,  inputItineraryEndTimeHour,
+    inputItineraryEndTimeMinute,inputItineraryHidden, inputItineraryDetail, inputItineraryCost, itineraryLat, itineraryLng }= inputItinerary;
   
   const [inputSettingCourse, setInputSettingCourse] = useState({
     // 코스 설정 Modal용 input
@@ -331,6 +333,8 @@ const CoursePage = () => {
     if (isMarkerClicked) {
       const markerPlaceName = markerInfo.place_name;
       const markerPlaceAddress = markerInfo.address_name;
+      const lat = markerInfo.x;
+      const lng = markerInfo.y;
 
       // if (isItineraryConflict(0, startTime, endTime)) {
         // 한시간 안에 다른 일정이 있을 경우
@@ -346,6 +350,8 @@ const CoursePage = () => {
           inputItineraryStartTimeMinute: startTimeMinute,
           inputItineraryEndTimeHour: endTimeHour,
           inputItineraryEndTimeMinute: endTimeMinute,
+          itineraryLat: lat,
+          itineraryLng: lng
         })
         if (isHidden) {
           commutePostCreateItinerary(markerPlaceName, markerPlaceAddress, startTime, endTime, isHidden);
@@ -520,6 +526,7 @@ const CoursePage = () => {
       inputItineraryStartTime:startTime,
       inputItineraryEndTime:endTime
     });
+    console.log(itineraryLat);
 
     fetch("/course/itinerary", {
       method: 'post',
@@ -541,7 +548,9 @@ const CoursePage = () => {
           touristSpotName: itineraryName,
           touristSpotAddress: itineraryAddress,
           touristSpotAvgCost: 0,
-          touristSpotAvgTime: 0
+          touristSpotAvgTime: 0,
+          coordinateX: itineraryLat,
+          coordinateY: itineraryLng,
         }
       })
     })
@@ -583,7 +592,9 @@ const CoursePage = () => {
           touristSpotName: inputItineraryName,
           touristSpotAddress: inputItineraryAddress,
           touristSpotAvgCost: 0,
-          touristSpotAvgTime: 0
+          touristSpotAvgTime: 0,
+          coordinateX: '',
+          coordinateY: '',
         }
       })
     })

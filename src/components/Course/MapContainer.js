@@ -222,7 +222,7 @@ const MapContainer = forwardRef((props, ref) => {
   // 통신
   const commuteGetMarkerInfo = async (data, newDatas) => {
     // 마커 클릭했을때 보여질 정보 중 평균 수치들 출력
-    await fetch("/course/spot?address="+data.address_name+"&name="+data.place_name)
+    await fetch("/course/spot?address="+data.address_name+"&name="+data.place_name+"&coordinateX="+data.x+"&coordinateY="+data.y)
     .then(res => {
       return res.json();
     })
@@ -236,8 +236,6 @@ const MapContainer = forwardRef((props, ref) => {
       });
     })
   }
-
-  
 
   return(
     <div>
