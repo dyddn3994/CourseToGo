@@ -17,7 +17,8 @@ const CourseSettingModal = (props) => {
     setInputSettingCourse, 
     onChangeInputSettingCourse,
     onClickSettingCourseModal,
-    onClickDeleteGroup
+    onClickDeleteGroup,
+    isCheckCourse
   } = props;
   
   const [openDatePicker, setOpenDatePicker] = useState(false);
@@ -108,42 +109,83 @@ const CourseSettingModal = (props) => {
       }}
     >
       <MainDiv>
-        <div style={{margin: '3%' }}>수정할 코스의 정보를 입력하세요.</div>
-        <InputDiv>
-          <InputLabel>코스 명</InputLabel>
-          <FormDiv>
-            <Form  name="inputCourseName" value={inputSettingCourse.inputCourseName} onChange={onChangeInputSettingCourse } /> 
-          </FormDiv>    
-        </InputDiv>
-  
-        <InputDiv>
-          <InputLabel style={{marginLeft:'2%'}}>여행 날짜</InputLabel>
-          <DateFormDiv>
-            <DateButton onClick={showDatePicker}>날짜 선택</DateButton>
-            {dateSet.end === '' ? null :
-            <DateResultView>
-              {dateSet.start && dateSet.start} ~ {dateSet.end && dateSet.end}
-            </DateResultView> }
-          </DateFormDiv>   
-        </InputDiv>
-        <DatePickerItem   
-          openDatePicker={openDatePicker}
-          setOpenDatePicker={setOpenDatePicker}
-          selected={startDate}
-          onChange={dateOnChange}
-          startDate={startDate}
-          endDate={endDate} 
-        />
-        <InputDiv>
-          <InputLabel>지역</InputLabel>
-          <FormDiv>
-            <SelectRegion options={CITY} selectOnChange={selectOnChange} defaultValue={inputSettingCourse.inputCity}/>
-          </FormDiv>
-        </InputDiv>
-        <ButtonDiv>
-          <OptionButton backgroundColor={'#4D9FE3'} color={'#FFFFFF'} onClick={onClickSettingCourseModal}>코스 설정</OptionButton>
-          <OptionButton backgroundColor={'#FFFFFF'} color={'#4D9FE3'} onClick={() => setIsCourseSettingModalOpen(false)}>취소</OptionButton>
-        </ButtonDiv>
+      {!isCheckCourse ? (
+        <>
+          <div style={{margin: '3%' }}>수정할 코스의 정보를 입력하세요.</div>
+          <InputDiv>
+            <InputLabel>코스 명</InputLabel>
+            <FormDiv>
+              <CourseNameText  name="inputCourseName" value={inputSettingCourse.inputCourseName} onChange={onChangeInputSettingCourse } /> 
+            </FormDiv>    
+          </InputDiv>
+    
+          <InputDiv>
+            <InputLabel style={{marginLeft:'2%'}}>여행 날짜</InputLabel>
+            <DateFormDiv>
+              <DateButton onClick={showDatePicker}>날짜 선택</DateButton>
+              {dateSet.end === '' ? null :
+              <DateResultView>
+                {dateSet.start && dateSet.start} ~ {dateSet.end && dateSet.end}
+              </DateResultView> }
+            </DateFormDiv>   
+          </InputDiv>
+          <DatePickerItem   
+            openDatePicker={openDatePicker}
+            setOpenDatePicker={setOpenDatePicker}
+            selected={startDate}
+            onChange={dateOnChange}
+            startDate={startDate}
+            endDate={endDate} 
+          />
+          <InputDiv>
+            <InputLabel>지역</InputLabel>
+            <FormDiv>
+              <SelectRegion options={CITY} selectOnChange={selectOnChange} defaultValue={inputSettingCourse.inputCity}/>
+            </FormDiv>
+          </InputDiv>
+          <ButtonDiv>
+            <OptionButton backgroundColor={'#4D9FE3'} color={'#FFFFFF'} onClick={onClickSettingCourseModal}>코스 설정</OptionButton>
+            <OptionButton backgroundColor={'#FFFFFF'} color={'#4D9FE3'} onClick={() => setIsCourseSettingModalOpen(false)}>취소</OptionButton>
+          </ButtonDiv>
+        </>
+      ) : (
+        <>
+          <div style={{margin: '3%' }}>코스 정보</div>
+          <InputDiv>
+            <InputLabel>코스 명</InputLabel>
+            <FormDiv>
+              <CourseNameText>{inputSettingCourse.inputCourseName}</CourseNameText> 
+            </FormDiv>    
+          </InputDiv>
+    
+          <InputDiv>
+            <InputLabel style={{marginLeft:'2%'}}>여행 날짜</InputLabel>
+            <DateFormDiv style={{marginLeft: '35%'}}>
+              {dateSet.end === '' ? null :
+              <DateResultView>
+                {dateSet.start && dateSet.start} ~ {dateSet.end && dateSet.end}
+              </DateResultView> }
+            </DateFormDiv>   
+          </InputDiv>
+          <DatePickerItem   
+            openDatePicker={openDatePicker}
+            setOpenDatePicker={setOpenDatePicker}
+            selected={startDate}
+            onChange={dateOnChange}
+            startDate={startDate}
+            endDate={endDate} 
+          />
+          <InputDiv>
+            <InputLabel>지역</InputLabel>
+            <FormDiv>
+              {inputSettingCourse.inputCity}
+            </FormDiv>
+          </InputDiv>
+          <ButtonDiv>
+            <OptionButton backgroundColor={'#FFFFFF'} color={'#4D9FE3'} onClick={() => setIsCourseSettingModalOpen(false)}>취소</OptionButton>
+          </ButtonDiv>
+        </>
+      )}
         <ButtonDiv style={{marginTop: '-30px'}}>
           <OptionButton backgroundColor={'#FF0000'} color={'#FFFFFF'} onClick={onClickDeleteGroup}>그룹 탈퇴</OptionButton>
         </ButtonDiv>
@@ -180,6 +222,10 @@ const Form = styled.input`
   box-shadow: 0px 0px 2px lightgray;
   font-size:1.2rem;
 `;
+
+const CourseNameText = styled.span`
+  font-size:1.2rem;
+`
 
 const FormDiv=  styled.div`
   width:90%; 

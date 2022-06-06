@@ -2,14 +2,14 @@ import React, { useState , useEffect} from "react";
 import styled, { css } from 'styled-components';
 
 import UserItem from './FilteringUserItem';
-const FilteringUserList = ({users,checkedHandler}) => {
+const FilteringUserList = ({users,checkedHandler, SERVER_URL}) => {
 
   // render
     return (
 
         <UserDiv>
           {users.map((item) => (
-              <UserItem key={item.memberId} item={item} checkedHandler={checkedHandler}/>
+              <UserItem key={item.memberId} item={item} checkedHandler={checkedHandler} SERVER_URL={SERVER_URL}/>
           ))} 
         </UserDiv>
      

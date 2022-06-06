@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled, { css } from 'styled-components';
 
-const FilteringUserItem = ({item, checkedHandler}) => {
+const FilteringUserItem = ({item, checkedHandler, SERVER_URL}) => {
   
     const [backgroundColor, setBackgorundColor] = useState('#FFFFFF');  //버튼 클릭 시 색상 변경
     
@@ -11,7 +11,8 @@ const FilteringUserItem = ({item, checkedHandler}) => {
         <UserButton style={{backgroundColor:backgroundColor }} onClick={()=>{checkedHandler(item);
                                                                         setBackgorundColor(backgroundColor==='#FFFFFF'? '#DCDCDC': '#FFFFFF'); }} >
             {/* 유저 프로필사진과 이름*/}
-            <ProfileDiv type='image' value={memberProfile} src={'http://122.199.121.202:9092/'+memberProfile}>{}</ProfileDiv>
+            <ProfileDiv type='image' value={memberProfile} src={SERVER_URL+memberProfile}>{}</ProfileDiv>
+            {console.log('memberProfile: ', memberProfile)}
             <InputUser type="button"  value={memberName}  />
         </UserButton>
     )

@@ -4,7 +4,7 @@ import { useParams } from 'react-router';
 
 // components
 
-const Memo = ({ setIsMemoOpen }) => {
+const Memo = ({ setIsMemoOpen, isCheckCourse }) => {
   // url 파라미터 
   // courseId: 코스id(1, 2, ...)
   // day: 설정 일차(1, 2, ...)
@@ -12,12 +12,12 @@ const Memo = ({ setIsMemoOpen }) => {
   
   // useState
   const [memoArray, setMemoArray] = useState([
-    {memoId: 2, content: "모이기", createDate: "2022-05-15T02:00:00"},
-    {memoId: 1, content: "칫솔 챙기기", createDate: "2022-05-14T12:13:00"},
-    {memoId: 3, content: "모이기", createDate: "2022-05-15T02:00:00"},
-    {memoId: 4, content: "칫솔 챙기기", createDate: "2022-05-14T12:13:00"},
-    {memoId: 5, content: "모이기", createDate: "2022-05-15T02:00:00"},
-    {memoId: 6, content: "칫솔 챙기기", createDate: "2022-05-14T12:13:00"},
+    // {memoId: 2, content: "모이기", createDate: "2022-05-15T02:00:00"},
+    // {memoId: 1, content: "칫솔 챙기기", createDate: "2022-05-14T12:13:00"},
+    // {memoId: 3, content: "모이기", createDate: "2022-05-15T02:00:00"},
+    // {memoId: 4, content: "칫솔 챙기기", createDate: "2022-05-14T12:13:00"},
+    // {memoId: 5, content: "모이기", createDate: "2022-05-15T02:00:00"},
+    // {memoId: 6, content: "칫솔 챙기기", createDate: "2022-05-14T12:13:00"},
   ])
 
   const [inputContent, setInputContent] = useState(''); // 메모 입력
@@ -99,7 +99,7 @@ const Memo = ({ setIsMemoOpen }) => {
         alert('메모등록에 실패하였습니다. ');
       }
       else {
-        alert('test : ' + memoId);
+        alert('등록되었습니다.');
         commuteGetMemos();
       }
     });
@@ -127,8 +127,11 @@ const Memo = ({ setIsMemoOpen }) => {
       if (memoId === -1) {
         alert('메모수정에 실패하였습니다. ');
       }
+      else if (memoId === -2) {
+        alert('작성자만 수정이 가능합니다.');
+      }
       else {
-        alert('test : ' + memoId);
+        alert('수정되었습니다.');
         commuteGetMemos();
       }
     });
@@ -147,10 +150,10 @@ const Memo = ({ setIsMemoOpen }) => {
     .then((ack)=>{
       // 삭제 성공 시 true
       if (!ack) {
-        alert('메모삭제에 실패하였습니다. ');
+        alert('작성자만 삭제가 가능합니다. ');
       }
       else {
-        alert('test : ' + ack);
+        alert('삭제되었습니다.');
         commuteGetMemos();
       }
     });
@@ -205,15 +208,16 @@ const Memo = ({ setIsMemoOpen }) => {
           <TextDiv>
             <div>   
               {createDateFormatting(memo.createDate)}
-            <span style={{marginLeft: '20px'}}>작성자 : {memo.member.memberName}</span>
             </div>
             {memo.content}
+            <div style={{fontSize: '15px', marginTop: '10px'}}>작성자 : {memo.member.memberName}</div>
           </TextDiv>
-          
-          <ButtonDiv>
-            <OptionButton onClick={() => onClickUpdateMemo(memo)}>수정</OptionButton>
-            <OptionButton onClick={() => onClickDeleteMemo(memo)}>삭제</OptionButton>
-          </ButtonDiv>
+          {!isCheckCourse ? (
+            <ButtonDiv>
+              <OptionButton onClick={() => onClickUpdateMemo(memo)}>수정</OptionButton>
+              <OptionButton onClick={() => onClickDeleteMemo(memo)}>삭제</OptionButton>
+            </ButtonDiv>
+          ): null}
         </ContentDiv>
       )
     })
@@ -231,11 +235,12 @@ const Memo = ({ setIsMemoOpen }) => {
         <FlexDiv>
           {renderContentList()}
         </FlexDiv>
-        
-       <InputContentDiv>
-        <ContentInputTextarea name="inputContent" value={inputContent} onChange={onChangeInputContent} />
-        <CreateMemoButton onClick={onClickCreateMemo}>메모 추가</CreateMemoButton>
-      </InputContentDiv>
+        {!isCheckCourse ? (
+          <InputContentDiv>
+            <ContentInputTextarea name="inputContent" value={inputContent} onChange={onChangeInputContent} />
+            <CreateMemoButton onClick={onClickCreateMemo}>메모 추가</CreateMemoButton>
+          </InputContentDiv>
+        ) : null}
      </BackgroundDiv>
     </MainDiv>
   );

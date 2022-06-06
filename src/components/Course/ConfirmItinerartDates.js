@@ -1,42 +1,47 @@
 import React, { useState } from "react";
 import styled, { css } from 'styled-components';
 import RenderItineraryList from './RenderItineraryList';
-const ConfirmItinerartDates = ({itineraryDates,
+
+const ConfirmItinerartDates = props => {
+  const { 
+    itineraryDates,
     timeToStringFormat,
     colorList,
     onMouseOverItinerary,
     onMouseOutItinerary,
     onClickOverlap,
-    onMouseOverOverlapItinerary }) => {
-        const renderResult = [];
-    
-  
-        <div>
-            {itineraryDates.map((itineraryDate, index) => {
-               renderResult.push(
-                   <div>
-                   <div>{index+1}</div>
-                <ItineraryScreenDiv >
-                    
-                <RenderItineraryList 
-                  itineraryArray={itineraryDate}
-                  timeToStringFormat={timeToStringFormat}
-                  colorList={colorList}
-                  thisPageDate={index+1}
-                //   onClickItinerary={onClickItinerary}
-                  onMouseOverItinerary={onMouseOverItinerary}
-                  onMouseOutItinerary={onMouseOutItinerary}
-                  onClickOverlap={ onClickOverlap}
-                  onMouseOverOverlapItinerary={onMouseOverOverlapItinerary} 
-                  key={index}/>
-                </ItineraryScreenDiv>
-                </div>
-               );
-            })}
-          </div>
-  
-    
-        return renderResult;
+    onMouseOverOverlapItinerary 
+  } = props;
+
+  const renderResult = [];
+
+
+  <div>
+    {itineraryDates.map((itineraryDate, index) => {
+        renderResult.push(
+            <div>
+            <div>{index+1}</div>
+        <ItineraryScreenDiv >
+            
+        <RenderItineraryList 
+          itineraryArray={itineraryDate}
+          timeToStringFormat={timeToStringFormat}
+          colorList={colorList}
+          thisPageDate={index+1}
+        //   onClickItinerary={onClickItinerary}
+          onMouseOverItinerary={onMouseOverItinerary}
+          onMouseOutItinerary={onMouseOutItinerary}
+          onClickOverlap={ onClickOverlap}
+          onMouseOverOverlapItinerary={onMouseOverOverlapItinerary} 
+          key={index}/>
+        </ItineraryScreenDiv>
+        </div>
+        );
+      })}
+    </div>
+
+
+  return renderResult;
         
 //   return (
 //     <>

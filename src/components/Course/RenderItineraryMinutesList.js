@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled, { css } from 'styled-components';
   const RenderItineraryMinutesList = (
-      {hour, itineraryArray,timeToStringFormat, colorList, thisPageDate, onClickItinerary,onMouseOverItinerary, onMouseOutItinerary,onClickOverlap,onMouseOverOverlapItinerary}) => {
+      {isMarkerClicked, hour, itineraryArray,timeToStringFormat, colorList, thisPageDate, onClickItinerary,onMouseOverItinerary, onMouseOutItinerary,onClickOverlap,onMouseOverOverlapItinerary}) => {
     const renderResult = [];
     const MINUTES = 60;
     let itineraryTitle = null;
@@ -96,7 +96,7 @@ import styled, { css } from 'styled-components';
           style={{
             height: '10px',
             backgroundColor: (isRenderColor ? renderColor : null)
-          }} 
+          }}
           onClick={(e) => onClickItinerary(
                     e,
                     (renderColor === "#FFFFFF" && '#ffffff' && 'white'), 
@@ -106,9 +106,9 @@ import styled, { css } from 'styled-components';
                     thisPageDate+"T"+representativeEndTimeFormat,
                     thisItinerary
                   )} 
-          onMouseOver={(e) => onMouseOverItinerary(e, thisTimeFormat)}
+          onMouseOver={(e) => onMouseOverItinerary(e, thisTimeFormat, thisItinerary)}
           onMouseOut={(e) => onMouseOutItinerary(e, renderColor)}
-          data-tip data-for='itineraryTimeTooltip'
+          data-tip data-for={(isMarkerClicked ?'itineraryTimeTooltip' : (isRenderColor ? 'itineraryInfoTooltip' : null))}
         >
           {isTitlePosition ? itineraryTitle : null}
           {(isHidden && isTitlePosition) && 
@@ -121,7 +121,7 @@ import styled, { css } from 'styled-components';
                 fontSize:'1.1rem'
               }}
               onClick={(e) => onClickOverlap( e,thisItinerary )} 
-              onMouseOver={() => onMouseOverOverlapItinerary(thisItinerary, thisPageDate+'T'+thisTimeFormat+':00')}
+              onMouseOver={(e) => onMouseOverOverlapItinerary(e, thisItinerary, thisPageDate+'T'+thisTimeFormat+':00')}
               // onMouseOver={() => setIsOverlapMouseOver(true)}
               // onMouseOut={() => setIsOverlapMouseOver(false)}
               data-tip data-for='tooltip'

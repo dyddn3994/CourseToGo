@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled, { css } from 'styled-components';
 import RenderItineraryMinutesList from './RenderItineraryMinutesList';
-  const RenderItineraryList = ({ itineraryArray,timeToStringFormat, colorList, thisPageDate, onClickItinerary,onMouseOverItinerary, onMouseOutItinerary,onClickOverlap,onMouseOverOverlapItinerary}) => {
+  const RenderItineraryList = ({ isMarkerClicked, itineraryArray,timeToStringFormat, colorList, thisPageDate, onClickItinerary,onMouseOverItinerary, onMouseOutItinerary,onClickOverlap,onMouseOverOverlapItinerary}) => {
     const renderResult = [];
     const HOURS = 24;
 
@@ -26,6 +26,7 @@ import RenderItineraryMinutesList from './RenderItineraryMinutesList';
                 onMouseOutItinerary={onMouseOutItinerary}
                 onClickOverlap={ onClickOverlap}
                 onMouseOverOverlapItinerary={onMouseOverOverlapItinerary}
+                isMarkerClicked={isMarkerClicked}
               />
             </span>
         </div>

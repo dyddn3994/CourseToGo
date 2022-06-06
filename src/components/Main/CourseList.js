@@ -7,12 +7,21 @@ const CoursesList =( {group,  onClickCourseLi, courseDateRender}) => {
     return (
     group.courses.map((course, courseListIndex) => (
       <CourseUl>
-        <Link style={{textDecoration :'none'} }to={'/course/'+String(course.courseId)+'/'+String(1)}>
-          <CourseLi key={courseListIndex} onClick={(e) => onClickCourseLi(e)}>
-            {course.courseName} <br />
-            {courseDateRender(course.courseStartDate, course.courseEndDate)}   {course.city}
-          </CourseLi>
-        </Link>
+        {course.check ? (
+          <Link style={{textDecoration :'none'} }to={'/confirmCourse/'+String(course.courseId)+'/'+String(1)}>
+            <CourseLi key={courseListIndex} onClick={(e) => onClickCourseLi(e)}>
+              {course.courseName} <br />
+              {courseDateRender(course.courseStartDate, course.courseEndDate)}   {course.city}
+            </CourseLi>
+          </Link>
+        ) : (
+          <Link style={{textDecoration :'none'} }to={'/course/'+String(course.courseId)+'/'+String(1)}>
+            <CourseLi key={courseListIndex} onClick={(e) => onClickCourseLi(e)}>
+              {course.courseName} <br />
+              {courseDateRender(course.courseStartDate, course.courseEndDate)}   {course.city}
+            </CourseLi>
+          </Link>
+        )}
       </CourseUl>
     ))
   );

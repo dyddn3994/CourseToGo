@@ -7,7 +7,7 @@ import SelectTime from '../../components/Course/SelectTime';
 
   // Modal
   // 일정 추가 모달
-  const AddItineraryModal =({HOURS,MINUTES, isAddItineraryModal,setIsAddItineraryModal,inputItinerary,onChangeInputItinerary, onClickAddItinerary}) => {
+  const AddItineraryModal =({HOURS,MINUTES, isAddItineraryModal,setIsAddItineraryModal,inputItinerary,onChangeInputItinerary, onClickAddItinerary, isAddItineraryByIcon}) => {
 
   return (
     <Modal 
@@ -31,8 +31,29 @@ import SelectTime from '../../components/Course/SelectTime';
     >
     <MainDiv>
        <div   style={{margin: '3%' }}></div>  
-       <InputForm label={'일정 이름'} name="inputItineraryName" value={inputItinerary.inputItineraryName} onChange={onChangeInputItinerary} />
-        <InputForm label={'주소'} name="inputItineraryAddress" value={inputItinerary.inputItineraryAddress} onChange={onChangeInputItinerary} />
+        {!isAddItineraryByIcon ? (
+          <>
+          <InputFormDiv>
+            <InputLabel>
+              <label>일정 이름</label> 
+            </InputLabel>
+            <FormDiv>
+              <Form>{inputItinerary.inputItineraryName}</Form>
+            </FormDiv>    
+          </InputFormDiv>
+          <InputFormDiv>
+            <InputLabel>
+              <label>주소</label> 
+            </InputLabel>
+            <FormDiv>
+              <Form>{inputItinerary.inputItineraryAddress}</Form>
+            </FormDiv>    
+          </InputFormDiv>
+          </>
+          // <InputForm label={'주소'} name="inputItineraryAddress" value={inputItinerary.inputItineraryAddress} onChange={onChangeInputItinerary} />
+        ) : (
+          <InputForm label={'일정 이름'} name="inputItineraryName" value={inputItinerary.inputItineraryName} onChange={onChangeInputItinerary} />
+        )}
         <TimeDiv>
          <SelectTime HOURS ={HOURS} MINUTES={MINUTES} inputItinerary={inputItinerary} onChangeInputItinerary={onChangeInputItinerary} />
         </TimeDiv>
@@ -75,5 +96,27 @@ margin-right:32%;
           border: 1px solid  gray;
           box-shadow: 0 0 3px  gray;
     }
+`;
+const InputFormDiv =  styled.div`
+  width:70%;
+  height:100%;
+  display : flex; 
+  justify-content: space-around;
+  margin-left:12%;
+  font-size:1.2rem;
+`;
+
+const Form = styled.span`
+  font-size:1.2rem;
+`;
+
+const FormDiv=  styled.div`
+  width:80%; 
+  margin-bottom:3%;
+  margin-left:10%;
+`;
+const InputLabel =  styled.div`
+  width:40%;
+  font-size:1.2rem;
 `;
   export default  AddItineraryModal;

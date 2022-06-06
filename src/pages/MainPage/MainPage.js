@@ -3,7 +3,6 @@ import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
-import { Ring } from '@uiball/loaders'
 
 // components
 import GroupListDiv from "./GroupListDiv.js";
@@ -21,7 +20,7 @@ const MainPage = () => {
   const [inputGroupKey, setInputGroupKey] = useState('');
   const [addGroupState, setAddGroupState] = useState('');
 
-  // const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false); // 로딩 시 화면 표현 
 
   // useRef
   const groupListDivRef = useRef();
@@ -53,7 +52,7 @@ const MainPage = () => {
           alert('동일한 이름의 그룹에 참가중입니다. 다른 이름으로 생성하세요.');
         }
         else {
-          alert(addedGroupId);
+          alert('그룹이 생성되었습니다.');
           
           setIsGroupCreateModalOpen(false);
           setInputGroupName('');

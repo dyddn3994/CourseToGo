@@ -28,6 +28,7 @@ import CourseHeader from '../../components/CourseHeader';
 import RenderItineraryList from '../../components/Course/RenderItineraryList';
 import CourseSettingModal from './CourseSettingModal';
 import CITY from '../../assets/City/City';
+import ItineraryInfoTooltip from '../../components/Course/ItineraryInfoTooltip';
 
 // 사용자별 색 인덱스에 따라 색 지정
 const colorList = [
@@ -38,6 +39,7 @@ const colorList = [
 ]
 const HOURS = Array(24).fill().map((v, i)=>i);
 const MINUTES = Array(6).fill().map((v, i)=>i*10);
+const isCheckCourse = false;
 
 var client = null; // stomp 연결용
 var stompClient = null;
@@ -92,7 +94,7 @@ const CoursePage = () => {
   const [overSearchList, setOverSearchList] = useState(false);	// 검색 리스트 마우스 오버 상태
  
   const [overlapItineraryArrayState, setOverlapItineraryArrayState] = useState([]);
-  const [representativeItineraryState, setRepresentativeItineraryState] = useState({});
+  const [representativeItineraryState, setRepresentativeItineraryState] = useState();
   const [thisItineraryTime, setThisItineraryTime] = useState(''); // 마커 클릭 후 일정에 mouseover시 표현할 툴팁 내 시간
   const [isMemoOpen, setIsMemoOpen] = useState(false); // 메모 열기 임시 state
 
@@ -100,6 +102,7 @@ const CoursePage = () => {
   const [isUpdateItineraryModal, setIsUpdateItineraryModal] = useState(false); // 일정 수정 모달
   const [isOverlapItineraryModal, setIsOverlapItineraryModal] = useState(false); // 중복일정 모달
   const [isCourseSettingModalOpen, setIsCourseSettingModalOpen] = useState(false); // 코스 설정 모달
+  const [isAddItineraryByIcon, setIsAddItineraryByIcon] = useState(false); // 일정 추가 아이콘을 클릭해서 추가할경우 주소 입력칸 없앰
 
   const [inputItinerary, setInputItinerary] = useState ({
     inputItineraryId: 0,// 일정 수정용 일정 id. Modal에 파라미터로 넘겨주는 방법을 몰라서 이렇게 처리. 알게되면 수정
@@ -164,13 +167,14 @@ const CoursePage = () => {
       ...inputItinerary,
       inputItineraryName:'',// 일정 추가 일정명 input
       inputItineraryAddress:'', // 일정 추가 주소 input
-      inputItineraryStartTimeHour:'', // 일정 시작 시간 input
-      inputItineraryStartTimeMinute:'', // 일정 시작 분 input
-      inputItineraryEndTimeHour:'', // 일정 종료 시간 input
-      inputItineraryEndTimeMinute:'',// 일정 종료 분 input
+      inputItineraryStartTimeHour:0, // 일정 시작 시간 input
+      inputItineraryStartTimeMinute:0, // 일정 시작 분 input
+      inputItineraryEndTimeHour:0, // 일정 종료 시간 input
+      inputItineraryEndTimeMinute:0,// 일정 종료 분 input
       inputItineraryDetail:'',// 일정 추가 일정 상세 input
-      inputItineraryCost:'' // 일정 추가 일정 비용 input
+      inputItineraryCost:0 // 일정 추가 일정 비용 input
     });
+    setIsAddItineraryByIcon(true);
     setIsAddItineraryModal(true);
   }
   const onClickAddItinerary = () => {
@@ -194,6 +198,8 @@ const CoursePage = () => {
     }
     const startTime = thisPageDate + 'T' + startTimeHour + ':' + startTimeMinute + ':00';
     const endTime = thisPageDate + 'T' + endTimeHour + ':' + endTimeMinute + ':00';
+    console.log('startTime: ', startTime)
+    console.log('endTime: ', endTime)
     setInputItinerary({
       ...inputItinerary,
       inputItineraryStartTime:startTime,
@@ -202,9 +208,9 @@ const CoursePage = () => {
     if (inputItineraryName === '') {
       alert('일정명을 입력해주세요');
     }
-    else if (inputItineraryAddress === '') {
-      alert('일정 주소를 입력해주세요');
-    }
+    // else if (inputItineraryAddress === '') {
+    //   alert('일정 주소를 입력해주세요');
+    // }
     else if (isTimeUnbalance(startTime, endTime)) {
       alert('종료 시간은 시작 시간 이후여야 합니다.');
     }
@@ -249,9 +255,9 @@ const CoursePage = () => {
     if (inputItineraryName === '') {
       alert('일정명을 입력해주세요');
     }
-    else if (inputItineraryAddress === '') {
-      alert('일정 주소를 입력해주세요');
-    }
+    // else if (inputItineraryAddress === '') {
+    //   alert('일정 주소를 입력해주세요');
+    // }
     else if (isTimeUnbalance(startTime, endTime)) {
       alert('종료 시간은 시작 시간 이후여야 합니다.');
     }
@@ -344,6 +350,7 @@ const CoursePage = () => {
           commutePostCreateItinerary(markerPlaceName, markerPlaceAddress, startTime, endTime, isHidden);
         }
         else {
+          setIsAddItineraryByIcon(false);
           setIsAddItineraryModal(true);
         }
       // }
@@ -384,15 +391,20 @@ const CoursePage = () => {
   }
 
   // onMouseOver
-  const onMouseOverItinerary = (e, thisTimeFormat) => {
-    // 마커 클릭 후 일정표에서 마우스가 올라가 있을 경우 색상 변경
+  const onMouseOverItinerary = (e, thisTimeFormat, thisItinerary) => {
     if (isMarkerClicked) {
+      // 마커 클릭 후 일정표에서 마우스가 올라가 있을 경우 색상 변경
       e.currentTarget.style.background = '#7fd1f7';
       setThisItineraryTime(thisTimeFormat);
     }
+    else {
+      // 일정에 마우스 올릴경우 대표 일정 세부정보 툴팁 표시
+      setRepresentativeItineraryState(thisItinerary);
+    }
   }
-  const onMouseOverOverlapItinerary = (representativeItinerary, overlapItineraryStartTime) => {
+  const onMouseOverOverlapItinerary = (e, representativeItinerary, overlapItineraryStartTime) => {
     // 중복 일정 숫자에 마우스 올리면 
+    e.preventDefault();
     const overlapItineraryArray = itineraryArray.filter(itinerary => (((itinerary.itineraryStartTime === overlapItineraryStartTime) && (itinerary.itineraryHidden)) && itinerary))
     setOverlapItineraryArrayState(overlapItineraryArray);
     setRepresentativeItineraryState(representativeItinerary);
@@ -583,7 +595,7 @@ const CoursePage = () => {
         alert('일정수정에 실패하였습니다. ');
       }
       else {
-        alert('test : ' + itineraryId);
+        alert('일정이 수정되었습니다.');
         commuteGetItineraryInfo(params.day);
       }
     });
@@ -614,7 +626,7 @@ const CoursePage = () => {
       else {
         // 중복 일정이 있는 대표 일정 삭제 성공, 대표 일정 id값 반환
         const newRepresentativeItineraryName = itineraryArray.filter(itinerary => (itinerary.itineraryId === itineraryId && itinerary.touristSpot.touristSpotName));
-        alert('대표 일정이 삭제되어 중복 일정인 '+newRepresentativeItineraryName+'이 대표일정이 되었습니다.');
+        alert('일정이 삭제되었습니다.');
         commuteGetItineraryInfo(params.day);
         setIsUpdateItineraryModal(false);
       }
@@ -622,8 +634,6 @@ const CoursePage = () => {
   }
   const commutePutSelectOverlapItinerary = (preId, selectedId) => {
     // 중복일정 선택
-    console.log(preId)
-    console.log(selectedId)
     setLoading(true);
     fetch("/course/itinerary/duplicate?preId="+preId+"&selectedId="+selectedId, {
       method: 'put',
@@ -699,17 +709,6 @@ const CoursePage = () => {
       }
     });
   }
-  // const commuteGetCourseCity = () => {
-  //   // 코스 도시 조회
-  //   fetch("/course/city?courseId="+params.courseId)
-  //   .then((res)=>{
-  //     return res.json();
-  //   })
-  //   .then((itinerayData)=>{
-  //     setItineraryArray(itinerayData);
-  //     setLoading(false);
-  //   });
-  // }
   const commuteGetCourseInfo = () => {
     // 코스 정보 조회
     fetch("/course?courseId="+params.courseId)
@@ -739,7 +738,7 @@ const CoursePage = () => {
     //   return res.json();
     // })
     .then((ack)=>{
-      alert(ack);
+      alert('탈퇴되었습니다.');
       // 
       // if (ack) {
       //   alert('코스가 확정되었습니다.');
@@ -886,7 +885,9 @@ const CoursePage = () => {
                   onMouseOverItinerary={onMouseOverItinerary}
                   onMouseOutItinerary={onMouseOutItinerary}
                   onClickOverlap={ onClickOverlap}
-                  onMouseOverOverlapItinerary={onMouseOverOverlapItinerary} />
+                  onMouseOverOverlapItinerary={onMouseOverOverlapItinerary} 
+                  isMarkerClicked={isMarkerClicked}
+                />
             </ItineraryScreenDiv>
             {isMarkerClicked ? (<div style={{textAlign:'center', width: '380px'}}>일정을 등록하고자 하는 시간을 클릭하세요.</div>) : null}
           </ItineraryDateScreenDiv>
@@ -918,7 +919,7 @@ const CoursePage = () => {
 
         {/* 메모 오픈 */}
         {isMemoOpen && (
-          <Memo setIsMemoOpen={setIsMemoOpen}/>
+          <Memo setIsMemoOpen={setIsMemoOpen} isCheckCourse={isCheckCourse}/>
         )}
 
       {/* 중복 일정 리스트 */}
@@ -926,10 +927,10 @@ const CoursePage = () => {
         <OverlapItineraryModal 
           isOverlapItineraryModal={  isOverlapItineraryModal}
           setIsOverlapItineraryModal={ setIsOverlapItineraryModal}
-          thisItinerary={thisItinerary}
           overlapItineraryArray={overlapItineraryArrayState}
           onClickSetRepresentative={onClickSetRepresentative}
-          />
+          representativeItineraryState={representativeItineraryState}
+        />
       }
 
       
@@ -941,6 +942,7 @@ const CoursePage = () => {
           inputItinerary={inputItinerary}
           onChangeInputItinerary={onChangeInputItinerary}
           onClickAddItinerary={onClickAddItinerary}
+          isAddItineraryByIcon={isAddItineraryByIcon}
           />
 
         {/* 일정 수정 Modal */}
@@ -963,21 +965,29 @@ const CoursePage = () => {
           onChangeInputSettingCourse={onChangeInputSettingCourse}
           onClickSettingCourseModal={onClickSettingCourseModal}
           onClickDeleteGroup={onClickDeleteGroup}
+          isCheckCourse={isCheckCourse}
         />
           
         {/* 중복 일정 툴팁, 마커 클릭 된 상태에서 띄우지 않음*/}
         {(!isMarkerClicked && 
-            <OverlapItineraryTooltip
-              overlapItineraryArray={overlapItineraryArrayState}
-            />
-          )}
+          <OverlapItineraryTooltip
+            overlapItineraryArray={overlapItineraryArrayState}
+          />
+        )}
 
         {/* 마커 클릭 후 일정 mouseover 툴팁 */}
         { (isMarkerClicked &&
-            <ItineraryTimeTooltip
-              thisItineraryTime={thisItineraryTime}
-            />
+          <ItineraryTimeTooltip
+            thisItineraryTime={thisItineraryTime}
+          />
         )}
+
+        {/* 일정 정보 툴팁, 마커 클릭 된 상태에서 띄우지 않음 */}
+        {(!isMarkerClicked && representativeItineraryState) ? (
+          <ItineraryInfoTooltip
+            itinerary={representativeItineraryState}
+          />
+        ) : null}
       </MainScreenDiv>
     )}
 

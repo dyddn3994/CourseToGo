@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 import { BiCopy } from 'react-icons/bi';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Link } from 'react-router-dom';
+import { Ring } from '@uiball/loaders'
 
 import CourseCreateModal from '../../components/Main/CourseCreateModal';
 import CoursesList from "../../components/Main/CourseList";
@@ -16,15 +17,15 @@ const GroupListDiv = forwardRef((props, ref) => {
     commuteGetGroupInfo();
   },[]);
   const [groups, setGroups] = useState([
-    { groupId: 1, groupName: 'A그룹', groupMemberCount: 4, groupKey: 972184357, groupClicked: false, courses: [
-        { courseId: 1, courseName: '1코스', courseStartDate: '2021-10-14', courseEndDate: '2021-11-16', city: '제주', check: true },
-        { courseId: 1, courseName: '2코스', courseStartDate: '2022-06-14', courseEndDate: '2022-06-15', city: '부산', check: false }
-      ]
-    },
-    { groupId: 2, groupName: 'B그룹', groupMemberCount: 3, groupKey: 157195250, groupClicked: false, courses: [
-        { courseId: 1, courseName: '1코스', courseStartDate: '2021-09-14', courseEndDate: '2021-09-16', city: '제주', check: false },
-      ]
-    }
+    // { groupId: 1, groupName: 'A그룹', groupMemberCount: 4, groupKey: 972184357, groupClicked: false, courses: [
+    //     { courseId: 1, courseName: '1코스', courseStartDate: '2021-10-14', courseEndDate: '2021-11-16', city: '제주', check: true },
+    //     { courseId: 1, courseName: '2코스', courseStartDate: '2022-06-14', courseEndDate: '2022-06-15', city: '부산', check: false }
+    //   ]
+    // },
+    // { groupId: 2, groupName: 'B그룹', groupMemberCount: 3, groupKey: 157195250, groupClicked: false, courses: [
+    //     { courseId: 1, courseName: '1코스', courseStartDate: '2021-09-14', courseEndDate: '2021-09-16', city: '제주', check: false },
+    //   ]
+    // }
   ]);
 
   const [createCourseGroupId, setCreateCourseGroupId] = useState(0); // 코스 추가할때 Modal에서 처리해서 어떤 그룹에서 코스를 추가하는지에 대한 데이터를 저장할 곳이 없음. 해당 값에 id 저장. 더 좋은 방법 있으면 수정
@@ -35,8 +36,9 @@ const GroupListDiv = forwardRef((props, ref) => {
     inputCourseEndDate:'',
     inputCity:'',
   });
-
   const { inputCourseName, inputCourseStartDate, inputCourseEndDate,inputCity} = inputCreateCourse;
+
+  const [loading, setLoading] = useState(true);
 
   const onChangeInputCreatCourse = (e) => {
     const { value, name } = e.target;
@@ -52,7 +54,7 @@ const GroupListDiv = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({
     // 그룹 정보 조회
     commuteGetGroupInfo() {
-      // setLoading(true);
+      setLoading(true);
       fetch("/group")
       .then((res)=>{
         return res.json();
@@ -71,14 +73,14 @@ const GroupListDiv = forwardRef((props, ref) => {
         )
         setGroups(newGroups);
       });
-      // setLoading(false);
+      setLoading(false);
     }
   }));
 
   // 통신
   // 그룹 정보 조회
   const commuteGetGroupInfo = () => {
-    // setLoading(true);
+    setLoading(true);
     fetch("/group")
     .then((res)=>{
       return res.json();
@@ -96,8 +98,8 @@ const GroupListDiv = forwardRef((props, ref) => {
           })
       )
       setGroups(newGroups);
-    });
-    // setLoading(false);
+      setLoading(false);
+  });
   }
   // 코스 추가
   const commutePostCreateCourse = (groupId) => {
@@ -236,25 +238,36 @@ const GroupListDiv = forwardRef((props, ref) => {
   };
 
   return (
-    <GroupUl>
-      {groups.map((group, groupListIndex) => (
-        <GroupLi key={groupListIndex} onClick={() => onClickGroupLi(group.groupId)}>
-          <GroupListItem group={group} onClickCreateCourse={onClickCreateCourse} groupKeySpacing={groupKeySpacing} onClickCopy={onClickCopy} />
-          {/* 그룹이 클릭되어 있으면 코스 리스트 출력 */}
-          {group.groupClicked && 
-            <CoursesList group={ group}  onClickCourseLi={onClickCourseLi} courseDateRender={courseDateRender}/>}
-        </GroupLi>
-      ))}
-      {/* 코스 추가 모달 */}
-    <CourseCreateModal 
-      isCourseCreateModalOpen={isCourseCreateModalOpen} 
-      setIsCourseCreateModalOpen={setIsCourseCreateModalOpen} 
-      inputCreateCourse={inputCreateCourse}
-      setInputCreateCourse={setInputCreateCourse}
-      onChangeInputCreatCourse ={onChangeInputCreatCourse} 
-      onClickCreateCourseModal={onClickCreateCourseModal}
-    />
-    </GroupUl>
+    <>
+    {loading ? (
+      <Ring 
+        size={40}
+        lineWeight={5}
+        speed={2} 
+        color="black"
+      />
+    ) : (
+      <GroupUl>
+        {groups.map((group, groupListIndex) => (
+          <GroupLi key={groupListIndex} onClick={() => onClickGroupLi(group.groupId)}>
+            <GroupListItem group={group} onClickCreateCourse={onClickCreateCourse} groupKeySpacing={groupKeySpacing} onClickCopy={onClickCopy} />
+            {/* 그룹이 클릭되어 있으면 코스 리스트 출력 */}
+            {group.groupClicked && 
+              <CoursesList group={ group}  onClickCourseLi={onClickCourseLi} courseDateRender={courseDateRender}/>}
+          </GroupLi>
+        ))}
+        {/* 코스 추가 모달 */}
+        <CourseCreateModal 
+          isCourseCreateModalOpen={isCourseCreateModalOpen} 
+          setIsCourseCreateModalOpen={setIsCourseCreateModalOpen} 
+          inputCreateCourse={inputCreateCourse}
+          setInputCreateCourse={setInputCreateCourse}
+          onChangeInputCreatCourse ={onChangeInputCreatCourse} 
+          onClickCreateCourseModal={onClickCreateCourseModal}
+        />
+      </GroupUl>
+    )}
+    </>
   );
 });
 

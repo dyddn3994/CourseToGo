@@ -25,7 +25,7 @@ const App = () => {
       <Route path="/searchPw" element={<SearchPwPage />} />
       <Route path="/join" element={<JoinPage />} />
       <Route path="/photoAlbum/:courseId/:day" element={<PhotoPage />} />
-      <Route path="/confirmCourse" element={<ConfirmCourse />} />
+      <Route path="/confirmCourse/:courseId/:day" element={<ConfirmCourse />} />
     </Routes>
   );
 };

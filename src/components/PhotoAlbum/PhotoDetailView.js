@@ -46,13 +46,13 @@ const OnclickedPhotoDiv = styled.div`
 `;
 const OnclickedPhoto = styled.img`
     margin-top:1%;
-    max-width: 650px;
-    max-height:500px;
+    max-width: 380px;
+    max-height:320px;
 `;
 
 const InfoDiv = styled.div`
     width:100%;
-    margin-left:5%;
+    margin-top:1%;
     display: flex;
     justify-content: space-between;
 `;
@@ -60,7 +60,7 @@ const InfoDiv = styled.div`
 const InfoString = styled.div`
     width:100%;
     text-align: left;
-    font-size: 1.4rem;
+    font-size: 0.8rem;
 `;
 const InfoButtonDiv = styled.div`
     width:50%;
@@ -68,7 +68,7 @@ const InfoButtonDiv = styled.div`
 const EditButton = styled.button`
     background-color:#FFFFFF;
     border-radius: 0.30rem;
-    font-size: 1.2rem;
+    font-size: 0.8rem;
     line-height: 1.6;
     border: 1px solid lightgray;
     width:50%;

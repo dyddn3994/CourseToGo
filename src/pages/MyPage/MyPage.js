@@ -1,6 +1,7 @@
 import React, { useState , useEffect} from "react";
 import styled, { css } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios'
 
 import CourseHeader from "../../components/CourseHeader";
 import InputForm from "../../components/InputForm";
@@ -19,11 +20,13 @@ const  MyPage = () => {
     phoneNumber:'010',
     age:'22',
     gender:'남성',
+    memberProfileUrl: '',
+    memberFaceUrl: '',
     memberProfile:'',
     memberFace:'',
   });
 
-  const {userId,pwd,memberName,email,phoneNumber,age,gender, memberProfile, memberFace } = inputMemberInfo;
+  const {userId,pwd,memberName,email,phoneNumber,age,gender, memberProfileUrl, memberFaceUrl, memberProfile, memberFace } = inputMemberInfo;
 
   const onChange = (e) => {
     const { value, name } = e.target;
@@ -33,16 +36,22 @@ const  MyPage = () => {
     });
   };
   const onChangeFile = (e) => {
+    const { files, name } = e.target;
+
     setInputMemberInfo({
       ...inputMemberInfo,
-      [ e.target.name]: URL.createObjectURL(e.target.files[0]) // 파일 URL로 set
+      [name]: files
     });
-    console.log(inputMemberInfo);
+    // setInputMemberInfo({
+    //   ...inputMemberInfo,
+    //   [ e.target.name]: URL.createObjectURL(e.target.files[0]) // 파일 URL로 set
+    // });
+    // console.log(inputMemberInfo);
   }
 
   const faceProfileCheckedFandeler = () => {
-    if(!checkedFaceProfile){ // 프로필 사진을 얼굴 사진으로 등록하기 O
-         setInputMemberInfo({ 
+    if(!checkedFaceProfile) { // 프로필 사진을 얼굴 사진으로 등록하기 O
+      setInputMemberInfo({ 
         ...inputMemberInfo,
         memberFace: inputMemberInfo.memberProfile
       });
@@ -52,9 +61,9 @@ const  MyPage = () => {
   }
   
   
-    useEffect(() => {
-        commuteGetMemberInfo();
-      },[]);
+  useEffect(() => {
+    commuteGetMemberInfo();
+  },[]);
 
     const  commuteGetMemberInfo = () => {
         fetch("/mypage")
@@ -70,41 +79,75 @@ const  MyPage = () => {
               phoneNumber:memberData.phoneNumber,
               age:memberData.age,
               gender:memberData.gender,
-              memberProfile:memberData.memberProfile,
-              memberFace:memberData.memberFace,
+              memberProfileUrl: memberData.memberProfile,
+              memberFaceUrl: memberData.memberFace,
+
+              // memberProfile:memberData.memberProfile,
+              // memberFace:memberData.memberFace
           });
         });
       }
     const commutePutMemberInfo = () => {
-      fetch("/mypage/update", {
-        method: 'put',
+      console.log('memberProfileUrl: ', memberProfileUrl)
+      console.log('memberFaceUrl: ', memberFaceUrl)
+      const formData = new FormData();
+      const memberDto1 = {
+        userId: userId,
+        pwd: pwd,
+        phoneNumber: phoneNumber,
+        email: email,
+        age: age,
+        memberName: memberName,
+        gender: gender,
+        memberProfile: memberProfileUrl,
+        memberFace: memberFaceUrl
+      }
+      formData.append('memberDto', new Blob([JSON.stringify(memberDto1)], { type: 'application/json'}));
+      if (memberProfile) {
+        formData.append('profileImage', memberProfile[0]);
+      }
+      if (memberProfile) {
+        formData.append('faceImage', memberFace[0]);
+      }
+      const config = {
         headers: {
-          "Content-Type": "application/json",
-        },
-        body : JSON.stringify({
-          userId:inputMemberInfo.userId,
-          pwd: inputMemberInfo.pwd,
-          memberName:inputMemberInfo.memberName,
-          email:inputMemberInfo.email,
-          phoneNumber:inputMemberInfo.phoneNumber,
-          age:inputMemberInfo.age,
-          gender:inputMemberInfo.gender,
-          memberProfile:inputMemberInfo.memberProfile,
-          memberFace:inputMemberInfo.memberFace,
-       })
-      })
-      .then((res)=>{
-        return res.json();
-      })
-      .then((updateResult)=>{
-        if (updateResult) { // 수정 true 성공
-          alert('회원 정보가 수정 되었습니다 ');
-          navigate('../');
+          "content-type": "multipart/form-data"
         }
-        else {
-          alert("회원 정보 수정에 실패 하였습니다");
-        }
+      };
+      axios.put(`mypage/update`, formData, config)
+      .then(res => {
+        alert('회원 정보가 수정 되었습니다. 다시 로그인해주세요.');
+        navigate('../');  //로그인 페이지로
       });
+      // fetch("/mypage/update", {
+      //   method: 'put',
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      //   body : JSON.stringify({
+      //     userId:inputMemberInfo.userId,
+      //     pwd: inputMemberInfo.pwd,
+      //     memberName:inputMemberInfo.memberName,
+      //     email:inputMemberInfo.email,
+      //     phoneNumber:inputMemberInfo.phoneNumber,
+      //     age:inputMemberInfo.age,
+      //     gender:inputMemberInfo.gender,
+      //     memberProfile:inputMemberInfo.memberProfile,
+      //     memberFace:inputMemberInfo.memberFace,
+      //  })
+      // })
+      // .then((res)=>{
+      //   return res.json();
+      // })
+      // .then((updateResult)=>{
+      //   if (updateResult) { // 수정 true 성공
+      //     alert('회원 정보가 수정 되었습니다. 다시 로그인해주세요.');
+      //     navigate('../');
+      //   }
+      //   else {
+      //     alert("회원 정보 수정에 실패 하였습니다");
+      //   }
+      // });
     }
   
     const deleteMember = () => {
@@ -120,7 +163,7 @@ const  MyPage = () => {
         })
         .then((deleteResult)=>{
           if (deleteResult) { // 회원 탈퇴 결과 성공 시
-            alert('탈퇴 되었습니다');
+            alert('탈퇴되었습니다');
             navigate('../');
           }
           else {
@@ -161,22 +204,32 @@ const  MyPage = () => {
             </InputFormDiv>
 
             {/* 프로필 사진 업로드 및 선택 부분 */}
-            <InputForm  label={"프로필 사진"} name={"memberProfile"} type={"file"} onChange={onChangeFile} /> 
-            {inputMemberInfo.memberProfile && (
+            <InputForm  accept="image/*" label={"프로필 사진"} name={"memberProfile"} type={"file"} onChange={onChangeFile} /> 
+            {inputMemberInfo.memberProfile ? (
+              <></>
+              // <ImageDiv>
+              //   <UploadImg alt='profileImg' src={inputMemberInfo.memberProfile} style={{margin:'auto'}} />
+              // </ImageDiv>
+             ) : (
               <ImageDiv>
-                <UploadImg alt='profileImg' src={inputMemberInfo.memberProfile} style={{margin:'auto'}} />
+                <UploadImg alt='profileImg' src={inputMemberInfo.memberProfileUrl} style={{margin:'auto'}} />
               </ImageDiv>
              )}
             {!checkedFaceProfile &&
-              <InputForm label={"얼굴 등록"} name={"memberFace"} type={"file"} onChange={onChangeFile} /> 
+              <InputForm accept="image/*" label={"얼굴 등록"} name={"memberFace"} type={"file"} onChange={onChangeFile} /> 
             }
             <ProfileCheckBoxDiv>
               <input  onClick={faceProfileCheckedFandeler} type="checkbox" />
               <label> 프로필 사진으로 얼굴 등록하기</label>
             </ProfileCheckBoxDiv>
-            {(inputMemberInfo.memberFace && !checkedFaceProfile) && (
+            {(inputMemberInfo.memberFace && !checkedFaceProfile) ? (
+              <></>
+              // <ImageDiv>
+              //   <UploadImg alt='profileImg' src={inputMemberInfo.memberFace} style={{margin:'auto'}} />
+              // </ImageDiv>
+             ) : (
               <ImageDiv>
-                <UploadImg alt='profileImg' src={inputMemberInfo.memberFace} style={{margin:'auto'}} />
+                <UploadImg alt='profileImg' src={inputMemberInfo.memberFaceUrl} style={{margin:'auto'}} />
               </ImageDiv>
              )}
           </InputDiv>     

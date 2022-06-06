@@ -15,7 +15,7 @@ import BodyBlackoutStyle from "../../components/PhotoAlbum/BodyBlackoutStyle";
 import EditModal from "../../components/PhotoAlbum/EditModal";
 import CourseHeader from "../../components/CourseHeader";
 
-const SERVER_URL = 'http://122.199.121.202:9092/'
+const SERVER_URL = 'http://192.168.228.46:9092/'
 
 const CoursePhotoPage = () => {
 
@@ -61,6 +61,7 @@ const CoursePhotoPage = () => {
   // 사진 편집 클릭 유무
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); 
   const [thisCourseCity, setThisCourseCity] = useState('');
+  const [isCheckCourse, setIsCheckCourse] = useState(false);
 
   
   // useEffect(() => {
@@ -87,39 +88,45 @@ const CoursePhotoPage = () => {
   
   //다운로드 클릭 시
   const downloadCheckedHandler = (e) => {
-    // checkedPhotos.forEach((value) => {    //선택된 사진들 다 다운로드 하기
-    //   const url =  value.photoImage;
-    //   const a = document.createElement("a")
-    //   a.href = url
-    //   a.download = `${value.itinerary}_${value.uploader}` //다운로드될 파일 이름
-    //   a.click()
-    //   a.remove()
-    //   window.URL.revokeObjectURL(url);
-    // })
-    commutePostPhotoDownload();
+    if (checkedPhotos.length === 0) {
+      // 선택한 사진이 없을 경우 예외처리
+      alert('다운로드할 사진을 선택 후 버튼을 클릭해주세요.')      
+    }
+    else {
+      commutePostPhotoDownload();
+    }
   };
 
   // 삭제 버튼 클릭 시
-  const deleteCheckedHandler = (e) => {
-    commuteDeletePhoto();
-    console.log('list', checkedPhotos); //checkedPhotos에 삭제할 사진이 포함되어 있음
-    // setData([]); // 삭제된 후의 사진 데이터
-
+  const deleteCheckedHandler = async (e) => {
+    if (checkedPhotos.length === 0) {
+      alert('삭제할 사진을 선택 후 버튼을 클릭해주세요.')
+    }
+    else {
+      if (window.confirm("정말로 삭제하시겠습니까?") === true) {
+        for await (const selectPhoto of checkedPhotos) {
+          commuteDeletePhoto(selectPhoto.photoId);
+        }
+        alert('삭제되었습니다.');
+        console.log('list', checkedPhotos); //checkedPhotos에 삭제할 사진이 포함되어 있음
+        // setData([]); // 삭제된 후의 사진 데이터
+      }
+    }
   };
 
   // 필터링 선택 시
   const filteringCheckedHandler = (e) => {
     console.log('list', checkedUsers);  //  선택된 유저 아이디 리스트
-    if (checkedUsers.length > 0) { // 선택된 유저가 있을 때
+    // if (checkedUsers.length > 0) { // 선택된 유저가 있을 때
       commuteGetPhotoFilter();
       // setData([]);  // 알맞은 사진으로 setData
-    }
+    // }
     // else { // 선택된 유저가 없을 때
-      // setData(data);  //모든 이미지 보여주기
+    //   setData(data);  //모든 이미지 보여주기
     // }
   };
 
-    // 필터링 유저 클릭 시
+  // 필터링 유저 클릭 시
   const userCheckedHandler = (memberItem) => { 
     if(checkedUsers.includes(memberItem)) { // 이미 선택된 유저 한 번 더 클릭 시
       setCheckedUsers(checkedUsers.filter(element => element.memberId !== memberItem.memberId));  // 리스트에서 삭제
@@ -237,10 +244,9 @@ const CoursePhotoPage = () => {
     // });
     setLoading(false);
   }
-  const commuteDeletePhoto = () => {
+  const commuteDeletePhoto = (selectPhotoId) => {
     // 사진 삭제
-    console.log(currItem.photoId);
-    fetch("/photo?photoId="+String(currItem.photoId), {
+    fetch("/photo?photoId="+String(selectPhotoId), {
       method: 'delete',
       headers: {
         "Content-Type": "application/json",
@@ -257,13 +263,15 @@ const CoursePhotoPage = () => {
         alert('사진이 존재하지 않습니다.')
       }
       else {
-        alert('삭제되었습니다.')
+        // alert('삭제되었습니다.')
         commuteGetCoursePhoto();
       }
     });
   }
   const commuteGetPhotoFilter = () => {
     // 사진 필터링
+    setLoading(true);
+    
     // 선택한 사용자 '/'로 포맷 맞춤
     let formatUsers = '';
     checkedUsers.forEach((user) => {
@@ -296,6 +304,7 @@ const CoursePhotoPage = () => {
         setData(newPhotoData);
       }
     });
+    setLoading(false);
   }
   const commutePostPhotoDownload = () => {
     // 사진 다운로드
@@ -306,21 +315,6 @@ const CoursePhotoPage = () => {
     const photoDownloadPath = "photo/download?photoIdList="+photoIdString
     
     window.open(SERVER_URL + photoDownloadPath , '_blank')
-    // fetch("/photo/download?photoIdList="+photoIdString, {
-    //   method: 'get',
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   // body : JSON.stringify({
-    //   //   photoIdList: photoIdString  // '22/24/5' 이런식으로 photoId가 나열된 string 전송 
-    //   // })
-    // })
-    // // .then((res)=>{
-    // //   return res.json();
-    // // })
-    // .then((ack)=>{
-    //   console.log(ack);
-    // });
   }
   const commuteGetCourseInfo = () => {
     // 코스 정보 조회
@@ -330,6 +324,7 @@ const CoursePhotoPage = () => {
     })
     .then((courseInfo)=>{
       setThisCourseCity(courseInfo.city);
+      setIsCheckCourse(courseInfo.check);
     });
   }
 
@@ -345,25 +340,28 @@ const CoursePhotoPage = () => {
       <MainDiv>
       {loading ? (
         <div style={{position: 'absolute', left: '50%', top: '45%'}}>
-        <Ring 
-          size={40}
-          lineWeight={5}
-          speed={2} 
-          color="black"
-        />
+          <Ring 
+            size={40}
+            lineWeight={5}
+            speed={2} 
+            color="black"
+          />
         </div>
       ) : (
         <>
-    
         {/* 코스명이 들어갈 부분 */}
-        <CourseHeader thisCourseCity={thisCourseCity} linkToBack={'/course/'+params.courseId+'/'+params.day}/>
+        {isCheckCourse ? (
+          <CourseHeader thisCourseCity={thisCourseCity} linkToBack={'/confirmCourse/'+params.courseId+'/'+params.day}/>
+        ) : (
+          <CourseHeader thisCourseCity={thisCourseCity} linkToBack={'/course/'+params.courseId+'/'+params.day}/>
+        )}
 
         {/* 필터링 및 선택 다운로드 부분  */}
         <FixedButtonDiv>
           <FilteringAndButton>
             {/* 그룹원 필터링 선택 */}
             <UserDiv>
-              <FilterinUserList users= {users}  checkedHandler={userCheckedHandler} /> 
+              <FilterinUserList users= {users}  checkedHandler={userCheckedHandler} SERVER_URL={SERVER_URL}/> 
             </UserDiv>
         
             <ButtonDiv>

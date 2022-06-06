@@ -11,7 +11,7 @@ const OverlapItineraryTooltip = props => {
   return (
     <ReactTooltip
       id='tooltip'
-      place='right'
+      place='bottom'
       effect='solid'
       type='dark'
       // getContent={dataTip => 'sss' + dataTip}

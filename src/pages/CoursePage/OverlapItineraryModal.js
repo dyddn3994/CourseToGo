@@ -9,7 +9,8 @@ const OverlapItineraryModal = props => {
     setIsOverlapItineraryModal,
     thisItinerary,
     overlapItineraryArray,
-    onClickSetRepresentative
+    onClickSetRepresentative,
+    representativeItineraryState
   } = props;
 
   return (
@@ -38,7 +39,7 @@ const OverlapItineraryModal = props => {
         <div style={{}}>
           <ContentBox>
             <div>&lt;대표 일정&gt;</div>
-            <div style={{textAlign: 'center', margin: '10px', fontSize:'0.9rem'}}>{(Object.keys(thisItinerary).length !== 0 && thisItinerary.touristSpot.touristSpotName)}</div>
+            <div style={{textAlign: 'center', margin: '10px', fontSize:'0.9rem'}}>{(Object.keys(representativeItineraryState).length !== 0 && representativeItineraryState.touristSpot.touristSpotName)}</div>
           </ContentBox>
           <ContentBox>
             <div>&lt;중복 일정&gt;</div>
@@ -46,7 +47,7 @@ const OverlapItineraryModal = props => {
               {overlapItineraryArray.map((overlapItinerary, overlapItineraryIndex) => (
                 <span style={{margin: '10px', fontSize:'1.2rem', fontWeight:'100'}}>
                   <div style={{textAlign: 'center'}}>{overlapItinerary.touristSpot.touristSpotName}</div>
-                  <OptionButton onClick={() => onClickSetRepresentative(thisItinerary.itineraryId, overlapItinerary.itineraryId)}>대표 일정으로 설정</OptionButton>
+                  <OptionButton onClick={() => onClickSetRepresentative(representativeItineraryState.itineraryId, overlapItinerary.itineraryId)}>대표 일정으로 설정</OptionButton>
                 </span>
               ))}
             </div>
