@@ -464,7 +464,7 @@ const ConfirmCourse= () => {
                           // onClickItinerary={onClickItinerary}
                           onClickOverlap={ onClickOverlap}
                           onMouseOverOverlapItinerary={onMouseOverOverlapItinerary} /> */}
-              <ItineraryScreenDiv>
+              {/* <ItineraryScreenDiv>
                 <RenderItineraryList 
                   itineraryArray={itineraryArray}
                   timeToStringFormat={timeToStringFormat}
@@ -479,7 +479,7 @@ const ConfirmCourse= () => {
                   courseId={params.courseId}
                   itineraryDate={params.day}
                 />
-              </ItineraryScreenDiv>
+              </ItineraryScreenDiv> */}
               {/* {renderAllItineraryList()} */}
             </HorizontalScrollDiv>
           </ItineraryScreen>
