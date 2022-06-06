@@ -1,26 +1,26 @@
 import React,{useState} from 'react'
 import styled, { css } from 'styled-components';
 
-// const MapResultList = ({places, isOpenSearchList, onMouseOverList, overSearchList}) => {
-const MapResultList = ({places, isOpenSearchList}) => {
+ const MapResultList = ({places, isOpenSearchList, onMouseOverList, overSearchList, listOnClieck}) => {
+//const MapResultList = ({places, isOpenSearchList}) => {
 
   return (
     <>
-   { isOpenSearchList&&
-      <ResultList>
+    { (isOpenSearchList) &&
+      <ResultList    onMouseOver={onMouseOverList } onMouseOut={onMouseOverList}>
         {places.map((item, i) => (
           <div key={i}>
-            <TextBox>
-              <div style={{fontWeight:'880', fontSize:'1.2rem',marginBottom:'3%'}}>{item.place_name}</div>
-              {item.road_address_name ? (
-                <div>
-                  <span>주소: {item.road_address_name}</span>
-                  {/* <span>{item.address_name}</span> 도로명이랑 구주소 있으면 도로명만 보여줘도 될 듯!!! */}
-                </div>
-              ) : (
-                <span>주소: {item.address_name}</span>
-              )}
-              <span>전화번호: {item.phone}</span>
+            <TextBox onClick={()=>listOnClieck(item)}>
+              <div style={{fontWeight:'880', fontSize:'0.95rem',marginBottom:'3%'}}>{item.place_name}</div>
+              <div>주소: {item.address_name}</div>
+              <div>전화번호: {item.phone}</div>
+              {item.touristSpotAvgTime === 0 ? 
+              null
+              :<div>
+              <div>평균시간: {item.touristSpotAvgTime}</div>
+              <div>평균비용: {item.touristSpotAvgCost}</div>
+            </div>
+            }
             </TextBox>
           </div>
         ))}
@@ -37,10 +37,10 @@ const ResultList = styled.div`
   height: 70%;
   background-color: #ffffff;
   opacity: 0.9;
-  width:350px;
+  width:360px;
   position: fixed;
   margin-left:0.1%;
-  top: 113px;
+  top: 120px;
   padding: 5px;
   z-index:1;
   border-radius:1rem;
@@ -64,7 +64,7 @@ const ResultList = styled.div`
   // border-bottom: 1.5px solid  #4D9FE3;
   margin:2%;
   padding:5%;
-  font-size:1.1rem;
+  font-size:1rem;
   border-radius:1rem;
   &:hover{  
     background-color:lightgray ;

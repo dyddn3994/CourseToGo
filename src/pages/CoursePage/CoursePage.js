@@ -160,6 +160,7 @@ const CoursePage = () => {
 
   // onClick
   const onClickSearch = () => {
+    setSearchPlace('');
     setSearchPlace(searchInputTemp);
   }
   const onClickItineraryAddIcon = () => {
@@ -814,6 +815,23 @@ const CoursePage = () => {
 
     return formatTime;
   }
+  const onMouseOverList = () => {
+    // setOverSearchList(!overSearchList);
+  }
+  const onMouseOverListOut = () => {
+    // if(isOpenSearchList){
+    //   setOverSearchList(!overSearchList);
+    // }
+  }
+  const searchListHidden =()=> {  
+      setISOpenSearchList(!isOpenSearchList);
+  }
+  const searchListHiddenOut =()=> {  
+    if(overSearchList){
+      setISOpenSearchList(!isOpenSearchList);
+    }
+    
+}
   // render
   return (
      <>
@@ -838,21 +856,21 @@ const CoursePage = () => {
               placeholder='여행지를 입력하세요'
               onChange={onChangeSearch}
               onKeyPress={onKeyPressSearch}
-              onFocus={() => setISOpenSearchList(true)}
-              onBlur={() => setISOpenSearchList(false)}
+              onMouseOver={searchListHidden}
+              onMouseOut={searchListHiddenOut}
             />
               <SearchButton onClick={onClickSearch}>검색</SearchButton>
               <span style={{float: 'right', paddingRight: '10px', fontSize: '25px'}}> <BsFillPlusSquareFill onClick={() => onClickItineraryAddIcon()} /> </span>
             </SearchDiv>
-            <MapDiv>
+            <MapDiv>          
                 <MapContainer 
                   isOpenSearchList={isOpenSearchList} 
                   searchPlace={searchPlace}
                   setIsMarkerClicked={setIsMarkerClicked} 
                   setMarkerInfo={setMarkerInfo} 
                   thisCourseCity={thisCourseCity} 
-                  isMouseOverMapList={isMouseOverMapList}
-                  setIsMouseOverMapList={setIsMouseOverMapList}
+                  onMouseOverList={onMouseOverList}
+                  onMouseOverListOut ={ onMouseOverListOut} 
                 ></MapContainer>
             </MapDiv>
           </LeftScreenDiv>
@@ -1032,7 +1050,7 @@ const LeftScreenDiv = styled.div`
   margin-left: 7%;
 `;
 const ItineraryScreenDiv = styled.div`
-  font-size:1.1rem;
+  font-size:1rem;
   flex-basis: 50%;
   width: 480px;
   overflow-y: scroll;
