@@ -2,10 +2,7 @@ import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'rea
 import styled, { css } from 'styled-components';
 import MapResultList from './MapResultList';
 import CITY from '../../assets/City/City';
-import Keyword from './Keyword';
 const { kakao } = window
-
-
 
 const MapContainer = forwardRef((props, ref) => {
 
