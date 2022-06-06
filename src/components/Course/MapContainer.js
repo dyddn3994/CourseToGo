@@ -2,25 +2,19 @@ import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'rea
 import styled, { css } from 'styled-components';
 import MapResultList from './MapResultList';
 import CITY from '../../assets/City/City';
+import MarkerImg from '../../assets/premium-icon-location-5582962.png';
+
 const { kakao } = window
 
 const MapContainer = forwardRef((props, ref) => {
 
   const { overSearchList, isOpenSearchList,searchPlace, setIsMarkerClicked, setMarkerInfo, thisCourseCity, isMouseOverMapList, setIsMouseOverMapList } = props;
   const [thisCity, setThisCity] = useState(thisCourseCity);
-  const [touristSpotInfo, setTouristSpotInfo] = useState({});
   const [temp, setTemp] = useState([]); // 테스트용 임시
   const [newPlaces , setNewPlaces] = useState([]);
 
   const [clickedSearchListPlace, setClickedSearchListPlace] = useState(''); // 선택된 검색리스트의 장소
-  const [onClickedSearchList ,setOnClickedSearchList] =useState(false); // 검색 리스트 클릭 여부
-  // const [map, setMap] = useState();
-  // 부모 컴포넌트에서 자식 함수 실행할 수 있도록 설정
   useImperativeHandle(ref, () => ({
-    // 그룹 정보 조회
-    // setMarkerClose() {
-    //   infowindow.close();
-    // },
     setMapCity(city) {
       setThisCity(city);
     }
@@ -29,12 +23,6 @@ const MapContainer = forwardRef((props, ref) => {
   // 검색결과 배열에 담아줌
   const [places, setPlaces] = useState([])
   const [infowindow, setInfowindow] = useState(); // 마커에서 일정 등록 이후에 마커 클릭된 상태 닫으려고 한건데 안되네..
-  // const [container, setContainer] = useState();
-  // const [lat, setLat] = useState();
-  // const [lng, setLng] = useState();
-  // const [options, setOptions] = useState();
-  // const [map, setMap] = useState();
-  // const [ps, setPs] = useState();
   
   let isMarkerContent = false;
   useEffect(() => {
@@ -59,20 +47,17 @@ const MapContainer = forwardRef((props, ref) => {
     const ps = new kakao.maps.services.Places();
 
     ps.keywordSearch(searchPlace, placesSearchCB)
+    
+    var  imageSize = new kakao.maps.Size(40, 40), // 마커이미지의 크기입니다
+    imageOption = { offset: new kakao.maps.Point(19, 43) };
+    var markerImage = new kakao.maps.MarkerImage(MarkerImg, imageSize, imageOption)
 
-    // var imageSrc = 'map-marker-1_icon-icons.com_56710.png', // 마커이미지의 주소입니다    
-    // imageSize = new kakao.maps.Size(64, 69), // 마커이미지의 크기입니다
-    // imageOption = { offset: new kakao.maps.Point(27, 69) };
-    // var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption)
     if(clickedSearchListPlace!==''){
       var locPosition = new kakao.maps.LatLng(clickedSearchListPlace.y, clickedSearchListPlace.x), // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
-          message = '<div style="padding:5px; background-color:#4D9FE3; color:#ffffff; width:90px; font-size:1rem;">'
+          message = '<div style="padding:5px; background-color:#4D9FE3; color:#ffffff; font-size:1rem;">'
           +clickedSearchListPlace.place_name+'</div>'; // 인포윈도우에 표시될 내용입니다
-          // 마커와 인포윈도우를 표시합니다
+
       displayMyMarker(locPosition, message);
-      // let bounds = new kakao.maps.LatLngBounds()
- 
-      // bounds.extend(new kakao.maps.LatLng(clickedSearchListPlace.y, clickedSearchListPlace.x))
     }
 
     function placesSearchCB(data, status, pagination) {
@@ -80,7 +65,6 @@ const MapContainer = forwardRef((props, ref) => {
         let bounds = new kakao.maps.LatLngBounds()
         
         setPlaces(data);
-        console.log('places list', places);
         setTemp(data);
 
         for (let i = 0; i < data.length; i++) {
@@ -88,68 +72,33 @@ const MapContainer = forwardRef((props, ref) => {
           bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x))
         }
         map.setBounds(bounds)
-
-        // 페이지 목록 보여주는 displayPagination() 추가
-        displayPagination(pagination)
       }
-    }
-
-    // 검색결과 목록 하단에 페이지 번호 표시
-    function displayPagination(pagination) {
-      var paginationEl = document.getElementById('pagination'),
-        fragment = document.createDocumentFragment(),
-        i;
-
-      // 기존에 추가된 페이지 번호 삭제
-      while (paginationEl.hasChildNodes()) {
-        paginationEl.removeChild(paginationEl.lastChild)
-      }
-
-      for (i = 1; i <= pagination.last; i++) {
-        var el = document.createElement('a')
-        el.href = '#'
-        el.innerHTML = '<span>'+i+'</span>'
-
-        if (i === pagination.current) {
-          el.className = 'on'
-        } else {
-          el.onclick = (function (i) {
-            return function () {
-              pagination.gotoPage(i)
-            }
-          })(i)
-        }
-
-        fragment.appendChild(el)
-      }
-      paginationEl.appendChild(fragment)
     }
 
     function displayMarker(place) {
-      
       let marker = new kakao.maps.Marker({
         map: map,
         position: new kakao.maps.LatLng(place.y, place.x),
       })
-
       kakao.maps.event.addListener(marker, 'click', function () {
+        console.log('new list', newPlaces);
           isMarkerContent = !isMarkerContent; 
           let renderPinContent = 
             '<div style="padding-bottom: 20px;  border-radius:1rem; ">' +
             '<div style="padding:5px;font-size:1rem;">' + '이름: ' +  place.place_name + '</div>' +
             '<div style="padding:5px;font-size:1rem;">' + '주소: ' +  place.address_name + '</div>';
             for (let i = 0; i < newPlaces.length; i++) {
-              if ((newPlaces[i].address_name === place.address_name) && (newPlaces[i].touristSpotAvgCost!==0) &&(newPlaces[i].touristSpotAvgTime!==0) ) {   
+              if ((newPlaces[i].address_name === place.address_name) && (newPlaces[i].touristSpotAvgCost!==undefined) &&(newPlaces[i].touristSpotAvgTime!==undefined) ) {   
                 renderPinContent = renderPinContent + 
-                    '<div style="padding:5px;font-size:1rem;">' + '평균 비용: ' +newPlaces[i].touristSpotAvgCost + '원' + '</div>' +
-                    '<div style="padding:5px;font-size:1rem;">' + '평균 소요시간: ' + newPlaces[i].touristSpotAvgTime + '분' + '</div>';
+                    '<div style="padding:5px;font-size:1rem;">' + '평균 비용: ' + newPlaces[i].touristSpotAvgCost + '원' + '</div>' +
+                    '<div style="padding:5px;font-size:1rem;">' + '평균 소요시간: ' + newPlaces[i].touristSpotAvgTime/60 + '분' + '</div>';
                 break;
               }
             }
         renderPinContent = renderPinContent + '</div>';
         infowindow.setContent(
           renderPinContent
-        )  
+        )
         if (isMarkerContent) {
           infowindow.open(map, marker)
           setIsMarkerClicked(true);
@@ -184,18 +133,22 @@ const MapContainer = forwardRef((props, ref) => {
             var marker = new kakao.maps.Marker({
               map: map,
               position: locPosition,
-              // image: markerImage
+               image: markerImage,
+              zIndex:3
           });
   
-          var iwContent = message, // 인포윈도우에 표시할 내용
-              iwRemoveable = true;
+          var iwContent = message; // 인포윈도우에 표시할 내용
   
           // 인포윈도우를 생성합니다
           var infowindow = new kakao.maps.InfoWindow({
-              content: iwContent,
-              removable: iwRemoveable
+              content: iwContent
           });
   
+          kakao.maps.event.addListener(marker, 'click', function () {      
+            marker.setMap(null);
+            infowindow.close();
+        })
+
           // 인포윈도우를 마커위에 표시합니다
           infowindow.open(map, marker);
   
@@ -215,7 +168,6 @@ const MapContainer = forwardRef((props, ref) => {
       commuteGetMarkerInfo(item,newDatas);
     })
     setNewPlaces(newDatas);
-    console.log('newPlaces list', newPlaces);
     return newPlaces;
   }
 
@@ -231,7 +183,7 @@ const MapContainer = forwardRef((props, ref) => {
         if (place.address_name === data.address_name) {
           newDatas.push({ ...data, touristSpotAvgCost: touristSpotInfo.touristSpotAvgCost, touristSpotAvgTime: touristSpotInfo.touristSpotAvgTime });
         }
-        console.log('newDatas list', newDatas);
+      
         return newDatas;
       });
     })
@@ -250,24 +202,24 @@ const MapContainer = forwardRef((props, ref) => {
       {/* <MapResultList places={places} isOpenSearchList={isOpenSearchList}  onMouseOverList={ onMouseOverList}  overSearchList={overSearchList}/> */}
    { (isOpenSearchList || isMouseOverMapList) ? (
       // <ResultList onMouseOver={() => setIsMouseOverMapList(true)} onMouseOut={() => setIsMouseOverMapList(false)}>
-      <ResultList>
+     
+     <ResultList>
         { newPlaces.map((item, i) => (
           <div key={i}>
-            <TextBox onClick={()=> setClickedSearchListPlace(item)}>
+            <TextBox onClick={(e)=>  setClickedSearchListPlace(item)}>
               <div style={{fontWeight:'900',marginBottom:'3%' , fontSize:'1.1rem'}}>{item.place_name}</div>
               <div>주소: {item.address_name}</div>
               <div>전화번호: {item.phone}</div>
-              {(item.touristSpotAvgTime===0)&&(item.touristSpotAvgCost===0) ? null:
+              {(item.touristSpotAvgTime===undefined)&&(item.touristSpotAvgCost===undefined) ? null:
                 <div>
                     <div>평균시간: {item.touristSpotAvgTime} 분</div>
                     <div>평균비용: {item.touristSpotAvgCost} 원</div>
                 </div>
-              
               }
             </TextBox>
           </div>
         ))}
-        <div id="pagination"></div>
+
       </ResultList>
    ): null
    }

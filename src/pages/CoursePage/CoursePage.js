@@ -428,8 +428,7 @@ const CoursePage = () => {
   // onKeyPress
   const onKeyPressSearch = e => {
     if (e.key === 'Enter') {
-      onClickSearch();
-      // sendStomp();
+      searchListHiddenOut();
     }
   }
 
