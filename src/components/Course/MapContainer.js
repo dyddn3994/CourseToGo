@@ -12,7 +12,7 @@ const MapContainer = forwardRef((props, ref) => {
   const [thisCity, setThisCity] = useState(thisCourseCity);
   const [temp, setTemp] = useState([]); // 테스트용 임시
   const [newPlaces , setNewPlaces] = useState([]);
-
+  const [checkClieckList, setCheckClieckList] = useState(false); // 선택된 검색리스트의 장소
   const [clickedSearchListPlace, setClickedSearchListPlace] = useState(''); // 선택된 검색리스트의 장소
   useImperativeHandle(ref, () => ({
     setMapCity(city) {
@@ -96,9 +96,12 @@ const MapContainer = forwardRef((props, ref) => {
               }
             }
         renderPinContent = renderPinContent + '</div>';
-        infowindow.setContent(
-          renderPinContent
-        )
+        var infowindow = new kakao.maps.InfoWindow({
+          // 마커 클릭 시 출력될 정보
+          content: renderPinContent,
+          // removable: true,
+        })
+      
         if (isMarkerContent) {
           infowindow.open(map, marker)
           setIsMarkerClicked(true);
@@ -109,20 +112,6 @@ const MapContainer = forwardRef((props, ref) => {
           setIsMarkerClicked(false);
         }
       })
-
-      kakao.maps.event.addListener(marker, 'mouseover', function() {
-        let renderPinContent = 
-        '<div style="padding-bottom: 10px;  border-radius:1rem;">' +
-        '<div style="padding:5px;font-size:1rem;">' +  place.place_name + '</div>';
-        infowindow.setContent(
-          renderPinContent
-        )  
-          infowindow.open(map, marker)
-      });
-      
-      kakao.maps.event.addListener(marker, 'mouseout', function() {
-        infowindow.close();
-      });
     }
 
      //-------- 마커 생성 -------------------//
@@ -154,6 +143,7 @@ const MapContainer = forwardRef((props, ref) => {
   
           // 지도 중심좌표를 접속위치로 변경합니다
           map.setCenter(locPosition);
+          setCheckClieckList(false);
   }
 
   }, [clickedSearchListPlace, searchPlace])
@@ -164,10 +154,11 @@ const MapContainer = forwardRef((props, ref) => {
 
   const setAvgDatas = async () => {
     let newDatas = [];
+    setNewPlaces('');
     places.map((item)=>{
-      commuteGetMarkerInfo(item,newDatas);
+      commuteGetMarkerInfo(item,newPlaces);
     })
-    setNewPlaces(newDatas);
+    setNewPlaces(newPlaces);
     return newPlaces;
   }
 
@@ -189,6 +180,10 @@ const MapContainer = forwardRef((props, ref) => {
     })
   }
 
+  const onClickSearchList = (item) => {
+    setClickedSearchListPlace(item);
+    setCheckClieckList(true);
+  }
   return(
     <div>
     <div
@@ -200,13 +195,13 @@ const MapContainer = forwardRef((props, ref) => {
     ></div>
      
       {/* <MapResultList places={places} isOpenSearchList={isOpenSearchList}  onMouseOverList={ onMouseOverList}  overSearchList={overSearchList}/> */}
-   { (isOpenSearchList || isMouseOverMapList) ? (
+   { ( isOpenSearchList || isMouseOverMapList) ? (
       // <ResultList onMouseOver={() => setIsMouseOverMapList(true)} onMouseOut={() => setIsMouseOverMapList(false)}>
      
      <ResultList>
         { newPlaces.map((item, i) => (
           <div key={i}>
-            <TextBox onClick={(e)=>  setClickedSearchListPlace(item)}>
+            <TextBox onClick={(e)=>  onClickSearchList(item)}>
               <div style={{fontWeight:'900',marginBottom:'3%' , fontSize:'1.1rem'}}>{item.place_name}</div>
               <div>주소: {item.address_name}</div>
               <div>전화번호: {item.phone}</div>
