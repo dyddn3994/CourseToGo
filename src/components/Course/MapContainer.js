@@ -2,6 +2,7 @@ import React, { useEffect, useState, forwardRef, useImperativeHandle } from 'rea
 import styled, { css } from 'styled-components';
 import MapResultList from './MapResultList';
 import CITY from '../../assets/City/City';
+import Keyword from './Keyword';
 const { kakao } = window
 
 
@@ -12,7 +13,11 @@ const MapContainer = forwardRef((props, ref) => {
   const [thisCity, setThisCity] = useState(thisCourseCity);
   const [touristSpotInfo, setTouristSpotInfo] = useState({});
   const [temp, setTemp] = useState([]); // 테스트용 임시
-  
+  const [newPlaces , setNewPlaces] = useState([]);
+
+  const [clickedSearchListPlace, setClickedSearchListPlace] = useState(''); // 선택된 검색리스트의 장소
+  const [onClickedSearchList ,setOnClickedSearchList] =useState(false); // 검색 리스트 클릭 여부
+  // const [map, setMap] = useState();
   // 부모 컴포넌트에서 자식 함수 실행할 수 있도록 설정
   useImperativeHandle(ref, () => ({
     // 그룹 정보 조회
@@ -46,30 +51,39 @@ const MapContainer = forwardRef((props, ref) => {
       setThisCity('Jeju')
     }
     const lat = CITY.find(item => item.value === thisCity).lat;
-    // setLat(CITY.find(item => item.value === thisCity).lat)
     const lng = CITY.find(item => item.value === thisCity).lng;
-    // setLng(CITY.find(item => item.value === thisCity).lng)
+   
     const options = {
       center: new kakao.maps.LatLng(lat, lng),
       level: 10,
     }
-    // setOptions({
-    //   center: new kakao.maps.LatLng(lat, lng),
-    //   level: 10,
-    // })
-    const map = new kakao.maps.Map(container, options)
-    // setMap(new kakao.maps.Map(container, options))
 
+    const map = new kakao.maps.Map(container, options)
     const ps = new kakao.maps.services.Places();
-    // setPs(new kakao.maps.services.Places())
 
     ps.keywordSearch(searchPlace, placesSearchCB)
+
+    // var imageSrc = 'map-marker-1_icon-icons.com_56710.png', // 마커이미지의 주소입니다    
+    // imageSize = new kakao.maps.Size(64, 69), // 마커이미지의 크기입니다
+    // imageOption = { offset: new kakao.maps.Point(27, 69) };
+    // var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption)
+    if(clickedSearchListPlace!==''){
+      var locPosition = new kakao.maps.LatLng(clickedSearchListPlace.y, clickedSearchListPlace.x), // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
+          message = '<div style="padding:5px; background-color:#4D9FE3; color:#ffffff; width:90px; font-size:1rem;">'
+          +clickedSearchListPlace.place_name+'</div>'; // 인포윈도우에 표시될 내용입니다
+          // 마커와 인포윈도우를 표시합니다
+      displayMyMarker(locPosition, message);
+      // let bounds = new kakao.maps.LatLngBounds()
+ 
+      // bounds.extend(new kakao.maps.LatLng(clickedSearchListPlace.y, clickedSearchListPlace.x))
+    }
 
     function placesSearchCB(data, status, pagination) {
       if (status === kakao.maps.services.Status.OK) {
         let bounds = new kakao.maps.LatLngBounds()
-
-        setPlaces(data)
+        
+        setPlaces(data);
+        console.log('places list', places);
         setTemp(data);
 
         for (let i = 0; i < data.length; i++) {
@@ -87,7 +101,7 @@ const MapContainer = forwardRef((props, ref) => {
     function displayPagination(pagination) {
       var paginationEl = document.getElementById('pagination'),
         fragment = document.createDocumentFragment(),
-        i
+        i;
 
       // 기존에 추가된 페이지 번호 삭제
       while (paginationEl.hasChildNodes()) {
@@ -115,26 +129,30 @@ const MapContainer = forwardRef((props, ref) => {
     }
 
     function displayMarker(place) {
+      
       let marker = new kakao.maps.Marker({
         map: map,
         position: new kakao.maps.LatLng(place.y, place.x),
       })
 
       kakao.maps.event.addListener(marker, 'click', function () {
-        isMarkerContent = !isMarkerContent;
-        let renderPinContent = 
-          '<div style="padding-bottom: 20px;">' +
-            '<div style="padding:5px;font-size:12px;">' + '이름: ' + place.place_name + '</div>' +
-            '<div style="padding:5px;font-size:12px;">' + '주소: ' + place.address_name + '</div>';
-        // if (place.touristSpotAvgCost !== 0) {
-        //   renderPinContent = renderPinContent + 
-        //     '<div style="padding:5px;font-size:12px;">' + '평균 비용: ' + place.touristSpotAvgCost + '원' + '</div>' +
-        //     '<div style="padding:5px;font-size:12px;">' + '평균 소요시간: ' + place.touristSpotAvgTime + '시간' + '</div>';
-        // }
+          isMarkerContent = !isMarkerContent; 
+          let renderPinContent = 
+            '<div style="padding-bottom: 20px;  border-radius:1rem; ">' +
+            '<div style="padding:5px;font-size:1rem;">' + '이름: ' +  place.place_name + '</div>' +
+            '<div style="padding:5px;font-size:1rem;">' + '주소: ' +  place.address_name + '</div>';
+            for (let i = 0; i < newPlaces.length; i++) {
+              if ((newPlaces[i].address_name === place.address_name) && (newPlaces[i].touristSpotAvgCost!==0) &&(newPlaces[i].touristSpotAvgTime!==0) ) {   
+                renderPinContent = renderPinContent + 
+                    '<div style="padding:5px;font-size:1rem;">' + '평균 비용: ' +newPlaces[i].touristSpotAvgCost + '원' + '</div>' +
+                    '<div style="padding:5px;font-size:1rem;">' + '평균 소요시간: ' + newPlaces[i].touristSpotAvgTime + '분' + '</div>';
+                break;
+              }
+            }
         renderPinContent = renderPinContent + '</div>';
         infowindow.setContent(
           renderPinContent
-        )
+        )  
         if (isMarkerContent) {
           infowindow.open(map, marker)
           setIsMarkerClicked(true);
@@ -146,8 +164,49 @@ const MapContainer = forwardRef((props, ref) => {
         }
       })
 
+      kakao.maps.event.addListener(marker, 'mouseover', function() {
+        let renderPinContent = 
+        '<div style="padding-bottom: 10px;  border-radius:1rem;">' +
+        '<div style="padding:5px;font-size:1rem;">' +  place.place_name + '</div>';
+        infowindow.setContent(
+          renderPinContent
+        )  
+          infowindow.open(map, marker)
+      });
+      
+      kakao.maps.event.addListener(marker, 'mouseout', function() {
+        infowindow.close();
+      });
     }
-  }, [searchPlace])
+
+     //-------- 마커 생성 -------------------//
+    // 지도에 마커와 인포윈도우를 표시하는 함수입니다
+    function displayMyMarker(locPosition, message) { // 함수 이름을 구분해줬다, 이래야 마크가 겹치지 않아서 버그가 생기지 않는다, 관련 호출이름도 다 바꿔 줘야한다.
+
+            // 마커를 생성합니다
+            var marker = new kakao.maps.Marker({
+              map: map,
+              position: locPosition,
+              // image: markerImage
+          });
+  
+          var iwContent = message, // 인포윈도우에 표시할 내용
+              iwRemoveable = true;
+  
+          // 인포윈도우를 생성합니다
+          var infowindow = new kakao.maps.InfoWindow({
+              content: iwContent,
+              removable: iwRemoveable
+          });
+  
+          // 인포윈도우를 마커위에 표시합니다
+          infowindow.open(map, marker);
+  
+          // 지도 중심좌표를 접속위치로 변경합니다
+          map.setCenter(locPosition);
+  }
+
+  }, [clickedSearchListPlace, searchPlace])
 
   useEffect(() => {
     setAvgDatas();
@@ -155,10 +214,12 @@ const MapContainer = forwardRef((props, ref) => {
 
   const setAvgDatas = async () => {
     let newDatas = [];
-    for await (const place of places) {
-      await commuteGetMarkerInfo(place, newDatas)
-    }
-    setPlaces(newDatas);
+    places.map((item)=>{
+      commuteGetMarkerInfo(item,newDatas);
+    })
+    setNewPlaces(newDatas);
+    console.log('newPlaces list', newPlaces);
+    return newPlaces;
   }
 
   // 통신
@@ -169,18 +230,19 @@ const MapContainer = forwardRef((props, ref) => {
       return res.json();
     })
     .then((touristSpotInfo) => {
-      const newPlaces = places.map((place) => {
+      places.map((place) => {
         if (place.address_name === data.address_name) {
-          newDatas.push({ ...place, touristSpotAvgCost: touristSpotInfo.touristSpotAvgCost, touristSpotAvgTime: touristSpotInfo.touristSpotAvgTime });
+          newDatas.push({ ...data, touristSpotAvgCost: touristSpotInfo.touristSpotAvgCost, touristSpotAvgTime: touristSpotInfo.touristSpotAvgTime });
         }
-        return (place.address_name === data.address_name 
-        ? { ...place, touristSpotAvgCost: touristSpotInfo.touristSpotAvgCost, touristSpotAvgTime: touristSpotInfo.touristSpotAvgTime } 
-        : place)});
-
+        console.log('newDatas list', newDatas);
+        return newDatas;
+      });
     })
   }
 
-  return (
+  
+
+  return(
     <div>
     <div
       id="myMap"
@@ -189,39 +251,24 @@ const MapContainer = forwardRef((props, ref) => {
         height: '690px',
       }}
     ></div>
-      {/* <div id="result-list" style={{
-        overflowY: "scroll", 
-        height: "25vh", 
-        width: '40vh', 
-        top: '-480px', 
-        left: '20px', 
-        zIndex: '3', 
-        position: 'relative',
-        backgroundColor: 'rgba(255, 255, 255, 0.5)',
-        scrollbarWidth: 'thin'
-      }}>
-        {places.map((item, i) => (
-          <div key={i} style={{ marginBottom: '20px' }}>
-            <div>
-              <div style={{fontWeight: 'bold'}}>{item.place_name}</div>
-              <span style={{marginTop: '-10px'}}>{item.address_name}</span>
-              <span>{item.phone}</span>
-            </div>
-          </div>
-        ))}
-        <div id="pagination"></div>
-      </div> */}
+     
       {/* <MapResultList places={places} isOpenSearchList={isOpenSearchList}  onMouseOverList={ onMouseOverList}  overSearchList={overSearchList}/> */}
    { (isOpenSearchList || isMouseOverMapList) ? (
-      <ResultList onMouseOver={() => setIsMouseOverMapList(true)} onMouseOut={() => setIsMouseOverMapList(false)}>
-        {places.map((item, i) => (
+      // <ResultList onMouseOver={() => setIsMouseOverMapList(true)} onMouseOut={() => setIsMouseOverMapList(false)}>
+      <ResultList>
+        { newPlaces.map((item, i) => (
           <div key={i}>
-            <TextBox>
-              <div style={{fontWeight:'880', fontSize:'0.95rem',marginBottom:'3%'}}>{item.place_name}</div>
+            <TextBox onClick={()=> setClickedSearchListPlace(item)}>
+              <div style={{fontWeight:'900',marginBottom:'3%' , fontSize:'1.1rem'}}>{item.place_name}</div>
               <div>주소: {item.address_name}</div>
               <div>전화번호: {item.phone}</div>
-              <div>평균시간: {item.touristSpotAvgTime}</div>
-              <div>평균비용: {item.touristSpotAvgCost}</div>
+              {(item.touristSpotAvgTime===0)&&(item.touristSpotAvgCost===0) ? null:
+                <div>
+                    <div>평균시간: {item.touristSpotAvgTime} 분</div>
+                    <div>평균비용: {item.touristSpotAvgCost} 원</div>
+                </div>
+              
+              }
             </TextBox>
           </div>
         ))}
@@ -238,10 +285,10 @@ const ResultList = styled.div`
   height: 70%;
   background-color: #ffffff;
   opacity: 0.9;
-  width:280px;
+  width:360px;
   position: fixed;
   margin-left:0.1%;
-  top: 100px;
+  top: 120px;
   padding: 5px;
   z-index:1;
   border-radius:1rem;
@@ -265,7 +312,7 @@ const ResultList = styled.div`
   // border-bottom: 1.5px solid  #4D9FE3;
   margin:2%;
   padding:5%;
-  font-size:0.9rem;
+  font-size:1rem;
   border-radius:1rem;
   &:hover{  
     background-color:lightgray ;
