@@ -28,6 +28,7 @@ import CourseSettingModal from './CourseSettingModal';
 import CITY from '../../assets/City/City';
 import RenderItineraryList from '../../components/Course/RenderItineraryList';
 import ItineraryInfoTooltip from '../../components/Course/ItineraryInfoTooltip.js';
+import MapContainer from '../../components/Course/MapContainer.js';
 
 // 사용자별 색 인덱스에 따라 색 지정
 const colorList = [
@@ -400,44 +401,6 @@ const ConfirmCourse= () => {
 
     return formatTime;
   }
-
-  // const renderAllItineraryList = () => {
-  //   // 모든 일정을 한번에 출력
-  //   let i = 1;
-  //   let renderArray = [];
-  //   let thisDate;
-  //   let isBreak = false;
-  //   while (!isBreak) {
-  //     fetch("/course/date?courseId="+params.courseId+"&day="+String(i))
-  //     .then(res => {
-  //       return res.json();
-  //     })
-  //     .then((itineraryDateInfo) => {
-  //       thisDate = itineraryDateInfo.selectDate;
-  //       console.log('thisDate: ', thisDate);
-  //       console.log('endPageDate: ', endPageDate);
-  //       if (thisDate === endPageDate) isBreak = true;
-  //     })
-  //     renderArray.push(
-  //       <ItineraryScreenDiv>
-  //         <RenderItineraryList 
-  //           itineraryArray={itineraryArray}
-  //           timeToStringFormat={timeToStringFormat}
-  //           colorList={colorList}
-  //           thisPageDate={thisDate}
-  //           onClickItinerary={ onClickItinerary}
-  //           onMouseOverItinerary={onMouseOverItinerary}
-  //           onMouseOutItinerary={onMouseOutItinerary}
-  //           onClickOverlap={ onClickOverlap}
-  //           onMouseOverOverlapItinerary={onMouseOverOverlapItinerary} 
-  //           isMarkerClicked={isMarkerClicked}
-  //         />
-  //       </ItineraryScreenDiv>
-  //     )
-  //     i++;
-  //   }
-  //   return renderArray;
-  // }
  
   // render
   return (
@@ -455,16 +418,51 @@ const ConfirmCourse= () => {
       <MainScreenDiv>
         <CourseHeader thisCourseCity={thisCourseCity} onClickCourseSettingIcon={onClickCourseSettingIcon} linkToBack={'/main'} />
         <ContentDiv>
-    
-          <ItineraryScreen>
-            <HorizontalScrollDiv>
-            {/* <ConfirmItinerartDates itineraryDates={itineraryDates}
-                          timeToStringFormat={timeToStringFormat}
-                          colorList={colorList}
-                          // onClickItinerary={onClickItinerary}
-                          onClickOverlap={ onClickOverlap}
-                          onMouseOverOverlapItinerary={onMouseOverOverlapItinerary} /> */}
-              {/* <ItineraryScreenDiv>
+        <LeftScreenDiv>
+          {/* <SearchDiv>
+            <SearchInput 
+              type="text"
+              placeholder='여행지를 입력하세요'
+              onChange={onChangeSearch}
+              onKeyPress={onKeyPressSearch}
+              onFocus={() => setISOpenSearchList(true)}
+              onBlur={() => setISOpenSearchList(false)}
+            />
+              <SearchButton onClick={onClickSearch}>검색</SearchButton>
+              <span style={{float: 'right', paddingRight: '10px', fontSize: '25px'}}> <BsFillPlusSquareFill onClick={() => onClickItineraryAddIcon()} /> </span>
+            </SearchDiv> */}
+            <MapDiv>
+              <MapContainer 
+                isOpenSearchList={isOpenSearchList} 
+                searchPlace={searchPlace}
+                setIsMarkerClicked={setIsMarkerClicked} 
+                setMarkerInfo={setMarkerInfo} 
+                thisCourseCity={thisCourseCity} 
+                isMouseOverMapList={isMouseOverMapList}
+                setIsMouseOverMapList={setIsMouseOverMapList}
+              ></MapContainer>
+            </MapDiv>
+          </LeftScreenDiv>
+
+          <ItineraryDateScreenDiv>
+            <div  style={{ width:"100%",display: "flex", justifyContent: "space-evenly"}}>
+              <span> 
+                {
+                  // 1일차일 경우 일차 감소 클릭 방지
+                  (params.day !== '1' ? (<Link to={linkDate(-1)}> <CgChevronLeftR /> </Link>) : (<CgChevronLeftR />))
+                }
+              </span>
+              <ItineraryDateDiv>
+                  <span>{thisPageDate} ({params.day}일차)</span>
+              </ItineraryDateDiv>
+              <span> 
+                {
+                  // 가장 마지막 일차일 경우 일차 증가 클릭 방지
+                  (thisPageDate !== endPageDate ? (<Link to={linkDate(1)}> <CgChevronRightR /> </Link>) : <CgChevronRightR />)
+                }
+              </span>
+            </div >
+            <ItineraryScreenDiv style={isMarkerClicked ? {opacity: '0.5'} : {opacity: '1'}}>
                 <RenderItineraryList 
                   itineraryArray={itineraryArray}
                   timeToStringFormat={timeToStringFormat}
@@ -476,13 +474,9 @@ const ConfirmCourse= () => {
                   onClickOverlap={ onClickOverlap}
                   onMouseOverOverlapItinerary={onMouseOverOverlapItinerary} 
                   isMarkerClicked={isMarkerClicked}
-                  courseId={params.courseId}
-                  itineraryDate={params.day}
                 />
-              </ItineraryScreenDiv> */}
-              {/* {renderAllItineraryList()} */}
-            </HorizontalScrollDiv>
-          </ItineraryScreen>
+            </ItineraryScreenDiv>
+          </ItineraryDateScreenDiv>
           <RightScreenDiv>
             <ButtonDiv>
               <RightScreenButton onClick={() => setIsMemoOpen(!isMemoOpen)}>메모</RightScreenButton>
@@ -553,35 +547,29 @@ const ConfirmCourse= () => {
 // styled components
 // div
 const ItineraryScreenDiv = styled.div`
-  font-size:1.1rem;
-  flex-basis: 50%;
-  width: 480px; 
-  overflow-y: scroll;
-  background-color:	white;
-  height: 75vh;
-  margin-top: 3%;
-  box-shadow: 0px 0px 2px lightgray;
-  border-radius: 0.6rem;
-  &::-webkit-scrollbar {
-    width:12px;
-    border-radius:3%;
-  }
-  &::-webkit-scrollbar-thumb {
-    background-color: lightgray ;
-    border-radius:6px;
-    background-clip: padding-box;
-    border: 1px solid transparent;
-  }
-  &::-webkit-scrollbar-corner{
-    background-color:#F5F5F5 ;
-  }
+font-size:1.1rem;
+flex-basis: 50%;
+width: 480px; 
+overflow-y: scroll;
+background-color:	white;
+height: 75vh;
+margin-top: 3%;
+box-shadow: 0px 0px 2px lightgray;
+border-radius: 0.6rem;
+&::-webkit-scrollbar {
+  width:12px;
+  border-radius:3%;
+}
+&::-webkit-scrollbar-thumb {
+  background-color: lightgray ;
+  border-radius:6px;
+  background-clip: padding-box;
+  border: 1px solid transparent;
+}
+&::-webkit-scrollbar-corner{
+  background-color:#F5F5F5 ;
+}
 `;
-const HorizontalScrollDiv = styled.div`
-  display:flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  flex-grow: 1;
-`
 const MainScreenDiv = styled.div`
 position: absolute; 
 background-color:	#F5F5F5;
@@ -589,7 +577,6 @@ width:100%;
 height: 100vh;
 `;
 const ItineraryDateScreenDiv = styled.div`
-
   position:fixed;
 margin-left:60%;
   margin-top:1%;
@@ -597,13 +584,10 @@ margin-left:60%;
 
 const ItineraryScreen = styled.div`
   position:fixed;
-  width:90%;
-  /* padding-top: -20px; */
+  width:80%;
+  height: 80vh;
   display:flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  flex-grow: 1;
-  overflow-x: scroll;
+  overflow-y: scroll;
   box-shadow: 0px 0px 2px lightgray;
   border-radius: 0.6rem;
   &::-webkit-scrollbar {
@@ -632,7 +616,7 @@ const ItineraryDateDiv = styled.div`
 `;
 const ContentDiv = styled.div`
   display: flex;
-  padding-top:2%;
+  padding-top:6%;
   background-color:	#F5F5F5;
   height: 100vh;
   position:fixed;
@@ -656,7 +640,6 @@ const SearchDiv = styled.div`
 `;
 const ButtonDiv = styled.div`
 margin-top:20%;
-
 `;
 const MapDiv = styled.div`
   padding: 10px;
@@ -664,7 +647,6 @@ const MapDiv = styled.div`
 
 const BlogSharchDiv = styled.div`
 margin-top:20%;
-
 `;
 
 const BlogTitle = styled.div`
@@ -702,7 +684,6 @@ const SearchButton = styled.button`
 }
 `;
 const RightScreenButton = styled.button`
-
 background-color:#FFFFFF;
 border-radius: 0.30rem;
 font-size: 1.1rem;
@@ -719,5 +700,6 @@ font-weight: bold;
   box-shadow: 0 0 3px  gray;
 }
 `;
+
 
 export default ConfirmCourse;
