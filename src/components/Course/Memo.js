@@ -356,7 +356,7 @@ width:90%;
 `;
 
 // textarea
-const ContentInputTextarea = styled.textarea`
+const ContentInputTextarea = styled.input`
   margin-top:7%;
   width: 100%;
   height: 120px;

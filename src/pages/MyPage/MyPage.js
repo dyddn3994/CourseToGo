@@ -106,7 +106,7 @@ const  MyPage = () => {
       if (memberProfile) {
         formData.append('profileImage', memberProfile[0]);
       }
-      if (memberProfile) {
+      if (memberFace) {
         formData.append('faceImage', memberFace[0]);
       }
       const config = {

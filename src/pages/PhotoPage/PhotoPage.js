@@ -15,7 +15,7 @@ import BodyBlackoutStyle from "../../components/PhotoAlbum/BodyBlackoutStyle";
 import EditModal from "../../components/PhotoAlbum/EditModal";
 import CourseHeader from "../../components/CourseHeader";
 
-const SERVER_URL = 'http://192.168.228.46:9092/'
+const SERVER_URL = 'http://localhost:9092/'
 
 const CoursePhotoPage = () => {
 
@@ -54,7 +54,7 @@ const CoursePhotoPage = () => {
   });
   const { uploadPhotos } = inputs;
 
-  const [loading, setLoading] = useState(false); // 화면이 로딩중이라면 true
+  const [loading, setLoading] = useState(true); // 화면이 로딩중이라면 true
   
   // const [isCheckedAllPhoto, setIsCheckedAllPhoto] = useState(false); //사진 선택여부
   // const [isCheckedPhoto, setIsCheckedPhoto] = useState(false); //사진 선택여부
@@ -62,6 +62,7 @@ const CoursePhotoPage = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false); 
   const [thisCourseCity, setThisCourseCity] = useState('');
   const [isCheckCourse, setIsCheckCourse] = useState(false);
+  const [editedPhoto, setEditedPhoto] = useState(''); // 편집된 사진 url
 
   
   // useEffect(() => {
@@ -117,13 +118,14 @@ const CoursePhotoPage = () => {
   // 필터링 선택 시
   const filteringCheckedHandler = (e) => {
     console.log('list', checkedUsers);  //  선택된 유저 아이디 리스트
-    // if (checkedUsers.length > 0) { // 선택된 유저가 있을 때
+    if (checkedUsers.length > 0) { // 선택된 유저가 있을 때
       commuteGetPhotoFilter();
       // setData([]);  // 알맞은 사진으로 setData
-    // }
-    // else { // 선택된 유저가 없을 때
-    //   setData(data);  //모든 이미지 보여주기
-    // }
+    }
+    else { // 선택된 유저가 없을 때
+      // setData(data);  //모든 이미지 보여주기
+      commuteGetCoursePhoto();
+    }
   };
 
   // 필터링 유저 클릭 시
@@ -156,7 +158,7 @@ const CoursePhotoPage = () => {
     if(checkedPhotos.length > 0){
       const lastValue = checkedPhotos[checkedPhotos.length - 1];
       setCurrItem(datas.find(element => element.photoId === lastValue.photoId));
-      console.log(currItem);
+      console.log('currItem: ', currItem);
       return currItem;
     }
   };
@@ -278,8 +280,6 @@ const CoursePhotoPage = () => {
       formatUsers = formatUsers + user.userId + '/';
     });
     formatUsers = formatUsers.slice(0, -1); // 마지막 '/' 자르기
-    console.log(formatUsers);
-    console.log(Number(params.courseId))
 
     fetch("/photo/filter", {
       method: 'post',
@@ -303,15 +303,16 @@ const CoursePhotoPage = () => {
         const newPhotoData = fliterdDatas.map(data => ({ ...data, photoImage: SERVER_URL+data.photoImage })); // 서버 url 연결해야 조회 가능
         setData(newPhotoData);
       }
+      setLoading(false);
+      setCheckedUsers([]);
     });
-    setLoading(false);
   }
   const commutePostPhotoDownload = () => {
     // 사진 다운로드
     let photoList = []
     checkedPhotos.forEach((photo) => photoList.push(photo.photoId));
     const photoIdString = photoList.join(',')
-    console.log(photoIdString)
+
     const photoDownloadPath = "photo/download?photoIdList="+photoIdString
     
     window.open(SERVER_URL + photoDownloadPath , '_blank')
@@ -327,9 +328,30 @@ const CoursePhotoPage = () => {
       setIsCheckCourse(courseInfo.check);
     });
   }
+  const commuteGetEditPhoto = () => {
+    // 사진 편집
+    setLoading(true);
+    
+    // 선택한 사용자 '/'로 포맷 맞춤
+    let formatUsers = '';
+    checkedUsers.forEach((user) => {
+      formatUsers = formatUsers + user.userId + '/';
+    });
+    formatUsers = formatUsers.slice(0, -1); // 마지막 '/' 자르기
+
+    fetch("/photo/edit?photoId="+currItem.photoId+"&userId="+formatUsers)
+    .then((res)=>{
+      return res.json();
+    })
+    .then((editedPhotoUrl)=>{
+      setEditedPhoto(editedPhotoUrl);
+      setLoading(false);  
+    })
+  }
 
   // 편집 클릭 시 
   const editClickedHandler = () => { 
+    commuteGetEditPhoto();
     setIsEditModalOpen(true); //모달 오픈
     console.log('str',currItem.id); //편집될 사진은 currItem임
   };
@@ -375,6 +397,7 @@ const CoursePhotoPage = () => {
                 <input name='uploadPhotos' type='file' multiple accept='image/*' style={{display: 'none'}} ref={photoInputRef} onChange={onChangeUploadFile} />
                 사진등록
               </Button>
+              <Button onClick={() => window.location.reload()}>새로고침</Button>
             </ButtonDiv>
           </FilteringAndButton>
         </FixedButtonDiv> 
@@ -393,7 +416,7 @@ const CoursePhotoPage = () => {
         <div>
           {isEditModalOpen && <BodyBlackoutStyle setIsEditModalOpen={setIsEditModalOpen} />}
           {isEditModalOpen && (
-            <EditModal setIsEditModalOpen={setIsEditModalOpen} />
+            <EditModal setIsEditModalOpen={setIsEditModalOpen} editedPhoto={editedPhoto} />
           )}
         </div>
         </>

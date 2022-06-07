@@ -21,15 +21,7 @@ const ButtonType = ({type, clickedHandler}) => {
             </SubmitButtonDiv>
             <ButtonDiv>
                 {type === 'login' ? (
-                   <SearchDiv>
-                     <div>
-                        <Link to="/searchId">아이디찾기</Link>
-                     </div>
-                     <div>
-                      <Link to="/searchPw">비밀번호찾기</Link>
-                     </div>   
-                    </SearchDiv>  
-
+                    null
                 ):(
                     <Link to="/"  >로그인</Link>
                 )}

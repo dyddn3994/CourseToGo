@@ -53,9 +53,9 @@ const CoursePage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    commuteStomp();
-    // connectStomp();
+    commuteGetUserId();
     commuteGetCourseInfo();
+    commuteStomp();
     return () => {
       disconnectStomp();
     }
@@ -69,6 +69,7 @@ const CoursePage = () => {
   const [endPageDate, setEndPageDate] = useState(''); // 마지막 일정 날짜
   const [thisCourseCity, setThisCourseCity] = useState('Jeju'); // 코스 도시 정보
   const [groupId, setGroupId] = useState(0); // 그룹 id
+  const [memberData, setMemberData] = useState(); // 유저 정보
 
   const [searchPlace, setSearchPlace] = useState(''); // 장소 검색어
   const [thisItinerary ,setThisItinerary ] = useState('');
@@ -351,7 +352,9 @@ const CoursePage = () => {
           inputItineraryEndTimeHour: endTimeHour,
           inputItineraryEndTimeMinute: endTimeMinute,
           itineraryLat: lat,
-          itineraryLng: lng
+          itineraryLng: lng,
+          inputItineraryDetail:'',
+          inputItineraryCost:0, 
         })
         if (isHidden) {
           commutePostCreateItinerary(markerPlaceName, markerPlaceAddress, startTime, endTime, isHidden);
@@ -428,7 +431,8 @@ const CoursePage = () => {
   // onKeyPress
   const onKeyPressSearch = e => {
     if (e.key === 'Enter') {
-      searchListHiddenOut();
+      // searchListHiddenOut();
+      onClickSearch();
     }
   }
 
@@ -442,7 +446,10 @@ const CoursePage = () => {
       console.log('Connected: ' + frame);
       
       stompClient.subscribe('/topic/'+String(params.courseId), (data) => {// -> 받을때
-        alert('data: ' + data);
+        if ('tjdehd' !== data.body) {
+          alert('새로 등록된 정보가 있습니다!');
+          commuteGetItineraryInfo(params.day);
+        }
       });
     });
   };
@@ -455,44 +462,6 @@ const CoursePage = () => {
       stompClient.disconnect();
     }
   };
-  // const connectStomp = () => {
-  //   client = new Client({
-  //     brokerURL: 'ws://122.199.121.202:9092/socket',
-  //     debug: function (str) {
-  //       console.log(str);
-  //     },
-  //     onConnect: () => {
-  //       subscribe();
-  //     },
-  //   });
-
-  //   client.activate();
-  // }; 
-  // const subscribe = () => {
-  //   if (client != null) {
-  //     client.subscribe('/topic/'+params.courseId, (data) => {
-  //       alert(data);
-  //     });
-  //   }
-  // };
-  // const sendStomp = () => {
-  //   if (client != null) {
-  //     if (!client.connected) return;
-
-  //     client.publish({
-  //       destination: "/app/message",
-  //       // body: JSON.stringify({
-  //       //   message: message,
-  //       // }),
-  //       body: params.courseId,
-  //     });
-  //   }
-  // };
-  // const disconnectStomp = () => {
-  //   if (client != null) {
-  //     if (client.connected) client.deactivate();
-  //   }
-  // };
   const commuteGetItineraryDate = (courseId, day) => {
     // 일정 날짜 조회
     fetch("/course/date?courseId="+courseId+"&day="+day)
@@ -564,6 +533,8 @@ const CoursePage = () => {
       else {
         alert(itineraryName + '일정이 ' + startTime.substring(11,16) + '부터 ' + endTime.substring(11, 16) + '까지로 등록되었습니다.');
         commuteGetItineraryInfo(params.day);
+        // sendStomp();
+        onClickSearch();
       }
     });
   }
@@ -608,6 +579,7 @@ const CoursePage = () => {
       else {
         alert('일정이 수정되었습니다.');
         commuteGetItineraryInfo(params.day);
+        // sendStomp();
       }
     });
   }
@@ -640,6 +612,7 @@ const CoursePage = () => {
         alert('일정이 삭제되었습니다.');
         commuteGetItineraryInfo(params.day);
         setIsUpdateItineraryModal(false);
+        // sendStomp();
       }
     });
   }
@@ -661,6 +634,7 @@ const CoursePage = () => {
         alert('대표일정이 변경되었습니다.');
         commuteGetItineraryInfo(params.day);
         setIsOverlapItineraryModal(false);
+        // sendStomp();
       }
       else {
         alert('대표일정 변경에 실패하였습니다.');
@@ -758,6 +732,16 @@ const CoursePage = () => {
       // else {
       //   alert('코스 확정에 실패하였습니다.');
       // }
+    });
+  }
+  const commuteGetUserId = () => {
+    fetch("/mypage")
+    .then((res)=>{
+      return res.json();
+    })
+    .then((memberData)=>{
+      console.log(memberData);
+      setMemberData(memberData);
     });
   }
 

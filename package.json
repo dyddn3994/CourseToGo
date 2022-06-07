@@ -58,7 +58,7 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://192.168.228.46:9092",
+  "proxy": "http://localhost:9092",
   "homepage": "./"
   
 }

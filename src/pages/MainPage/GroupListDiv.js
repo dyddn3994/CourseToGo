@@ -128,7 +128,6 @@ const GroupListDiv = forwardRef((props, ref) => {
         alert('코스 등록에 실패하였습니다. ');
       }
       else {
-        alert('test : ' + courseId);
         alert("코스 등록이 완료되었습니다");
         setIsCourseCreateModalOpen(false);
         resetInputs();

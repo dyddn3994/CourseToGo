@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 
 import Img from '../../assets/제주도.jpg';
 
-const EditModal = ({currItem, setIsEditModalOpen }) => {
+const EditModal = ({currItem, setIsEditModalOpen, editedPhoto }) => {
 
     // 결과 이미지
     const [resultImage, setResultImage] = useState();
@@ -11,14 +11,14 @@ const EditModal = ({currItem, setIsEditModalOpen }) => {
     // 저장 클릭 시 <= 제대로 확인 못해봄
     const saveClieckedHandler = () => {
       //[this.content] : 서버에서 받은 편집된 사진으로 바꿔야함
-      const blob = new Blob([this.content], {type: 'image/jpg'});
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${currItem.itinerary}_${currItem.id}_edit`
-      a.click()
-      a.remove()
-      window.URL.revokeObjectURL(url);
+      // const blob = new Blob([this.content], {type: 'image/jpg'});
+      // const url = window.URL.createObjectURL(blob);
+      // const a = document.createElement("a");
+      // a.href = url;
+      // a.download = `${currItem.itinerary}_${currItem.id}_edit`
+      // a.click()
+      // a.remove()
+      // window.URL.revokeObjectURL(url);
     };
 
     // 취소 버튼 클릭 시
@@ -30,7 +30,7 @@ const EditModal = ({currItem, setIsEditModalOpen }) => {
         <EditModalDiv>
             <ResultImageDiv>
                 {/* 편집된 결과 이미지 */}
-                <Image  src= {Img} /> {/* 이건 보여주기용으로 넣은거임 */}
+                <Image  src= {editedPhoto} /> {/* 이건 보여주기용으로 넣은거임 */}
                 {/* <Image  src= {resultImage} /> */}
             </ResultImageDiv>  
             <ButtonDiv>
